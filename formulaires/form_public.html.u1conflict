@@ -1,0 +1,457 @@
+<link type="text/css" href="#CHEMIN{css/custom-theme/ui.all.css}" rel="stylesheet" />
+<script type="text/javascript" src="#CHEMIN{js/jquery-ui-1.6.custom.min.js}"></script>
+
+<link type="text/css" href="#CHEMIN{css/datePicker.css}" rel="stylesheet" />
+<script type="text/javascript" src="#CHEMIN{js/date.js}"></script>
+<script type="text/javascript" src="#CHEMIN{js/jquery.datePicker.min-2.1.2.js}"></script>		
+
+<style>
+	#contenu {
+		font-size:10px;
+	}
+	.formulaire_spip li fieldset {
+		border:0;
+	}
+	.formulaire_spip ul ul input.text, .formulaire_spip ul ul input.password, .formulaire_spip ul ul textarea, .formulaire_spip ul ul select  {
+		width:190px!important;
+	}
+	.ui-tabs .ui-tabs-hide {
+	     display: none;
+	}
+	.ui-tabs-panel {
+		padding:0;
+		border-top:0;
+	}
+	.ui-tabs-nav {
+		border-width:0
+	}
+	.ui-tabs-nav ul.nav li {
+		text-align:center;
+	}
+	.ui-tabs-nav ul.nav li a {
+		padding:0.5em 0;
+		width:98px;
+	}
+
+	.ui-tabs-nav ul.nav {
+		border-bottom:1px solid #97A5B0;
+		border-left:1px solid #97A5B0;
+		overflow:hidden;
+	}
+	.ui-tabs-nav ul.nav li {
+		border-style:solid solid solid none;
+		border-width:1px 1px 1px medium;
+	}
+	#tabs {
+		width:100%;
+	}
+
+	a.dp-choose-date {
+		float: left;
+		width: 16px;
+		height: 16px;
+		padding: 0;
+		margin: 5px 3px 0;
+		display: block;
+		text-indent: -2000px;
+		overflow: hidden;
+		background: url(#CHEMIN{images/calendar.png}) no-repeat; 
+	}
+	a.dp-choose-date.dp-disabled {
+		background-position: 0 -20px;
+		cursor: default;
+	}
+	/* makes the input field shorter once the date picker code
+	 * has run (to allow space for the calendar icon
+	 */
+	.formulaire_spip ul li input.dp-applied {
+		width: 140px!important;
+		float: left;
+	}
+	div.dp-popup h2 {
+		display:block;
+	}
+</style>
+
+<div class="formulaire_spip formulaire_editer formulaire_editer_site formulaire_editer_site-#ENV{id_site,nouveau}">
+	<!-- <br class='bugajaxie' /> -->
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	
+<form action="#ENV{action}" method="post" name="form1" class="style3" id="form1">
+	[(#REM) declarer les hidden qui declencheront le service du formulaire 
+		parametre : url d'action ]
+	#ACTION_FORMULAIRE{#ENV{action}}
+	<div id="tabs">
+		
+		<ul class="nav">
+			<li><a href="#general"><span>General</span></a></li>
+			<li><a href="#membership"><span>Membership</span></a></li>
+			<li><a href="#professional"><span>Professional</span></a></li>
+			<li><a href="#conferences"><span>Conferences</span></a></li>
+		</ul>
+		<div id="general" class="formulaire_spip">
+			<ul>
+				<li>
+					<label>Member number : <b>#ENV{membernumber}</b></label> 
+					<input name="membernumber" type="hidden" value="#ENV{membernumber}"/>								 
+				</li>
+
+				<li>
+					<label>Details</label>
+					<fieldset>
+						<ul>
+							<li>
+								<label>Gender</label> 
+								<input name="gender" type="radio" value="M" [(#ENV{gender}|=={M}|oui)checked]> M
+								&nbsp;&nbsp;&nbsp;
+								<input name="gender" type="radio" value="F" [(#ENV{gender}|=={F}|oui)checked]> F				
+							[<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{gender})</span>]
+							<input name="gender_test" type="hidden" value="#ENV{gender}"/>								 
+							</li>
+							<li>
+								<label>Title</label> <input name="title" type="text" class="text" id="title" value="#ENV{title}">
+								<input name="title_test" type="hidden" value="#ENV{title}"/>								 
+							</li>
+							<li>
+								<label>First name</label> <input name="lastname" disabled type="text" class="text" id="inlastname"  value="#ENV{lastname}">
+							</li>
+							<li>
+								<label>Family name</label> <input name="firstname" disabled  type="text" class="text" id="infirstname"  value="#ENV{firstname}">
+							</li>
+							<li style="overflow: hidden; width: 100%">
+								<label>Birth date</label> <input name="birthdate" type="text" id="birthdate" value="#ENV{birthdate}" class="text date-pick">
+								<input name="birthdate_test" type="hidden" value="#ENV{birthdate}"/>	
+							</li>
+
+							<li>
+								<label>Email</label> <input name="email" type="text" class="text" id="inemail" value="#ENV{email}" size="50">
+								<input name="email_test" type="hidden" value="#ENV{email}"/>
+								[<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{email})</span>]
+							</li>
+						</ul>
+					</fieldset>
+				</li>
+
+				<li>
+
+					<label>Login</label>
+					<fieldset>
+						<ul>
+							<li>
+								<label>Login</label> <input name="login" type="text" disabled class="text" id="inlogin" value="#ENV{login}">
+							</li>
+							<li>
+
+								<label>Password</label> <input name="password" type="text" class="text"id="inpassword" value="">
+								<input name="password_test" type="hidden" value="#ENV{password}"/>
+							</li>
+						</ul>
+					</fieldset>
+				</li>
+
+				<li>
+					<label>Company</label> 
+					#ENV{company}
+				</li>
+
+				<li>
+					<label>Address</label>
+
+					<fieldset>
+						
+						<ul>
+							<li>
+								<label>Address 1</label> <input name="addr1" type="text" class="text" id="inaddr1" value="#ENV{addr1}" size="55">
+								<input name="addr1_test" type="hidden" value="#ENV{addr1}"/>
+							</li>
+							<li>
+								<label>Address 2</label> <input name="addr2" type="text" class="text" id="inaddr2" value="#ENV{addr2}" size="55">
+								<input name="addr2_test" type="hidden" value="#ENV{addr2}"/>
+							</li>
+							<li>
+								<label>Address 3</label> <input name="addr3" type="text" class="text" id="inaddr3" value="#ENV{addr3}" size="55">
+								<input name="addr3_test" type="hidden" value="#ENV{addr3}"/>
+							</li>
+							<li>
+								<label>Post Code</label> <input name="addr4" type="text" class="text" id="inaddr4" value="#ENV{addr4}" size="55">
+								<input name="addr4_test" type="hidden" value="#ENV{addr4}"/>
+							</li>
+
+							<li>
+								<label>Town</label> <input name="addr5" type="text" class="text"id="inaddr5" value="#ENV{addr5}" size="45">
+								<input name="addr5_test" type="hidden" value="#ENV{addr5}"/>
+							</li>
+							<li>
+								<label>Country</label>  
+								<select name="country" id="incountry" style="width:195px">
+								<option value=''>Make a choice</option>
+<BOUCLE_country(SPIP_GEO_PAYS){par pays}>
+<option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{country}}|oui)selected]>#PAYS</option>
+</BOUCLE_country>
+								</select>
+								<input name="country_test" type="hidden" value="#ENV{country}"/>
+								[<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{country})</span>]
+							</li>
+							</ul>
+						<li>
+							<label>Nationality</label> 
+							<select name="nationality" id="nationality" style="width:195px">
+								<option value=''>Make a choice</option>
+<BOUCLE_nationality(SPIP_GEO_PAYS){par pays}>
+<option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{nationality}}|oui)selected]>#PAYS</option>
+</BOUCLE_nationality>
+
+							</select>
+							<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+						</li>
+					</fieldset>
+				</li>
+				
+				<li>
+					<label>Phone / Fax (old)</label>
+					<p>Please don't use the old fields anymore but correct your fax and phone numbers into the red area.<br />Thank you</p>
+					<fieldset id="old_fields">
+						
+						<ul>
+							<li>
+								<label>Fax 1</label> <input name="fax1" type="text" class="text"id="infax1" value="#ENV{fax1}">
+								<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+								
+							</li>
+							<li>
+								<label>Fax 2</label> <input name="fax2" type="text" class="text"id="infax2" value="#ENV{fax2}">
+								<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+
+							</li>
+							<li>
+								<label>Telephone 1</label> <input name="tel1" type="text" class="text"id="intel1" value="#ENV{tel1}">
+								<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+							</li>
+							<li>
+								<label>Telephone 2</label> <input name="tel2" type="text" class="text"id="intel2" value="#ENV{tel2}">
+								<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+							</li>
+
+							<li>
+								<label>Telephone 3</label> <input name="tel3" type="text" class="text"id="intel3" value="#ENV{tel3}">
+								<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+							</li>							
+						</ul>
+					</fieldset>
+					
+
+					<fieldset id="new_fields">
+						<p>+ national prefix | regional prefix | number</p>
+						<ul>
+							<li>
+								<div class="label">Fax 1</div>
+								+ <input name="fax1_pn" type="text" class="text-short" id="fax1_pn" value="#ENV{fax1_pn}">
+								  <input name="fax1_pl" type="text" class="text-short" id="fax1_pl" value="#ENV{fax1_pl}">
+								  <input name="fax1" type="text" class="text-medium" id="infax1" value="#ENV{fax1}">	
+							</li>
+							<li>
+								<div class="label">Fax 2</div>
+								+ <input name="fax2_pn" type="text" class="text-short" id="fax2_pn" value="#ENV{fax2_pn}">
+								  <input name="fax2_pl" type="text" class="text-short" id="fax2_pl" value="#ENV{fax2_pl}">
+								  <input name="fax2" type="text" class="text-medium"id="infax2" value="#ENV{fax2}">
+							</li>
+							<li>
+								<div class="label">Telephone 1</div>	
+								+ <input name="tel1_pn" type="text" class="text-short" id="tel1_pn" value="#ENV{tel1_pn}">
+								  <input name="tel1_pl" type="text" class="text-short" id="tel1_pl" value="#ENV{tel1_pl}">
+								  <input name="tel1" type="text" class="text-medium"id="intel1" value="#ENV{tel1}">
+								<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+							</li>
+							<li>
+								<div class="label">Telephone 2 </div>
+							    + <input name="tel2_pn" type="text" class="text-short" id="tel2_pn" value="#ENV{tel2_pn}">
+								  <input name="tel2_pl" type="text" class="text-short" id="tel2_pl" value="#ENV{tel2_pl}">
+								  <input name="tel2" type="text" class="text-medium"id="intel2" value="#ENV{tel2}">
+								<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+							</li>
+
+							<li>
+								<div class="label">Telephone 3</div>						
+								+ <input name="tel3_pn" type="text" class="text-short" id="tel3_pn" value="#ENV{tel3_pn}">
+								  <input name="tel3_pl" type="text" class="text-short" id="tel3_pl" value="#ENV{tel3_pl}">
+								  <input name="tel3" type="text" class="text-medium"id="intel3" value="#ENV{tel3}">
+								<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+							</li>							
+						</ul>
+					</fieldset>
+					<div class="clear"> </div>
+				</li>
+
+
+
+
+
+				<li>
+					<strong>Member shown in member directory ?</strong> <input name="listed_in_dir" type="checkbox" id="listed_in_dir" value="Yes" [(#ENV{listed_in_dir}|=={Yes}|oui)checked]>
+					<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
+
+				</li>
+				<li>
+					<strong>Last modification done on : </strong>#ENV{datestamp}</li>
+
+			</ul>
+
+			<p class='boutons_formulaire'>
+				<input type="submit" name="Submit" value="Submit">
+			</p>
+
+			
+		</div><!-- general -->
+		
+		<div id="membership" class="formulaire_spip">
+			<ul>
+				<li style="overflow: hidden; width: 100%">
+					<label>Date of membership</label> <input name="datemembership" type="text" class="text date-pick" id="datemembership" value="#ENV{datemembership}">
+					<input name="datemembership_test" type="hidden" value="#ENV{datemembership}"/>
+				</li>							
+				<li>
+					<label>Member of Honours</label> #ENV**{memberofhonour}
+				</li>
+				<li>
+					<label>Past President</label> #ENV**{pastpresident}
+				</li>
+				<li>
+					<label>Member Type</label> [(#ENV**{membertype})]
+				</li>
+				<li>
+					<label>Council Member</label> [(#ENV**{councilmem,No})]
+				</li>
+				<li>
+					<label>Past member of Council</label> [(#ENV**{pastcouncil,No})]
+				</li>
+				<li>
+					<label>Committee Member</label> #ENV**{list_commitee_member}
+				</li>
+				<li>
+					<label>Chair of Committee</label> #ENV**{chaircommitee,No}
+				</li>
+				<li>
+					<label>Vice-Chair of Committee</label> #ENV**{vicechaircommitee,No}
+				</li>
+				<li>
+					<label>Secretary of Committee</label> #ENV**{secretarycommitee,No}
+				</li>
+				<li>
+					<label>Executive Bodies</label> [(#ENV**{executivebodies,No})]
+				</li>
+				<li>
+					<label>OHIM number</label> <input name="OHIM" type="text" class="text"id="ohimnumber" value="#ENV**{OHIM}">
+				</li>							
+				<li>
+					<label>Member of other associations</label> 
+					[(#ENV**{li_associations}|html_entity_decode)]
+				</li>							
+			</ul>
+
+				<p class='boutons_formulaire'>
+					<input type="submit" name="Submit" value="Submit">
+				</p>
+
+		</div><!-- membership -->
+		
+		<div id="professional" class="formulaire_spip">
+			<ul>
+				<li>
+					<label>Company</label> 
+					<input name="company" type="text" class="text" id="incompany" value="#ENV{company}">
+					<input name="company_test" type="hidden" value="#ENV{company}"/>
+				</li>
+				<li>
+					<label>VAT number</label> 
+					<input name="vat_number" type="text" class="text" id="invat_number" value="#ENV{vat_number}">
+					<input name="vat_number_test" type="hidden" value="#ENV{vat_number}"/>
+				</li>
+				<li>
+					<label>Practice in</label> 
+					<select name="practicein" id="inpracticein" style="width:195px">
+						<option value=''>Make a choice</option>
+<BOUCLE_practicein(SPIP_GEO_PAYS){par pays}>
+<option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{practicein}}|oui)selected]>#PAYS</option>
+</BOUCLE_practicein>
+					</select>
+					<input name="practicein_test" type="hidden" value="#ENV{practicein}"/>
+				</li>
+
+				<li style="overflow: hidden; width: 100%">
+					<label>In activity since</label> 
+					<input name="inactivitysince" type="text" id="inactivitysince" value="#ENV{inactivitysince}" class="text date-pick">
+					<input name="inactivitysince_test" type="hidden" value="#ENV{inactivitysince}"/>
+				</li>
+				<li>
+					<label>Categories of Professional</label> 
+
+					<fieldset>
+						<ul>
+							[(#ENV**{li_cat_professionnal}|html_entity_decode)]
+						</ul>
+					</fieldset>
+
+				</li>
+				
+			</ul>
+			<p class='boutons_formulaire'>
+
+				<input type="submit" name="Submit" value="Submit">
+			</p>
+		</div> <!-- professional -->
+		
+		<div id="conferences" class="formulaire_spip">
+			<ul>
+
+				[
+					<li>
+						<label>Spring Committee Chair</label>
+						<fieldset>
+							<ul>
+						(#ENV**{li_spring}|html_entity_decode)
+							</ul>
+						</fieldset>
+					</li>
+				]
+
+				[
+					<li>
+						<label><br />Autumn Committee Chair</label>
+						<fieldset>
+							<ul>
+						(#ENV**{li_autumn}|html_entity_decode)
+							</ul>
+						</fieldset>
+					</li>
+				]
+
+			</ul>
+
+			<p class='boutons_formulaire'>
+				<input type="submit" name="Submit" value="Submit">
+			</p>
+		</div>	 <!-- conferencies -->
+
+	</div>
+
+</form>
+
+</div>
+
+<script type="text/javascript">
+	$("#tabs").tabs();
+	Date.firstDayOfWeek = 0;
+	Date.format = 'mm/dd/yyyy';
+	$('.date-pick').datePicker(
+			{
+				startDate: '01/01/1920',
+				endDate: (new Date()).asString()
+			}
+		);
+
+</script>
+
+<pre>
+	[(#ENV**{debug})]
+</pre>

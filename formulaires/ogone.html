@@ -1,0 +1,145 @@
+#CACHE{0}
+
+<script type="text/javascript">
+jQuery.fn.maxLength = function(max){
+	this.each(function(){
+		//Get the type of the matched element
+		var type = this.tagName.toLowerCase();
+		//If the type property exists, save it in lower case
+		var inputType = this.type? this.type.toLowerCase() : null;
+		//Check if is a input type=text OR type=password
+		if(type == "input" && inputType == "text" || inputType == "password"){
+			//Apply the standard maxLength
+			this.maxLength = max;
+		}
+		//Check if the element is a textarea
+		else if(type == "textarea"){
+			//Add the key press event
+			this.onkeypress = function(e){
+				//Get the event object (for IE)
+				var ob = e || event;
+				//Get the code of key pressed
+				var keyCode = ob.keyCode;
+				//Check if it has a selected text
+				var hasSelection = document.selection? document.selection.createRange().text.length > 0 : this.selectionStart != this.selectionEnd;
+				//return false if can't write more
+				return !(this.value.length >= max && (keyCode > 50 || keyCode == 32 || keyCode == 0 || keyCode == 13) && !ob.ctrlKey && !ob.altKey && !hasSelection);
+			};
+			//Add the key up event
+			this.onkeyup = function(){
+				//If the keypress fail and allow write more text that required, this event will remove it
+				if(this.value.length > max){
+					this.value = this.value.substring(0,max);
+				}
+			};
+		}
+	});
+};
+
+jQuery().ready(function(){
+	jQuery("#complus").maxLength(1000)
+});
+</script>
+
+<form method="post" action="[(#ENV{ogone_action}|sinon{#ENV{action}})]" id="form_ogone">
+	[<input type="hidden" name="PSPID" value="(#ENV*{pspid})" />
+	][<input type="hidden" name="orderID" value="(#ENV*{reference})" />
+	][<input type="hidden" name="currency" value="(#ENV*{currency})" />
+	][<input type="hidden" name="language" value="(#ENV*{lang_code})" />
+	][<input type="hidden" name="SHASign" value="(#ENV*{SHASign})" />
+	][<input type="hidden" name="amount" value="(#ENV*{amount})" />
+	]#ACTION_FORMULAIRE{#ENV{action}}
+</form>
+
+<form method="post" action="[(#ENV{ogone_action}|sinon{#ENV{action}})]" id="form1" name="form1">
+    [<p class='formulaire_erreur'>(#ENV*{message_erreur})</p>]
+    [<p class='formulaire_ok'>(#ENV*{message_ok})</p>]
+	[<input type="hidden" name="PSPID" value="(#ENV*{pspid})" />
+	][<input type="hidden" name="orderID" value="(#ENV*{reference})" />
+	][<input type="hidden" name="currency" value="(#ENV*{currency})" />
+	][<input type="hidden" name="language" value="(#ENV*{lang_code})" />
+	][<input type="hidden" name="SHASign" value="(#ENV*{SHASign})" />
+	][<input type="hidden" name="amount" value="(#ENV*{amount})" />
+	]#ACTION_FORMULAIRE{#ENV{action}}
+	<fieldset>
+	<div class="f_col1">
+    <label for="don"><:montant:> * : </label>
+	[<span class='erreur'>(#ENV**{erreurs}|table_valeur{don})</span>]
+	<input type="text" NAME="don" [(#EDITABLE|non)readonly] value="#ENV*{don}" id="don" />
+	<input type="hidden" NAME="com" value="[Paiement en ligne pour un don de (#ENV*{don}) #ENV*{currency}]" />
+	</div>
+    <div class="f_col2">
+	<label for="select_currency"><:monnaie:> * : </label>
+    <select name="select_currency" id="select_currency">
+		<option value="EUR">Euro</option>
+		<!--option value="CHF">Franc suisse</option>
+		<option value="GBP">Pound sterling</option-->
+		<option value="USD">US Dollar</option>		
+	</select>
+    </div>
+    <div class="clear"> </div>
+	<input type="hidden" name="select_language" value="<:code_langue:>" />
+	[(#REM)<!-- On ne fait plus de SELECT : la langue est calculée selon le contexte SPIP
+		<label for="select_language">Langue : </label>
+    	<select name="select_language">
+		<option value="fr_FR">Français</option>
+		<option value="en_US">English</option>
+		<option value="es_ES">Espa&ntilde;ol</option>
+		</select -->]
+	<!-- lay out information -->
+	<input type="hidden" NAME="TITLE" value="Formulaire de paiement s&amp;eacute;curis&amp;eacute;" />
+	<!-- or dynamic template page -->
+	<input type="hidden" NAME="tp" value="[(#URL_PAGE{template_ogone}|url_absolue)]" />
+	<!-- post-payment redirection -->
+	<input name="homeurl" type="hidden" value="[(#URL_RUBRIQUE{3}|parametre_url{'lang',#LANG}|url_absolue)]" />
+	<input name="catalogurl" type="hidden" value="[(#URL_RUBRIQUE{3}|parametre_url{'lang',#LANG}|url_absolue)]" />
+	[(#REM) <!-- Le problème avec ces redirections, c'est qu'elles sont automatiques
+		<input name="accepturl" type="hidden" value="[(#URL_RUBRIQUE{3}|url_absolue)]" />
+		<input name="declineurl" type="hidden" value="[(#URL_RUBRIQUE{3}|url_absolue)]" />
+		<input name="exceptionurl" type="hidden" value="[(#URL_RUBRIQUE{3}|url_absolue)]" />
+	<input name="cancelurl" type="hidden" value="[(#URL_RUBRIQUE{3}|url_absolue)]" /-->]
+	<!-- miscellanous -->
+	<label for="CN"><:nom:> * : </label>
+	[<span class='erreur'>(#ENV**{erreurs}|table_valeur{CN})</span>]
+	<input type="text" NAME="CN" [(#EDITABLE|non)readonly] value="#ENV*{CN}" maxLength="35" />
+	
+    <label for="EMAIL">Email * : </label>
+	[<span class='erreur'>(#ENV**{erreurs}|table_valeur{EMAIL})</span>]
+	<input type="text" name="EMAIL" [(#EDITABLE|non)readonly] value="#ENV*{email}" maxLength="50" />
+	
+	<label for="owneraddress"><:adresse:> : </label>
+	<input type="hidden" name="owneraddress" value="#ENV*{owneraddress}" />
+	<input type="text" name="address1" id="address1" [(#EDITABLE|non)readonly] maxLength="35" value="#ENV*{address1}" style="margin-bottom:1px"/><br />
+	<input type="text" name="address2" id="address2" [(#EDITABLE|non)readonly] maxLength="35" value="#ENV*{address2}" />
+	
+	<div class="clearfix">
+	<div class="f_col1">
+	<label for="ownerzip"><:zip:> : </label>
+	<input type="text" name="ownerzip" [(#EDITABLE|non)readonly] maxLength="10" id="ownerzip" value="#ENV*{ownerzip}" />
+	</div>
+    <div class="f_col2">
+	<label for="ownertown"><:ville:> : </label>
+	<input type="text" name="ownertown" [(#EDITABLE|non)readonly] maxLength="25" value="#ENV*{ownertown}" />
+	</div>
+	</div>
+    <div class="clear"> </div>
+	<label for="ownercty"><:pays:> : </label>
+	[<select name="ownercty" (#EDITABLE|oui)>
+		[(#ENV{'select_pays'}|html_entity_decode{#EVAL{ENT_QUOTES}})]
+	</select>]
+	[(#EDITABLE|non) 
+		#ENV*{pays} 
+		<input type="hidden" NAME="ownercty" value="#ENV*{ownercty}" />
+	]
+	
+	<label for="COMPLUS"><:commentaires:> : </label>
+	<textarea id="complus" name="COMPLUS" rows="4" [(#EDITABLE|non)readonly]>#ENV*{COMPLUS}</textarea>
+	<p><small><:necessaire:></small></p>
+	</fieldset>
+    <p><input type="submit" value="<multi>[fr]Envoyer[en]Send[es]Enviar</multi>" id="submit2" name="submit2" /></p>
+	</form>
+
+[(#ENV{message_erreur}|non)
+[(#ENV{masque}|html_entity_decode)]
+]
+
