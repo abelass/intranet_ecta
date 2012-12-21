@@ -278,7 +278,8 @@ spip_query("SET NAMES 'utf8'");
 			$flux=array(
 				'data'=>array('id_auteur'=>$id_auteur)
 				);
-			$flux['args']['args'][4]['email']=$email;	
+			$flux['args']['args'][4]['email']=_request('email_test');	
+            include_spip('sclp_fonctions');
 			$traitement=charger_fonction('editer_auteur_traiter_listes','inc');
 			$flux=$traitement($flux);
 		

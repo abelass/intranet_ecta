@@ -55,7 +55,7 @@ function exec_membre_ecta_edit(){
 		if (!_request('listed_in_dir')) $maj['listed_in_dir'] = "listed_in_dir = 'No'";
 		
 		spip_query("update ecta_members set ". implode(',',$maj) ." where seq='$sequp'",'ectamembersdev');
-		
+        
 		
 		/* Confs */
 		spip_query("delete from ecta_members_conferencies where id_member='$sequp'",'ectamembersdev');
@@ -104,11 +104,14 @@ function exec_membre_ecta_edit(){
 			if(count($ch)>0){
 			//actualisation mailchimp
 			
-				spip_log('actualisation profil','sclp');
+				spip_log('actualisation profil intranet','sclp');
 				$flux=array(
 					'data'=>array('id_auteur'=>$aut['id_auteur'])
 					);
-				$flux['args']['args'][4]['email']=_request('inemail');	
+                    
+
+				$flux['args']['args'][4]['email']=$aut['email'];	
+				
 				$traitement=charger_fonction('editer_auteur_traiter_listes','inc');
 				$flux=$traitement($flux);
 				
