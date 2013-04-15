@@ -9,7 +9,7 @@
 	0.2.0
 	</version>
 	<etat> <!-- Etat du plugin, au choix : dev (developpement), test, stable, experimental -->
-	experimental
+	stable
 	</etat>
 	<description>
 	Intranet d'ECTA
