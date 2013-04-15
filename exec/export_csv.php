@@ -115,16 +115,20 @@ while($r = spip_fetch_array($q)) {
  			$com=sql_select('*','ecta_members_commitees','id_member='.$row['seq']);
  			
  			while($data=sql_fetch($com)){
-				$row['mem_coms'][$row['membernumber']][]= $data['id_commitee'];
+ 			    if($data['end_date']>0)$end_date=affdate($data['end_date'],'Y');
+                else $end_date='today';
+				if($data['start_date']>0) $row['mem_coms'][$row['membernumber']][$data['id_commitee']][]=affdate($data['start_date'],'Y').'-'.$end_date ;
 				}
-
+// echo serialize($row['mem_coms']);
 			$ligne=array();
 			foreach($tablefield as $key)
 			  if (isset($row[$key])){
  			  foreach($commitees as $id_c) {
+ 			     
  			  	if(is_array($row['mem_coms'][$row['membernumber']])){  			  
- 					if (in_array($id_c,$row['mem_coms'][$row['membernumber']])){
- 						$row[$commitee_titre[$id_c]]="yes";				
+ 					if ($row['mem_coms'][$row['membernumber']][$id_c]){
+ 					    
+ 						$row[$commitee_titre[$id_c]]=implode(', ',$row['mem_coms'][$row['membernumber']][$id_c]);				
  						}
  					else   $row[$commitee_titre[$id_c]]="no";
 				}
