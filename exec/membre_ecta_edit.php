@@ -4,6 +4,17 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
 include_spip('inc/vieilles_defs');
 
 function exec_membre_ecta_edit(){
+    
+
+    
+    /*
+         $sql=sql_select('id_member,id_commitee','ecta_members_commitees');
+     * $count=0;
+    while($data=sql_fetch($sql)){
+        $count++;
+        sql_update('ecta_members_commitees',array('id_membership'=>$count),'id_member='.$data['id_member'].' AND id_commitee='.$data['id_commitee']);
+    }*/
+    
 	global $connect_statut, $connect_id_auteur;
 	spip_query("SET NAMES 'utf8'",'ectamembersdev');
 	spip_query("SET NAMES 'utf8'");
@@ -69,13 +80,27 @@ function exec_membre_ecta_edit(){
 			}
 			
 		/* commities */
-		spip_query("delete from ecta_members_commitees where id_member='$sequp'",'ectamembersdev');
-		$val_from=_request('depuis');
-		if (isset($_POST['commitee']))
-			foreach ($_POST['commitee'] as $value) {
-				$from=$val_from[$value];
+		/*spip_query("delete from ecta_members_commitees where id_member='$sequp'",'ectamembersdev');*/
+		$val_start_date=_request('start_date');
+		$val_end_date=_request('end_date');		
+        
+
+			foreach ($val_start_date as $id_commitee =>$start) {
+				$end=$val_end_date[$id_commitee];				
 				//spip_query("insert into ecta_members_commitees(id_member,id_commitee,from) VALUES('$sequp','$value','$from')",'ectamembersdev');
-				sql_insertq('ecta_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$value,'depuis'=>$from));
+               
+				if($start['new'] AND $start['new']>0){
+				    sql_insertq('ecta_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01'));
+				}
+                elseif(!isset($start['new'])){
+                    foreach($start AS $id_membership=>$start_date){
+                        if($start_date>0){
+                            $end_date=$end[$id_membership].'-01-01';
+                            sql_updateq('ecta_members_commitees',array('start_date'=>$start_date.'-01-01','end_date'=>$end_date),'id_membership='.$id_membership);
+                            }
+                        else  sql_deleteq('ecta_members_commitees','id_membership='.$id_membership);
+                        }
+                }
 			}				
 		
 			/* association */
@@ -273,7 +298,21 @@ function exec_membre_ecta_edit(){
 		
 		<link type="text/css" href="<?php echo find_in_path('css/custom-theme/ui.all.css'); ?>" rel="stylesheet" />
 		<script type="text/javascript" src="<?php echo find_in_path('js/jquery-ui-1.6.custom.min.js'); ?>"></script>
-						
+
+		    
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        $('.hidden').hide('fast');
+        $('.switch').click(function(){
+            $('.switch').toggleClass('open');
+             $('.hidden').toggle('fast');       
+            }
+            
+           );
+});   
+</script>
+		    
+		</script>						
 
 <style>
 	#contenu {
@@ -299,6 +338,17 @@ function exec_membre_ecta_edit(){
 		padding:0.5em 0;
 		width:98px;
 	}
+	input.start_date, input.end_date{width:40px;}
+	.formulaire_spip li.membership label{    float: none;
+    margin-left: 0;
+    width: auto;}
+	.formulaire_spip li.membership{padding-left:0;width:350px;
+	}
+	.formulaire_spip span{font-weight:bold;cursor: pointer}
+	.formulaire_spip span .open{color:green}
+	.formulaire_spip span .close{display:none; color:red}
+	.formulaire_spip span.open .open{display:none}	
+	.formulaire_spip span.open .close{display:inline} 
 </style>
 
 <form action="" method="post" name="form1" class="style3" id="form1">
@@ -547,36 +597,68 @@ function exec_membre_ecta_edit(){
 									</option>
 								</select>
 							</li>
-							
 							<?php
 							
 							$q = spip_query("select ecta_commitees.id_commitee, ecta_commitees.title, 0+title AS num_order FROM ecta_commitees order by num_order",'ectamembersdev');
 							
+		
+                            
 							while($commitee = spip_fetch_array($q)) {
-								$commitee['title'] = supprimer_numero($commitee['title']);
+    							$champs='';    
+    							$commitee['title'] = supprimer_numero($commitee['title']);
+    							$start_date=0000;    
+                                $end_date=0000; 
+                                $champ1='<span> <b>From:</b> </span><input class="start_date" name="start_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$start_date.'"/>';
+                                $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/>';  
+													
+								$sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq,'','start_date DESC'); 
 								
-								$q2 = sql_fetsel('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq);
-										
-								if($q2) {
-									$checked="checked";
-									$depuis=$q2['depuis'];
-									}
-								else {
-									$checked = '';
-									$depuis='0000-00-00';
-									}
+								if(sql_count($sql)==0){
+								                          
+                                    $champs.=$champ1.$champ2;							    
+								};
+                                $count=0;
+                                 $end_tag='';
+                                 $limit=3;
+								while($data=sql_fetch($sql)){
+								    $count++;
+                                    $start_date=0000;    
+                                    $end_date=''; 
+                                    $begin_tag='';
+                                    $end_tag='';
+                                    
+ 
+								    if($data['start_date']>0)$start_date=affdate($data['start_date'],'Y');
+								    if($data['end_date']>0){
+								        $end_date=affdate($data['end_date'],'Y');
+                                        if( $count==1){
+                                            if($data['start_date']>0)$champs.=$champ1.$champ2;
+                                             $limit= 2;
+                                        }
+                                    }
+                                    if($count==$limit){
+                                        $begin_tag='<span class="switch">
+                                            <span class="open">+</span>
+                                            <span class="close">-</span>
+                                            </span><div class="hidden">';
+                                        $end_tag='</div>';
+                                    }
+    								$champs.=$begin_tag.'<span> <b>From:</b> </span><input class="start_date"  name="start_date['.$commitee['id_commitee'].']['.$data['id_membership'].']" type="text" value="'.$start_date.'"/>';
+                                    $champs.='<span> <b>To:</b> </span><input class="end_date" name="end_date['.$commitee['id_commitee'].']['.$data['id_membership'].']" type="text" value="'.$end_date.'"/>';						
 
-								$from='<span> <b>From:</b> </span><input name="depuis['.$commitee['id_commitee'].']" type="text" value="'.$depuis.'"/>';								
-								echo "
-										<li>
-											<label>{$commitee['title']}</label> <input name='commitee[{$commitee['id_commitee']}]' type='checkbox' value='{$commitee['id_commitee']}' $checked>
-											$from
-										</li>
-									";
-
-								$l_commitees[$commitee['id_commitee']] = $commitee['title'];
-
-							}
+    
+    								
+                                    }
+                                    $champs.=$end_tag;
+    								echo "
+    										<li class='membership'>
+    											<label>{$commitee['title']}</label> 
+    											<div>$champs</div>
+    											
+    										</li>
+    									";
+                              $l_commitees[$commitee['id_commitee']] = $commitee['title'];
+							     }
 							
 							?>
 							
@@ -711,7 +793,7 @@ function exec_membre_ecta_edit(){
 						<option value="Yes" <?php if ($pastpresident == 'Yes') { echo 'selected'; } ?>>
 							Yes
 						</option>
-						<option value="No" <?php if ($pastpresident == 'No') { echo 'selected'; } ?>>
+						<option value="N                            echo 1;o" <?php if ($pastpresident == 'No') { echo 'selected'; } ?>>
 							No
 						</option>
 					</select>
