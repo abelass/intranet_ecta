@@ -349,6 +349,7 @@ function exec_membre_ecta_edit(){
 	.formulaire_spip span .close{display:none; color:red}
 	.formulaire_spip span.open .open{display:none}	
 	.formulaire_spip span.open .close{display:inline} 
+	.membership small{font-size: 10px;color:#7f7f7f}
 </style>
 
 <form action="" method="post" name="form1" class="style3" id="form1">
@@ -653,6 +654,7 @@ function exec_membre_ecta_edit(){
     								echo "
     										<li class='membership'>
     											<label>{$commitee['title']}</label> 
+    											<small>Please specify a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
     											<div>$champs</div>
     											
     										</li>
