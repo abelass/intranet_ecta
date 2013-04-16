@@ -26,7 +26,6 @@ $commitee_titre= array();
 while($r = spip_fetch_array($q)) {
 	$commitees[] = $r['id_commitee'];
 	$commitee_titre[$r['id_commitee']] = $r['title'];
-
 }
 
 
@@ -110,47 +109,40 @@ while($r = spip_fetch_array($q)) {
 	
 	while($row = spip_fetch_array($reponse)){
 
-	$row['mem_coms']=array();
-		
- 			$com=sql_select('*','ecta_members_commitees','id_member='.$row['seq']);
- 			
- 			while($data=sql_fetch($com)){
- 			    if($data['end_date']>0)$end_date=affdate($data['end_date'],'Y');
-                else $end_date='today';
-				if($data['start_date']>0) $row['mem_coms'][$row['membernumber']][$data['id_commitee']][]=affdate($data['start_date'],'Y').'-'.$end_date ;
-				}
-// echo serialize($row['mem_coms']);
-			$ligne=array();
-			foreach($tablefield as $key)
-			  if (isset($row[$key])){
- 			  foreach($commitees as $id_c) {
- 			     
- 			  	if(is_array($row['mem_coms'][$row['membernumber']])){  			  
- 					if ($row['mem_coms'][$row['membernumber']][$id_c]){
- 					    
- 						$row[$commitee_titre[$id_c]]=implode(', ',$row['mem_coms'][$row['membernumber']][$id_c]);				
- 						}
- 					else   $row[$commitee_titre[$id_c]]="no";
-				}
- 				else  {
- 					$row[$commitee_titre[$id_c]]="no";
- 					}
-
-				}
-			if($key=='country')  {  $ligne[]=$country_full[$row['country']];}
-				elseif($key=='membertype') {$ligne[]=$type_name[$row['membertype']];}
-		
-				else {$ligne[]=$row[$key];}
-
-			}		
-			else{
-				  $ligne[]="";
-				  }
-
-
-
-			$output .= i2_import_csv_ligne($ligne,$delim);
+	$row['mem_coms']=array();		
+	$com=sql_select('*','ecta_members_commitees','id_member='.$row['seq']);
+	
+	while($data=sql_fetch($com)){
+	    if($data['end_date']>0)$end_date=affdate($data['end_date'],'Y');
+        else $end_date='today';
+		if($data['start_date']>0) $row['mem_coms'][$row['membernumber']][$data['id_commitee']][]=affdate($data['start_date'],'Y').'-'.$end_date ;
 		}
+	$ligne=array();
+	foreach($tablefield as $key)
+	  if (isset($row[$key])){
+	  foreach($commitees as $id_c) {
+	     
+	  	if(is_array($row['mem_coms'][$row['membernumber']])){  			  
+			if ($row['mem_coms'][$row['membernumber']][$id_c]){
+				$row[$commitee_titre[$id_c]]=implode(', ',$row['mem_coms'][$row['membernumber']][$id_c]);				
+				}
+			else   $row[$commitee_titre[$id_c]]="no";
+		}
+		else  {
+			$row[$commitee_titre[$id_c]]="no";
+			}
+		}
+	if($key=='country')  {  $ligne[]=$country_full[$row['country']];}
+		elseif($key=='membertype') {$ligne[]=$type_name[$row['membertype']];}
+
+		else {$ligne[]=$row[$key];}
+
+	}		
+	else{
+		  $ligne[]="";
+		  }
+	$output .= i2_import_csv_ligne($ligne,$delim);
+}
 	
 		$charset = 'charset=UTF-16LE';
 	
