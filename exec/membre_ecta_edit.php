@@ -19,7 +19,8 @@ function exec_membre_ecta_edit(){
 	spip_query("SET NAMES 'utf8'",'ectamembersdev');
 	spip_query("SET NAMES 'utf8'");
 	$message_maj = $message_err = '';
-	
+    
+	if(_request('delete'))sql_delete('ecta_members_commitees','id_membership='._request('delete'));
 	if (_request('inlogin'))
 	{
 		$sequp = (int)_request('sequp');
@@ -84,21 +85,18 @@ function exec_membre_ecta_edit(){
 		$val_start_date=_request('start_date');
 		$val_end_date=_request('end_date');		
         
-
 			foreach ($val_start_date as $id_commitee =>$start) {
 				$end=$val_end_date[$id_commitee];				
-				//spip_query("insert into ecta_members_commitees(id_member,id_commitee,from) VALUES('$sequp','$value','$from')",'ectamembersdev');
-               
 				if($start['new'] AND $start['new']>0){
 				    sql_insertq('ecta_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01'));
 				}
-                elseif(!isset($start['new'])){
+                else{
                     foreach($start AS $id_membership=>$start_date){
                         if($start_date>0){
                             $end_date=$end[$id_membership].'-01-01';
                             sql_updateq('ecta_members_commitees',array('start_date'=>$start_date.'-01-01','end_date'=>$end_date),'id_membership='.$id_membership);
                             }
-                        else  sql_deleteq('ecta_members_commitees','id_membership='.$id_membership);
+                        else  sql_delete('ecta_members_commitees','id_membership='.$id_membership);
                         }
                 }
 			}				
@@ -302,6 +300,8 @@ function exec_membre_ecta_edit(){
 		    
 <script type="text/javascript">
     jQuery(document).ready(function(){
+        
+$("a .ajax").unbind('click');
         $('.hidden').hide('fast');
         $('.switch').click(function(){
             $('.switch').toggleClass('open');
@@ -311,9 +311,7 @@ function exec_membre_ecta_edit(){
            );
 });   
 </script>
-		    
-		</script>						
-
+				
 <style>
 	#contenu {
 		font-size:10px;
@@ -342,14 +340,14 @@ function exec_membre_ecta_edit(){
 	.formulaire_spip li.membership label{    float: none;
     margin-left: 0;
     width: auto;}
-	.formulaire_spip li.membership{padding-left:0;width:350px;
+	.formulaire_spip li.membership,.formulaire_spip li.explication {padding-left:0;width:350px;
 	}
 	.formulaire_spip span{font-weight:bold;cursor: pointer}
 	.formulaire_spip span .open{color:green}
 	.formulaire_spip span .close{display:none; color:red}
 	.formulaire_spip span.open .open{display:none}	
 	.formulaire_spip span.open .close{display:inline} 
-	.membership small{font-size: 10px;color:#7f7f7f}
+	small{font-size: 10px;color:#7f7f7f;display:block}
 </style>
 
 <form action="" method="post" name="form1" class="style3" id="form1">
@@ -578,7 +576,7 @@ function exec_membre_ecta_edit(){
 					</select>
 				</li>
 
-				<li>
+				<li class="com">
 					<label>Committee member</label>
 					<fieldset>
 						
@@ -598,6 +596,9 @@ function exec_membre_ecta_edit(){
 									</option>
 								</select>
 							</li>
+                            <li class="explication">
+                                <small>Please specify a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
+                            </li>
 							<?php
 							
 							$q = spip_query("select ecta_commitees.id_commitee, ecta_commitees.title, 0+title AS num_order FROM ecta_commitees order by num_order",'ectamembersdev');
@@ -609,8 +610,8 @@ function exec_membre_ecta_edit(){
     							$commitee['title'] = supprimer_numero($commitee['title']);
     							$start_date=0000;    
                                 $end_date=0000; 
-                                $champ1='<span> <b>From:</b> </span><input class="start_date" name="start_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$start_date.'"/>';
-                                $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/>';  
+                                $champ1='<div><span> <b>From:</b> </span><input class="start_date" name="start_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$start_date.'"/>';
+                                $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/></div>';  
 													
 								$sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq,'','start_date DESC'); 
 								
@@ -644,17 +645,23 @@ function exec_membre_ecta_edit(){
                                             </span><div class="hidden">';
                                         $end_tag='</div>';
                                     }
-    								$champs.=$begin_tag.'<span> <b>From:</b> </span><input class="start_date"  name="start_date['.$commitee['id_commitee'].']['.$data['id_membership'].']" type="text" value="'.$start_date.'"/>';
-                                    $champs.='<span> <b>To:</b> </span><input class="end_date" name="end_date['.$commitee['id_commitee'].']['.$data['id_membership'].']" type="text" value="'.$end_date.'"/>';						
+    								$champs.=recuperer_fond('formulaires/field_period',
+    								    array(
+    								    'begin_tag'=>$begin_tag,
+    								    'end_tag'=>$end_tag, 
+    								    'end_tag'=>$end_tag,
+    								    'id_commitee'=>$commitee['id_commitee'],
+    								    'id_membership'=>$data['id_membership'], 
+    								    'start_date'=>$start_date,
+    								    'end_date'=>$end_date,  								    
+                                        ),array('ajax'=>'oui'))
+;
 
-    
-    								
                                     }
                                     $champs.=$end_tag;
     								echo "
     										<li class='membership'>
     											<label>{$commitee['title']}</label> 
-    											<small>Please specify a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
     											<div>$champs</div>
     											
     										</li>
@@ -1111,7 +1118,18 @@ function exec_membre_ecta_edit(){
 		?>
 		
 <script type="text/javascript">
-   $("#tabs").tabs()
+
+   $("#tabs").tabs({
+    load: function(event, ui) {
+        $(ui.panel).delegate('a', 'click', function(event) {
+            $(ui.panel).load(this.href);
+           event.preventDefault();
+        });
+  
+    },
+   cache: false 
+});
+
 </script>
 
 <?php
