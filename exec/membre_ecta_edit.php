@@ -619,64 +619,74 @@ $("a .ajax").unbind('click');
                                 <small>Please specify a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
                             </li>
 							<?php
+							$r=sql_select('*','ecta_commitee_role');
+							$roles=array();
+							while($rs=sql_fetch($r)){
+							  $roles[$rs['id_commitee_role']]=$rs['title'];  
+							}
+
 							
-							$q = spip_query("select ecta_commitees.id_commitee, ecta_commitees.title, 0+title AS num_order FROM ecta_commitees order by num_order",'ectamembersdev');
-							
-		
-                            
-							while($commitee = spip_fetch_array($q)) {
-    							$champs='';    
+							$q = spip_query("select ecta_commitees.id_commitee, ecta_commitees.title, 0+title AS num_order FROM ecta_commitees order by num_order");
+							while($commitee = spip_fetch_array($q)){
+							    $champs='';    
     							$commitee['title'] = supprimer_numero($commitee['title']);
     							$start_date=0000;    
-                                $end_date=0000; 
+                                $end_date=0000;
+                                $select.='<select name="id_commitee_role['.$commitee['id_commitee'].'][new]">';	
                                 $champ1='<div><span> <b>From:</b> </span><input class="start_date" name="start_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$start_date.'"/>';
-                                $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/></div>';  
-													
-								$sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq,'','start_date DESC'); 
-								
-								if(sql_count($sql)==0){
-								                          
-                                    $champs.=$champ1.$champ2;							    
-								};
-                                $count=0;
-                                 $end_tag='';
-                                 $limit=3;
-								while($data=sql_fetch($sql)){
-								    $count++;
-                                    $start_date=0000;    
-                                    $end_date=''; 
-                                    $begin_tag='';
-                                    $end_tag='';
+                                $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/></div>';                                				
+                                foreach($roles as $id=>$title){
+                                    if($id==0)$selected='selected="selected"';		    
+                                    $select.='<option value="'.$id.'" ' .selected.'>'.$title.'</option>';                          
+                                    $champ0='<div><span> <b>Role:</b> </span>'.$select;  
+                                    $sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','start_date DESC'); 
                                     
- 
-								    if($data['start_date']>0)$start_date=affdate($data['start_date'],'Y');
-								    if($data['end_date']>0){
-								        $end_date=affdate($data['end_date'],'Y');
-                                        if( $count==1){
-                                            if($data['start_date']>0)$champs.=$champ1.$champ2;
-                                             $limit= 2;
+                                    if(sql_count($sql)==0){
+                                        $champs.=$champ0.$champ1.champ2;                   
+                                    };
+                                    $count=0;
+                                     $end_tag='';
+                                     $limit=3;
+                                    while($data=sql_fetch($sql)){
+                                        $count++;
+                                        $start_date=0000;    
+                                        $end_date=''; 
+                                        $begin_tag='';
+                                        $end_tag='';
+                                        
+     
+                                        if($data['start_date']>0)$start_date=affdate($data['start_date'],'Y');
+                                        if($data['end_date']>0){
+                                            $end_date=affdate($data['end_date'],'Y');
+                                            if( $count==1){
+                                                if($data['start_date']>0)$champs.=$champ1.$champ2;
+                                                 $limit= 2;
+                                            }
                                         }
-                                    }
-                                    if($count==$limit){
-                                        $begin_tag='<span class="switch">
-                                            <span class="open">+</span>
-                                            <span class="close">-</span>
-                                            </span><div class="hidden">';
-                                        $end_tag='</div>';
-                                    }
-    								$champs.=recuperer_fond('formulaires/field_period',
-    								    array(
-    								    'begin_tag'=>$begin_tag,
-    								    'end_tag'=>$end_tag, 
-    								    'end_tag'=>$end_tag,
-    								    'id_commitee'=>$commitee['id_commitee'],
-    								    'id_membership'=>$data['id_membership'], 
-    								    'start_date'=>$start_date,
-    								    'end_date'=>$end_date,  								    
-                                        ),array('ajax'=>'oui'))
-;
+                                        if($count==$limit){
+                                            $begin_tag='<span class="switch">
+                                                <span class="open">+</span>
+                                                <span class="close">-</span>
+                                                </span><div class="hidden">';
+                                            $end_tag='</div>';
+                                        }
+                                        $champs.=recuperer_fond('formulaires/field_period',
+                                            array(
+                                            'begin_tag'=>$begin_tag,
+                                            'end_tag'=>$end_tag, 
+                                            'end_tag'=>$end_tag,
+                                            'id_commitee'=>$commitee['id_commitee'],
+                                            'id_membership'=>$data['id_membership'], 
+                                            'start_date'=>$start_date,
+                                            'end_date'=>$end_date,                                      
+                                            ),array('ajax'=>'oui'));
+    
+                                        }                                  
+                                    }                               
+ 
 
-                                    }
+                                        
+                                    
                                     $champs.=$end_tag;
     								echo "
     										<li class='membership'>
