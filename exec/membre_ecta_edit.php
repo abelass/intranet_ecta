@@ -7,14 +7,13 @@ function exec_membre_ecta_edit(){
     
 
     
-    /*
+    /*Scripts de migration à priorio plus utile
          $sql=sql_select('id_member,id_commitee','ecta_members_commitees');
       $count=0;
     while($data=sql_fetch($sql)){
         $count++;
         sql_update('ecta_members_commitees',array('id_membership'=>$count),'id_member='.$data['id_member'].' AND id_commitee='.$data['id_commitee']);
-    }*/
-    
+    }
     $sql=sql_select('*','ecta_members');
       $count=0;
       $champs_coms=array(1=>'chaircommitee',2=>'vicechaircommitee',3=>'secretarycommitee');
@@ -32,9 +31,8 @@ function exec_membre_ecta_edit(){
            
        }
         }  
-        
-        sql_update('ecta_members_commitees',array('id_membership'=>$count),'id_member='.$data['id_member'].' AND id_commitee='.$data['id_commitee']);
-    }
+    }*/
+    
     
 	global $connect_statut, $connect_id_auteur;
 	spip_query("SET NAMES 'utf8'",'ectamembersdev');
