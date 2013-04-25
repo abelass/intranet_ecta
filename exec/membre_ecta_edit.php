@@ -9,11 +9,32 @@ function exec_membre_ecta_edit(){
     
     /*
          $sql=sql_select('id_member,id_commitee','ecta_members_commitees');
-     * $count=0;
+      $count=0;
     while($data=sql_fetch($sql)){
         $count++;
         sql_update('ecta_members_commitees',array('id_membership'=>$count),'id_member='.$data['id_member'].' AND id_commitee='.$data['id_commitee']);
     }*/
+    
+    $sql=sql_select('*','ecta_members');
+      $count=0;
+      $champs_coms=array(1=>'chaircommitee',2=>'vicechaircommitee',3=>'secretarycommitee');
+    while($data=sql_fetch($sql)){
+        foreach($champs_coms as $id_com_mem => $com) {
+             if($id=$data['id_'.$com]>0){
+                 $valeurs=array(
+                 'id_commitee_role'=>$id_com_mem,
+                 'id_commitee'=>$id, 
+                 'id_member'=>$data['seq'], 
+                 'start_date'=>$data['from_'.$com],                                 
+                 );
+                 echo serialize($valeurs);
+                 sql_insertq('ecta_members_commitees',$valeurs);
+           
+       }
+        }  
+        
+        sql_update('ecta_members_commitees',array('id_membership'=>$count),'id_member='.$data['id_member'].' AND id_commitee='.$data['id_commitee']);
+    }
     
 	global $connect_statut, $connect_id_auteur;
 	spip_query("SET NAMES 'utf8'",'ectamembersdev');
