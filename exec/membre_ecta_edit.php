@@ -628,21 +628,27 @@ $("a .ajax").unbind('click');
 							
 							$q = spip_query("select ecta_commitees.id_commitee, ecta_commitees.title, 0+title AS num_order FROM ecta_commitees order by num_order");
 							while($commitee = spip_fetch_array($q)){
-							    $champs='';    
+							      
     							$commitee['title'] = supprimer_numero($commitee['title']);
     							$start_date=0000;    
                                 $end_date=0000;
-                                $select.='<select name="id_commitee_role['.$commitee['id_commitee'].'][new]">';	
+                                $select.='';	
                                 $champ1='<div><span> <b>From:</b> </span><input class="start_date" name="start_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$start_date.'"/>';
                                 $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/></div>';                                				
                                 foreach($roles as $id=>$title){
+                                    $selected='';
                                     if($id==0)$selected='selected="selected"';		    
-                                    $select.='<option value="'.$id.'" ' .selected.'>'.$title.'</option>';                          
-                                    $champ0='<div><span> <b>Role:</b> </span>'.$select;  
+                                    $select.='<option value="'.$id.'" ' .$selected.'>'.$title.'</option>';                          
+                                                                   
+                                    }                               
+                                $champ0='<span> <b>Role:</b> </span><select name="id_commitee_role['.$commitee['id_commitee'].'][new]">'.$select.'</select>';  
+                                foreach($roles as $id=>$title){
+                                    $champs='';  
+                                    echo $id;
                                     $sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','start_date DESC'); 
                                     
                                     if(sql_count($sql)==0){
-                                        $champs.=$champ0.$champ1.champ2;                   
+                                        $champs.=$champ0.$champ1.$champ2;                   
                                     };
                                     $count=0;
                                      $end_tag='';
@@ -681,11 +687,9 @@ $("a .ajax").unbind('click');
                                             'end_date'=>$end_date,                                      
                                             ),array('ajax'=>'oui'));
     
-                                        }                                  
-                                    }                               
- 
+                                        }  
 
-                                        
+                                        }
                                     
                                     $champs.=$end_tag;
     								echo "
