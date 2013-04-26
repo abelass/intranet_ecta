@@ -31,8 +31,27 @@ function exec_membre_ecta_edit(){
            
        }
         }  
-    }*/
+    }
     
+    $sql=sql_select('*','ecta_members');
+      $count=0;
+      $champs_coms=array(1=>'chaircommitee',2=>'vicechaircommitee',3=>'secretarycommitee');
+    while($data=sql_fetch($sql)){
+        foreach($champs_coms as $id_com_mem => $com) {
+             if($data['id_'.$com]>0){
+                 $valeurs=array(
+                 'id_commitee_role'=>$id_com_mem,
+                 'id_commitee'=>$data['id_'.$com], 
+                 'id_member'=>$data['seq'], 
+                 'start_date'=>$data['from_'.$com],                                 
+                 );
+                 echo serialize($valeurs);
+                 sql_insertq('ecta_members_commitees',$valeurs);
+           
+       }
+        }  
+    }*/
+
     
 	global $connect_statut, $connect_id_auteur;
 	spip_query("SET NAMES 'utf8'",'ectamembersdev');
@@ -367,6 +386,7 @@ $("a .ajax").unbind('click');
 	.formulaire_spip span.open .open{display:none}	
 	.formulaire_spip span.open .close{display:inline} 
 	small{font-size: 10px;color:#7f7f7f;display:block}
+	.formulaire_spip ul ul .member_role{width:auto !important}
 </style>
 
 <form action="" method="post" name="form1" class="style3" id="form1">
@@ -633,23 +653,24 @@ $("a .ajax").unbind('click');
     							$start_date=0000;    
                                 $end_date=0000;
                                 $select.='';	
-                                $champ1='<div><span> <b>From:</b> </span><input class="start_date" name="start_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$start_date.'"/>';
-                                $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/></div>';                                				
+                                $champ1='<span> <b>From:</b> </span><input class="start_date" name="start_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$start_date.'"/>';
+                                $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/></div>';
+                                 $select='';                                				
                                 foreach($roles as $id=>$title){
                                     $selected='';
                                     if($id==0)$selected='selected="selected"';		    
                                     $select.='<option value="'.$id.'" ' .$selected.'>'.$title.'</option>';                          
                                                                    
                                     }                               
-                                $champ0='<span> <b>Role:</b> </span><select name="id_commitee_role['.$commitee['id_commitee'].'][new]">'.$select.'</select>';  
+                                $champ0='<div><span> <b>Role:</b> </span><select class="member_role" name="id_commitee_role['.$commitee['id_commitee'].'][new]">'.$select.'</select>';  
+
+                                $champs='';
+                                $champs.=$champ0.$champ1.$champ2;                   
+
                                 foreach($roles as $id=>$title){
-                                    $champs='';  
-                                    echo $id;
                                     $sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','start_date DESC'); 
                                     
-                                    if(sql_count($sql)==0){
-                                        $champs.=$champ0.$champ1.$champ2;                   
-                                    };
+
                                     $count=0;
                                      $end_tag='';
                                      $limit=3;
@@ -683,8 +704,10 @@ $("a .ajax").unbind('click');
                                             'end_tag'=>$end_tag,
                                             'id_commitee'=>$commitee['id_commitee'],
                                             'id_membership'=>$data['id_membership'], 
+                                            'id_commitee_role'=>$data['id_commitee_role'],
                                             'start_date'=>$start_date,
-                                            'end_date'=>$end_date,                                      
+                                            'end_date'=>$end_date,
+                                            'roles'=>$roles, 
                                             ),array('ajax'=>'oui'));
     
                                         }  
