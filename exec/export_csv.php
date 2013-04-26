@@ -107,6 +107,13 @@ while($r = spip_fetch_array($q)) {
 	$reponse = spip_query($sql,'ectamembersdev');
 	spip_log($sql);
 	
+	//member role types
+	$r=sql_select('*','ecta_commitee_role');
+    $roles=array();
+        while($rs=sql_fetch($r)){
+            $roles[$rs['id_commitee_role']]=$rs['title'];  
+          }
+	
 	while($row = spip_fetch_array($reponse)){
 
 	$row['mem_coms']=array();		
@@ -115,7 +122,7 @@ while($r = spip_fetch_array($q)) {
 	while($data=sql_fetch($com)){
 	    if($data['end_date']>0)$end_date=affdate($data['end_date'],'Y');
         else $end_date='today';
-		if($data['start_date']>0) $row['mem_coms'][$row['membernumber']][$data['id_commitee']][]=affdate($data['start_date'],'Y').'-'.$end_date ;
+		if($data['start_date']>0 or $data['id_commitee_role']!=0) $row['mem_coms'][$row['membernumber']][$data['id_commitee']][]=$roles[$data['id_commitee_role']].': '.affdate($data['start_date'],'Y').'-'.$end_date ;
 		}
 	$ligne=array();
 	foreach($tablefield as $key)
