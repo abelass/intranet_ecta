@@ -32,8 +32,7 @@ function exec_membre_ecta_edit(){
        }
         }  
     }
-    
-    $sql=sql_select('*','ecta_members');
+        $sql=sql_select('*','ecta_members');
       $count=0;
       $champs_coms=array(1=>'chaircommitee',2=>'vicechaircommitee',3=>'secretarycommitee');
     while($data=sql_fetch($sql)){
@@ -50,7 +49,8 @@ function exec_membre_ecta_edit(){
            
        }
         }  
-    }*/
+    }
+*/
 
     
 	global $connect_statut, $connect_id_auteur;
@@ -122,19 +122,18 @@ function exec_membre_ecta_edit(){
 		/*spip_query("delete from ecta_members_commitees where id_member='$sequp'",'ectamembersdev');*/
 		$val_start_date=_request('start_date');
 		$val_end_date=_request('end_date');		
-        
+        $id_commitee_role=_request('id_commitee_role');
 			foreach ($val_start_date as $id_commitee =>$start) {
 				$end=$val_end_date[$id_commitee];				
-				if($start['new'] AND $start['new']>0){
-				    sql_insertq('ecta_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01'));
+				if(isset($start['new']) AND $start['new']>0){
+				    sql_insertq('ecta_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01','id_commitee_role'=>$id_commitee_role[$id_commitee]['new']));
 				}
                 else{
                     foreach($start AS $id_membership=>$start_date){
                         if($start_date>0){
                             $end_date=$end[$id_membership].'-01-01';
-                            sql_updateq('ecta_members_commitees',array('start_date'=>$start_date.'-01-01','end_date'=>$end_date),'id_membership='.$id_membership);
+                            sql_updateq('ecta_members_commitees',array('start_date'=>$start_date.'-01-01','end_date'=>$end_date,'id_commitee_role'=>$id_commitee_role[$id_commitee][$id_membership]),'id_membership='.$id_membership);
                             }
-                        else  sql_delete('ecta_members_commitees','id_membership='.$id_membership);
                         }
                 }
 			}				
@@ -665,29 +664,35 @@ $("a .ajax").unbind('click');
                                 $champ0='<div><span> <b>Role:</b> </span><select class="member_role" name="id_commitee_role['.$commitee['id_commitee'].'][new]">'.$select.'</select>';  
 
                                 $champs='';
-                                $champs.=$champ0.$champ1.$champ2;                   
+                                $champs.=$champ0.$champ1.$champ2;
+                                echo "
+                                            <li class='membership'>
+                                                <label>{$commitee['title']}</label> ";                   
 
                                 foreach($roles as $id=>$title){
-                                    $sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','start_date DESC'); 
+                                    $sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','id_commitee_role,start_date DESC'); 
                                     
 
-                                    $count=0;
+                                   
                                      $end_tag='';
-                                     $limit=3;
+                                      $count=0;
+     
                                     while($data=sql_fetch($sql)){
-                                        $count++;
-                                        $start_date=0000;    
+                              $start_date=0000;    
                                         $end_date=''; 
                                         $begin_tag='';
                                         $end_tag='';
+                                        $limit=3;
+                                        $count++;
+     
                                         
      
                                         if($data['start_date']>0)$start_date=affdate($data['start_date'],'Y');
                                         if($data['end_date']>0){
                                             $end_date=affdate($data['end_date'],'Y');
                                             if( $count==1){
-                                                if($data['start_date']>0)$champs.=$champ1.$champ2;
-                                                 $limit= 2;
+                                               // if($data['start_date']>0)$champs.=$champ0.$champ1.$champ2;
+                                                 //$limit= 2;
                                             }
                                         }
                                         if($count==$limit){
@@ -697,6 +702,7 @@ $("a .ajax").unbind('click');
                                                 </span><div class="hidden">';
                                             $end_tag='</div>';
                                         }
+                                        
                                         $champs.=recuperer_fond('formulaires/field_period',
                                             array(
                                             'begin_tag'=>$begin_tag,
@@ -708,20 +714,16 @@ $("a .ajax").unbind('click');
                                             'start_date'=>$start_date,
                                             'end_date'=>$end_date,
                                             'roles'=>$roles, 
-                                            ),array('ajax'=>'oui'));
+                                            ));
     
                                         }  
-
-                                        }
-                                    
-                                    $champs.=$end_tag;
-    								echo "
-    										<li class='membership'>
-    											<label>{$commitee['title']}</label> 
-    											<div>$champs</div>
-    											
-    										</li>
-    									";
+                              $champs.=$end_tag;
+                                        
+                           echo "<div>$champs</div>";
+                           $champs='';
+                                     }
+                           echo"</li>";
+    									  
                               $l_commitees[$commitee['id_commitee']] = $commitee['title'];
 							     }
 							
@@ -732,74 +734,7 @@ $("a .ajax").unbind('click');
 					</fieldset>
 				</li>	
 				
-				<li>
-					<label>Chair of commitee
-					</label>
-					<select name="id_chaircommitee" id="id_chaircommitee">
-						<option value=''>No</option>
-
-						<?php
-						
-						foreach($l_commitees as $id => $commitee) {
-
-							echo "<option value='{$id}' ";
-							if ($id_chaircommitee == $id)  echo ' selected ';
-							echo ">{$commitee}</option>";
-
-						}
-						
-						?>
-						
-					</select>
-					<div><b>From: </b></div>
-					<input type="text" name="from_chaircommitee" value="<?php echo $from_chaircommitee;?>"/>
-				</li>
 				
-				<li>
-					<label>Vice-Chair of commitee
-					</label>
-					<select name="id_vicechaircommitee" id="id_vicechaircommitee">
-						<option value=''>No</option>
-
-						<?php
-						
-						foreach($l_commitees as $id => $commitee) {
-
-							echo "<option value='{$id}' ";
-							if ($id_vicechaircommitee == $id)  echo ' selected ';
-							echo ">{$commitee}</option>";
-
-						}
-						
-						?>
-						
-					</select>
-					<div><b>From: </b></div>
-					<input type="text" name="from_vicechaircommitee" value="<?php echo $from_vicechaircommitee;?>"/>	
-				</li>
-				
-				<li>
-					<label>Secretary of commitee
-					</label>
-					<select name="id_secretarycommitee" id="id_secretarycommitee">
-						<option value=''>No</option>
-
-						<?php
-						
-						foreach($l_commitees as $id => $commitee) {
-
-							echo "<option value='{$id}' ";
-							if ($id_secretarycommitee == $id)  echo ' selected ';
-							echo ">{$commitee}</option>";
-
-						}
-						
-						?>
-						
-					</select>
-					<div><b>From: </b></div>
-					<input type="text" name="from_secretarycommitee" value="<?php echo $from_secretarycommitee;?>"/>
-				</li>
 				
 				<li>
 					<label>Executive Bodies
