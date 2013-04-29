@@ -635,7 +635,7 @@ $("a .ajax").unbind('click');
 								</select>
 							</li>
                             <li class="explication">
-                                <small>Please specify a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
+                                <small>Please specify a role and a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
                             </li>
 							<?php
 							$r=sql_select('*','ecta_commitee_role');
