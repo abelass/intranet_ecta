@@ -86,7 +86,7 @@ while($r = spip_fetch_array($q)) {
 		 */
 		$tables = array('ecta_members');
 
-		$tablefield=array('seq','id_auteur','membernumber','gender','title','name','surname','birthdate','email','login','password','addr1','addr2','addr3','addr4','addr5','country','nationality','fax1_pn','fax1_pl','fax1','fax2_pn','fax2_pl','fax2','tel1_pn','tel1_pl','tel1','tel2_pn','tel2_pl','tel2','tel3_pn','tel3_pl','tel3','listed_in_dir','OHIM','membertype','incommitee','commem','executivebodies','memberofhonour','sponsoredby1','sponsoredby2','datemembership','pastcouncil','company','practicein','inactivitysince','categoriesofprofessional','membership_fee','membership_year','payment_error','method_of_payment','date_of_payment','reference','councilmem','pastpresident','active','vat_number','Country Type','Council Member','Conferences');
+		$tablefield=array('seq','id_auteur','membernumber','gender','title','name','surname','birthdate','email','login','password','addr1','addr2','addr3','addr4','addr5','country','nationality','fax1_pn','fax1_pl','fax1','fax2_pn','fax2_pl','fax2','tel1_pn','tel1_pl','tel1','tel2_pn','tel2_pl','tel2','tel3_pn','tel3_pl','tel3','listed_in_dir','OHIM','membertype','incommitee','commem','executivebodies','memberofhonour','sponsoredby1','sponsoredby2','datemembership','pastcouncil','company','practicein','inactivitysince','categoriesofprofessional','membership_fee','membership_year','payment_error','method_of_payment','date_of_payment','reference','pastpresident','active','vat_number','Country Type','Council Member','Conferences');
 		
 		$coms= array();
 		$sqlcoms = "select * from ecta_commitees";
@@ -102,9 +102,9 @@ while($r = spip_fetch_array($q)) {
 		$output = i2_import_csv_ligne($tablefield,$delim);	
 		
 			
-	$sql=translitteration("SELECT seq, ecta_members.id_auteur, ecta_members.membernumber, ecta_members.gender, ecta_members.title, ecta_members.name, ecta_members.surname, ecta_members.birthdate, ecta_members.email, ecta_members.password, ecta_members.addr1, ecta_members.addr2, ecta_members.addr3, ecta_members.addr4, ecta_members.addr5, ecta_members.country, ecta_members.nationality, ecta_members.fax1_pn,ecta_members.fax1_pl,ecta_members.fax1,ecta_members.fax2_pn,ecta_members.fax2_pl,ecta_members.fax1,ecta_members.tel1_pn, ecta_members.tel1_pl, ecta_members.tel1,ecta_members.tel2_pn, ecta_members.tel2_pl, ecta_members.tel2,ecta_members.tel3_pn, ecta_members.tel3_pl,ecta_members.tel3,ecta_members.listed_in_dir,ecta_members.OHIM,ecta_members.membertype, ecta_members.incommitee, ecta_members.commem, ecta_members.executivebodies, ecta_members.memberofhonour, ecta_members.sponsoredby1, ecta_members.sponsoredby2, ecta_members.datemembership, ecta_members.pastcouncil, ecta_members.company, ecta_members.practicein, ecta_members.inactivitysince, ecta_members.categoriesofprofessional, ecta_members.membership_fee,  ecta_members.membership_year, ecta_members.payment_error, ecta_members.method_of_payment, ecta_members.date_of_payment, ecta_members.reference, ecta_members.councilmem, 
-	ecta_members.pastpresident, ecta_members.active, ecta_members.vat_number, ecta_members.countrytype, ecta_members.councilmem, mem_coms  FROM ecta_members $where");
-	$reponse = spip_query($sql,'ectamembersdev');
+	$sql=translitteration("SELECT seq, ecta_members.id_auteur, ecta_members.membernumber, ecta_members.gender, ecta_members.title, ecta_members.name, ecta_members.surname, ecta_members.birthdate, ecta_members.email, ecta_members.password, ecta_members.addr1, ecta_members.addr2, ecta_members.addr3, ecta_members.addr4, ecta_members.addr5, ecta_members.country, ecta_members.nationality, ecta_members.fax1_pn,ecta_members.fax1_pl,ecta_members.fax1,ecta_members.fax2_pn,ecta_members.fax2_pl,ecta_members.fax1,ecta_members.tel1_pn, ecta_members.tel1_pl, ecta_members.tel1,ecta_members.tel2_pn, ecta_members.tel2_pl, ecta_members.tel2,ecta_members.tel3_pn, ecta_members.tel3_pl,ecta_members.tel3,ecta_members.listed_in_dir,ecta_members.OHIM,ecta_members.membertype, ecta_members.incommitee, ecta_members.commem, ecta_members.executivebodies, ecta_members.memberofhonour, ecta_members.sponsoredby1, ecta_members.sponsoredby2, ecta_members.datemembership, ecta_members.pastcouncil, ecta_members.company, ecta_members.practicein, ecta_members.inactivitysince, ecta_members.categoriesofprofessional, ecta_members.membership_fee,  ecta_members.membership_year, ecta_members.payment_error, ecta_members.method_of_payment, ecta_members.date_of_payment, ecta_members.reference,
+	ecta_members.pastpresident, ecta_members.active, ecta_members.vat_number, ecta_members.countrytype  FROM ecta_members $where");
+	$reponse = spip_query($sql);
 	spip_log($sql);
 	
 	//member role types
@@ -124,6 +124,15 @@ while($r = spip_fetch_array($q)) {
         else $end_date='today';
 		if($data['start_date']>0 or $data['id_commitee_role']!=0) $row['mem_coms'][$row['membernumber']][$data['id_commitee']][]=$roles[$data['id_commitee_role']].': '.affdate($data['start_date'],'Y').'-'.$end_date ;
 		}
+		
+    $row['Council Member']=array();     
+    $counc=sql_select('*','ecta_members_council','seq='.$row['seq']);   
+    
+    while($data=sql_fetch($counc)){
+        if($data['end_date']>0)$end_date=affdate($data['end_date'],'Y');
+        else $end_date='today';
+        if($data['start_date']>0) $row['Council Member'][]=$data['statut'].': '.affdate($data['start_date'],'Y').'-'.$end_date ;
+        }
 	$ligne=array();
 	foreach($tablefield as $key)
 	  if (isset($row[$key])){
@@ -139,9 +148,9 @@ while($r = spip_fetch_array($q)) {
 			$row[$commitee_titre[$id_c]]="no";
 			}
 		}
-	if($key=='country')  {  $ligne[]=$country_full[$row['country']];}
+	   if($key=='country')  {  $ligne[]=$country_full[$row['country']];}
 		elseif($key=='membertype') {$ligne[]=$type_name[$row['membertype']];}
-
+        elseif($key=='Council Member')  $ligne[]=implode(', ',$row['Council Member']);
 		else {$ligne[]=$row[$key];}
 
 	}		
