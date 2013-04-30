@@ -791,6 +791,9 @@ $("a .ajax >.hidden").unbind('click');
 					</select>
 				</li>
 				<li><label>Council Member</label>
+				    <div class="explication">
+				        <small>Please specify a type and a year in the fields below. Once you have saved you will be able to add a new period.</small>
+				    </div>
 				<?php
                     $start_date=0000;    
                     $end_date=0000;  
