@@ -22,5 +22,12 @@ function ecta_post_typo($texte) {
     return $texte;
 }
 
+function ecta_formulaire_traiter($flux){
+    //actualiser le email dans ecta members si changé via le formulaire editer_auteur
+    if ($flux['args']['form'] == 'editer_auteur') {
+        sql_updateq('ecta_members',array('email'=>_request('email')),'id_auteur='._request('id_auteur'));
+    }
+    return $flux;
+}
 ?>
 

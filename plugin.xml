@@ -6,7 +6,7 @@
 	Gilles VINCENT et Rainer Müller
 	</auteur>
 	<version> <!-- Version du plugin -->
-	0.3.0
+	0.3.1
 	</version>
 	<etat> 
 	stable
@@ -27,5 +27,9 @@
 		<action>post_typo</action>
 		<inclure>ecta_pipelines_admin.php</inclure>
 	</pipeline>	
+	<pipeline>
+		<nom>formulaire_traiter</nom> 
+		<inclure>ecta_pipelines_admin.php</inclure>
+	</pipeline>		
 
 </plugin>
