@@ -44,13 +44,26 @@ function exec_membre_ecta_edit(){
                  'id_member'=>$data['seq'], 
                  'start_date'=>$data['from_'.$com],                                 
                  );
-                 echo serialize($valeurs);
                  sql_insertq('ecta_members_commitees',$valeurs);
            
        }
         }  
     }
+    $sql=sql_select('*','ecta_members');
+
+    while($data=sql_fetch($sql)){
+        if($data['councilmem']=='Yes' OR $data['councilmem']=='Com'){
+                 $valeurs=array(
+                 'seq'=>$data['seq'], 
+                 'statut'=>$data['councilmem'],                                 
+                 );
+                 echo serialize($valeurs);
+                 sql_insertq('ecta_members_council',$valeurs);
+             }
+           }
 */
+
+
 
     
 	global $connect_statut, $connect_id_auteur;
@@ -59,13 +72,14 @@ function exec_membre_ecta_edit(){
 	$message_maj = $message_err = '';
     
 	if(_request('delete'))sql_delete('ecta_members_commitees','id_membership='._request('delete'));
+	if(_request('delete_council'))sql_delete('ecta_members_council','  id_membership_council='._request('delete_council'));    
 	if (_request('inlogin'))
 	{
 		$sequp = (int)_request('sequp');
 		
 		/* SPIP */
 		$sql="SELECT * FROM ecta_members where seq='$sequp' ";
-		$reponse = spip_query($sql,'ectamembersdev');
+		$reponse = spip_query($sql);
 		$aut = spip_fetch_array($reponse);		
 		
 		$row['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
@@ -90,7 +104,7 @@ function exec_membre_ecta_edit(){
 		sql_updateq('spip_auteurs',$row,'id_auteur = '.$aut['id_auteur']);
 					
 		/* ECTA_members */
-		$reponse = spip_query('desc ecta_members','ectamembersdev');
+		$reponse = spip_query('desc ecta_members');
 		while($result = spip_fetch_array($reponse))
 			$r[] = $result['Field'];
 
@@ -118,7 +132,7 @@ function exec_membre_ecta_edit(){
 				spip_query("insert into ecta_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')",'ectamembersdev');
 			}
 			
-		/* commities */
+		/* committees */
 		/*spip_query("delete from ecta_members_commitees where id_member='$sequp'",'ectamembersdev');*/
 		$val_start_date=_request('start_date');
 		$val_end_date=_request('end_date');		
@@ -138,6 +152,33 @@ function exec_membre_ecta_edit(){
                 }
 			}				
 		
+        /*Councils*/
+        $council_statut=_request('council_statut');
+        $council_start_date=_request('council_start_date');        
+        $council_end_date=_request('council_end_date'); 
+      
+        foreach ($council_start_date AS $id_membership_council=>$start_date){
+            if( $id_membership_council =='new' AND $start_date>0){
+                $valeurs=array(
+                'seq'=>$sequp,
+                'end_date'=>$council_end_date['new'].'-01-01',
+                'start_date'=>$start_date.'-01-01',
+                'statut'=>$council_statut['new']?$council_statut['new']:'Yes');
+                sql_insertq('ecta_members_council',$valeurs);
+                }
+            elseif($start_date>0){
+                $valeurs=array(
+                    'seq'=>$sequp,
+                    'statut'=>$council_statut[$id_membership_council],
+                    'end_date'=>$council_end_date[$id_membership_council].'-01-01',
+                    'start_date'=>$start_date.'-01-01',
+                     'statut'=>$council_statut[$id_membership_council]?$council_statut[$id_membership_council]:'Yes'
+                    );
+                sql_updateq('ecta_members_council',$valeurs,'id_membership_council='.$id_membership_council);
+            }
+        }
+        
+              
 			/* association */
 			spip_query("delete from ecta_members_associations where id_member='$sequp'",'ectamembersdev');
 			if (isset($_POST['associations']))
@@ -337,12 +378,11 @@ function exec_membre_ecta_edit(){
 		    
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        
-$("a .ajax").unbind('click');
+      
+$("a .ajax >.hidden").unbind('click');
         $('.hidden').hide('fast');
         $('.switch').click(function(){
-            $('.switch').toggleClass('open');
-             $('.hidden').toggle('fast');       
+            $(this).toggleClass('open').next().toggle('fast');       
             }
             
            );
@@ -373,7 +413,7 @@ $("a .ajax").unbind('click');
 		padding:0.5em 0;
 		width:98px;
 	}
-	input.start_date, input.end_date{width:40px;}
+	input.start_date, input.end_date, input{width:40px;}
 	.formulaire_spip li.membership label{    float: none;
     margin-left: 0;
     width: auto;}
@@ -385,7 +425,7 @@ $("a .ajax").unbind('click');
 	.formulaire_spip span.open .open{display:none}	
 	.formulaire_spip span.open .close{display:inline} 
 	small{font-size: 10px;color:#7f7f7f;display:block}
-	.formulaire_spip ul ul .member_role{width:auto !important}
+	.formulaire_spip ul ul .member_role, select.statut{width:auto !important}
 </style>
 
 <form action="" method="post" name="form1" class="style3" id="form1">
@@ -673,7 +713,6 @@ $("a .ajax").unbind('click');
                                     $sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','id_commitee_role,start_date DESC'); 
                                     
 
-                                   
                                      $end_tag='';
                                       $count=0;
      
@@ -684,8 +723,6 @@ $("a .ajax").unbind('click');
                                         $end_tag='';
                                         $limit=3;
                                         $count++;
-     
-                                        
      
                                         if($data['start_date']>0)$start_date=affdate($data['start_date'],'Y');
                                         if($data['end_date']>0){
@@ -707,15 +744,14 @@ $("a .ajax").unbind('click');
                                             array(
                                             'begin_tag'=>$begin_tag,
                                             'end_tag'=>$end_tag, 
-                                            'end_tag'=>$end_tag,
                                             'id_commitee'=>$commitee['id_commitee'],
                                             'id_membership'=>$data['id_membership'], 
                                             'id_commitee_role'=>$data['id_commitee_role'],
                                             'start_date'=>$start_date,
                                             'end_date'=>$end_date,
                                             'roles'=>$roles, 
+                                            'seq'=>$seq,                                             
                                             ));
-    
                                         }  
                               $champs.=$end_tag;
                                         
@@ -726,16 +762,11 @@ $("a .ajax").unbind('click');
     									  
                               $l_commitees[$commitee['id_commitee']] = $commitee['title'];
 							     }
-							
 							?>
 							
-
 						</ul>
 					</fieldset>
 				</li>	
-				
-				
-				
 				<li>
 					<label>Executive Bodies
 					</label>
@@ -744,7 +775,7 @@ $("a .ajax").unbind('click');
 
 						<?php
 						
-						$q = spip_query("select *, 0+title AS num_order FROM ecta_executive_bodies order by num_order",'ectamembersdev');
+						$q = spip_query("select *, 0+title AS num_order FROM ecta_executive_bodies order by num_order");
 						
 						while($executive = spip_fetch_array($q)) {
 							$executive['title'] = supprimer_numero($executive['title']);
@@ -760,17 +791,65 @@ $("a .ajax").unbind('click');
 					</select>
 				</li>
 				<li><label>Council Member</label>
-					<select name="councilmem">
-						<option value=''>Make a choice</option>
-						<option value="Yes" <?php if ($councilmem == 'Yes') { echo 'selected'; } ?>>
-							Yes
-						</option>
-						<option value="No" <?php if ($councilmem == 'No') { echo 'selected'; } ?>>
-							No
-							<option value="Com" <?php if ($councilmem == 'Com') { echo 'selected'; } ?>>
-							Com
-						</option>
-					</select>
+				<?php
+                    $start_date=0000;    
+                    $end_date=0000;  
+                    
+                   $champ0='<div><select class="statut" name="council_statut[new]">
+                        <option value="">No</option>
+                        <option value="Yes">Yes</option>
+                        <option value="Com">Com</option>                                        
+                   </select>';  
+                   $champ1='<span> <b>From:</b> </span><input class="start_date" name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
+                   $champ2='<span> <b>To:</b> </span><input class="start_date"  name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
+                   
+                    $champs.=$champ0.$champ1.$champ2;    
+                     
+                    $sql=sql_select('*','ecta_members_council','seq='.$seq,'','start_date DESC');
+                    $count=0;
+                                     
+                    while($councils=sql_fetch($sql)){
+                        $start_date=0000;    
+                        $end_date=''; 
+                        $begin_tag='';
+                        $end_tag='';
+                        $limit=3;   
+                        $count++;
+     
+                        if($councils['start_date']>0)$start_date=affdate($councils['start_date'],'Y');
+                        if($councils['end_date']>0){
+                            $end_date=affdate($councils['end_date'],'Y');
+                            if( $count==1){
+                                if($councils['start_date']>0)$champs=$champ0.$champ1.$champ2;
+                                 $limit= 2;
+                            }
+                        }
+                        if($count==$limit){
+                            $begin_tag='<span class="switch">
+                                <span class="open">+</span>
+                                <span class="close">-</span>
+                                </span><div class="hidden">';
+                            $end_tag='</div>';
+                        }
+                        
+                        $champs.=recuperer_fond('formulaires/field_period_councils',
+                            array(
+                            'begin_tag'=>$begin_tag,
+                            'end_tag'=>$end_tag, 
+                            'id_membership_council'=>$councils['id_membership_council'], 
+                            'statut'=>$councils['statut'],
+                            'start_date'=>$start_date,
+                            'end_date'=>$end_date,
+                            'seq'=>$seq
+                            ));       
+                             
+                           }
+ $champs.=$end_tag;
+                           echo "<div>$champs</div>";
+                          
+
+					
+					?>
 				</li>
 				<li>
 					<label>Members of Honours
