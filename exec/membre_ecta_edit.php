@@ -800,8 +800,10 @@ $("a .ajax >.hidden").unbind('click');
                    </select>';  
                    $champ1='<span> <b>From:</b> </span><input class="start_date" name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
                    $champ2='<span> <b>To:</b> </span><input class="start_date"  name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
-                   
+                   $champs=$champ0.$champ1.$champ2;
                     $sql=sql_select('*','ecta_members_council','seq='.$seq,'','start_date DESC');
+                    
+                    if(sql_count( $sql)>0)$champs='';
                     $count=0;
                                      
                     while($councils=sql_fetch($sql)){
