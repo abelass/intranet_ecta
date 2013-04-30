@@ -772,20 +772,15 @@ $("a .ajax >.hidden").unbind('click');
 					</label>
 					<select name="executivebodies" id="executivebodies">
 						<option value=''>Make a choice</option>
-
 						<?php
-						
 						$q = spip_query("select *, 0+title AS num_order FROM ecta_executive_bodies order by num_order");
-						
 						while($executive = spip_fetch_array($q)) {
 							$executive['title'] = supprimer_numero($executive['title']);
 
 							echo "<option value='{$executive['title']}' ";
 							if ($executivebodies == $executive['title'])  echo ' selected ';
 							echo ">{$executive['title']}</option>";
-
 						}
-						
 						?>
 						
 					</select>
@@ -806,7 +801,7 @@ $("a .ajax >.hidden").unbind('click');
                    $champ1='<span> <b>From:</b> </span><input class="start_date" name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
                    $champ2='<span> <b>To:</b> </span><input class="start_date"  name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
                    
-                    $champs.=$champ0.$champ1.$champ2;    
+ 
                      
                     $sql=sql_select('*','ecta_members_council','seq='.$seq,'','start_date DESC');
                     $count=0;
@@ -822,7 +817,7 @@ $("a .ajax >.hidden").unbind('click');
                         if($councils['start_date']>0)$start_date=affdate($councils['start_date'],'Y');
                         if($councils['end_date']>0){
                             $end_date=affdate($councils['end_date'],'Y');
-                            if( $count==1){
+                            if($count==1){
                                 if($councils['start_date']>0)$champs=$champ0.$champ1.$champ2;
                                  $limit= 2;
                             }
