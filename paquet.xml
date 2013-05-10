@@ -46,7 +46,9 @@
 	<pipeline nom="post_typo" inclure="ecta_pipelines.php" /> 		
 
 	<pipeline nom="declarer_tables_objets_sql" inclure="base/ecta.php" /> 
+	<pipeline nom="declarer_tables_principales" inclure="base/ecta.php" /> 	
 	<pipeline nom="declarer_tables_interfaces" inclure="base/ecta.php" /> 
+	<pipeline nom="declarer_tables_auxiliaires" inclure="base/ecta.php" /> 
 
 	<menu nom="members" titre="member:titre_members" parent="menu_edition" icone="images/member-16.png" action="members" /> 
 	<menu nom="associations" titre="association:titre_associations" parent="menu_edition" icone="images/association-16.png" action="associations" /> 

@@ -28,10 +28,17 @@ function ecta_declarer_tables_interfaces($interfaces) {
 	$interfaces['table_des_tables']['categories_of_professional'] = 'categories_of_professional';
 	$interfaces['table_des_tables']['commitees'] = 'commitees';
 	$interfaces['table_des_tables']['conferencies'] = 'conferencies';
-
+	$interfaces['table_des_tables']['executive_bodies'] = 'executive_bodies'; 
+	$interfaces['table_des_tables']['membership'] = 'membership'; 
+	$interfaces['table_des_tables']['members_associations'] = 'members_associations';
+	$interfaces['table_des_tables']['members_categories_of_professional'] = 'members_categories_of_professional';
+    $interfaces['table_des_tables']['members_commitees'] = 'members_commitees';
+	return $interfaces;
+    $interfaces['table_des_tables']['members_council'] = 'members_council';
+    $interfaces['table_des_tables']['spip_members_type'] = 'spip_members_type';
+    
 	return $interfaces;
 }
-
 
 /**
  * Déclaration des objets éditoriaux
@@ -216,7 +223,175 @@ function ecta_declarer_tables_objets_sql($tables) {
 
 	return $tables;
 }
+function ecta_declarer_tables_principales($tables_principales){
+    //-- Table spip_executive_bodies------------------
+    $spip_executive_bodies = array(
+        "id_ecta_executive_body"  => "int(11) NOT NULL",
+        "title" => "varchar(50) DEFAULT 'oui' NOT NULL",
+        );
+ 
+    $spip_executive_bodies_key = array(
+        "PRIMARY KEY"   => "id_ecta_executive_body",
+        );
+ 
+    $tables_principales['spip_executive_bodies'] = array(
+        'field' => &$spip_executive_bodies, 
+        'key' => &$spip_executive_bodies_key, 
+        'join'=>array(
+            'id_ecta_executive_body'=>'id_ecta_executive_body'
+        ));
+        
+    //-- Table spip_membership_type------------------
+    $spip_membership_type = array(
+        "id_membership_type"  => "int(4) NOT NULL",
+        "membership_fee" => "varchar(20) DEFAULT 'oui' NOT NULL",
+        "amount"  => "int(11) NOT NULL",        
+        );
+ 
+    $spip_membership_types_key = array(
+        "PRIMARY KEY"   => "id_membership_type,membership_fee",
+        );
+ 
+    $tables_principales['spip_membership_type'] = array(
+        'field' => &$spip_membership_type, 
+        'key' => &$spip_membership_type_key, 
+        'join'=>array(
+            'id_membership_type'=>'id_membership_type'
+        )); 
+        
+    //-- Table spip_membership_type------------------
+    $spip_membership_type = array(
+        "id_membership_type"  => "int(4) NOT NULL",
+        "membership_fee" => "varchar(20) DEFAULT 'oui' NOT NULL",
+        "amount"  => "int(11) NOT NULL",        
+        );
+ 
+    $spip_membership_types_key = array(
+        "PRIMARY KEY"   => "id_membership_type,membership_fee",
+        );
+ 
+    $tables_principales['spip_membership_type'] = array(
+        'field' => &$spip_membership_type, 
+        'key' => &$spip_membership_type_key, 
+        'join'=>array(
+            'id_membership_type'=>'id_membership_type'
+        )); 
+        
+    //-- Table spip_members_commitees------------------
+    $spip_members_commitees = array(
+        "id_membership"  => "int(21) NOT NULL",
+        "id_member"  => "int(11) NOT NULL",
+        "id_commitee"  => "int(11) NOT NULL",
+        "id_commitee_role"  => "int(11) NOT NULL",               
+        "start_date" => "date DEFAULT '0000-00-00' NOT NULL",
+        "end_date" => "date DEFAULT '0000-00-00' NOT NULL",
 
+        );
+ 
+    $spip_members_commitees_key = array(
+        "PRIMARY KEY"   => "id_membership,id_member,id_commitee,id_commitee_role",
+        );
+ 
+    $tables_principales['spip_members_commitees'] = array(
+        'field' => &$spip_members_commitees, 
+        'key' => &$spip_members_commitees_key, 
+        'join'=>array(
+            'id_membership'=>'id_membership',
+            'id_member'=>'id_member',   
+            'id_commitee'=>'id_commitee', 
+            'id_commitee_role'=>'id_commitee_role'                                    
+        )); 
+        
+    //-- Table spip_members_council------------------
+    $spip_members_council = array(
+        "id_membership_council"  => "int(21) NOT NULL",
+        "seq"  => "int(11) NOT NULL",
+        "statut"  => "enum('Yes','Com') NOT NULL DEFAULT ''",
+        "id_commitee_role"  => "int(11) NOT NULL",               
+        "start_date" => "date DEFAULT '0000-00-00' NOT NULL",
+        "end_date" => "date DEFAULT '0000-00-00' NOT NULL",
 
+        );
+ 
+    $spip_members_council_key = array(
+        "PRIMARY KEY"   => "id_membership_council,seq,statut",
+        );
+ 
+    $tables_principales['spip_members_council'] = array(
+        'field' => &$spip_members_council, 
+        'key' => &$spip_members_council_key, 
+        'join'=>array(
+            'id_membership_council'=>'id_membership_council',
+            'seq'=>'seq',                                     
+        ));  
+
+    //-- Table spip_members_type-----------------
+    $spip_members_type = array(
+        "id_member_type"  => "int(6) NOT NULL",
+        "title" => "varchar(50) DEFAULT 'oui' NOT NULL",
+        );
+ 
+    $spip_members_type_key = array(
+        "PRIMARY KEY"   => "    id_member_type",
+        );
+ 
+    $tables_principales['spip_members_type'] = array(
+        'field' => &$spip_members_type, 
+        'key' => &$spip_members_type_key, 
+        'join'=>array(
+            '   id_member_type'=>'  id_member_type',                                
+        ));  
+
+    return $tables_principales;
+}
+
+function ecta_declarer_tables_auxiliaires($tables_auxiliaires){
+     
+    //Table spip_members_associations
+    $spip_members_associations = array(
+        'id_member' => 'bigint(11) DEFAULT "0" NOT NULL',
+        'id_association' => 'bigint(11) DEFAULT "0" NOT NULL',
+    );
+ 
+    $spip_members_associations_keys = array(
+        'PRIMARY KEY' => 'id_member, id_association'
+    );
+ 
+    $tables_auxiliaires['spip_members_associations'] = array(
+        'field' => &$spip_members_associations,
+        'key' => &$spip_members_associations_keys
+    );
+
+    //Table spip_members_categories_of_professional
+    $spip_members_categories_of_professional = array(
+        'id_member' => 'bigint(11) DEFAULT "0" NOT NULL',
+        'id_category' => 'bigint(11) DEFAULT "0" NOT NULL',
+    );
+ 
+    $spip_members_categories_of_professional_keys = array(
+        'PRIMARY KEY' => 'id_member, id_category'
+    );
+ 
+    $tables_auxiliaires['spip_members_categories_of_professional'] = array(
+        'field' => &$spip_members_categories_of_professional,
+        'key' => &$spip_members_categories_of_professional_keys
+    );
+
+    //Table spip_members_commitees
+    $spip_members_commitees = array(
+        'id_member' => 'bigint(11) DEFAULT "0" NOT NULL',
+        'id_category' => 'bigint(11) DEFAULT "0" NOT NULL',
+    );
+ 
+    $spip_members_commitees_keys = array(
+        'PRIMARY KEY' => 'id_member, id_category'
+    );
+ 
+    $tables_auxiliaires['spip_members_commitees'] = array(
+        'field' => &$spip_members_commitees,
+        'key' => &$spip_members_commitees_keys
+    );    
+    return $tables_auxiliaires;
+}
 
 ?>
