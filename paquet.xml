@@ -54,4 +54,5 @@
 	<menu nom="associations" titre="association:titre_associations" parent="menu_edition" icone="images/association-16.png" action="associations" /> 
 	<menu nom="commitees" titre="commitee:titre_commitees" parent="menu_edition" icone="images/commitee-16.png" action="commitees" /> 
 	<menu nom="conferencies" titre="conference:titre_conferencies" parent="menu_edition" icone="images/conference-16.png" action="conferencies" /> 
+	<menu nom="categories" titre="category:titre_categories_of_professional" parent="menu_edition" icone="images/category-16.png" action="categories_of_professional" /> 	
 </paquet>
