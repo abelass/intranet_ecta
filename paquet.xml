@@ -41,9 +41,9 @@
 
 	<necessite nom="saisies" compatibilite="[1.24.0;]" /> 
 
-	<pipeline nom="autoriser" inclure="spip_autorisations.php" /> 
-	<pipeline nom="formulaire_traiter" inclure="spip_pipelines.php" /> 	
-	<pipeline nom="post_typo" inclure="spip_pipelines.php" /> 		
+	<pipeline nom="autoriser" inclure="ecta_autorisations.php" /> 
+	<pipeline nom="formulaire_traiter" inclure="ecta_pipelines.php" /> 	
+	<pipeline nom="post_typo" inclure="ecta_pipelines.php" /> 		
 
 	<pipeline nom="declarer_tables_objets_sql" inclure="base/ecta.php" /> 
 	<pipeline nom="declarer_tables_principales" inclure="base/ecta.php" /> 	
