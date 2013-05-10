@@ -18,7 +18,7 @@
 	<BOUCLE_liste_associations(ASSOCIATIONS){id_mot?}{id_auteur?}{where?}{recherche?}{tri #ENV{par,num title},#GET{defaut_tri}}{par title}{pagination #ENV{nb,10}}>
 		<tr class='[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]'>
 			<td class='picto'>[(#CHEMIN_IMAGE{association-16.png}|balise_img)]</td>
-			<td class='title principale'>[(#LOGO_ASSOCIATION|image_reduire{20,26})]<a href="[(#ID_ASSOCIATION|generer_url_entite{association})]" title="<:info_numero_abbreviation|attribut_html:> #ID_ASSOCIATION">[(#RANG). ]#TITLE</a></td>
+			<td class='title principale'>[(#LOGO_ASSOCIATION|image_reduire{20,26})]<a href="[(#ID_ASSOCIATION|generer_url_entite{association})]" title="<:info_numero_abbreviation|attribut_html:> #ID_ASSOCIATION">[(#RANG). ][(#TITLE|supprimer_numero)]</a></td>
 			<td class='id'>[(#AUTORISER{modifier,association,#ID_ASSOCIATION}|?{
 				<a href="[(#URL_ECRIRE{association_edit,id_association=#ID_ASSOCIATION})]">#ID_ASSOCIATION</a>,
 				#ID_ASSOCIATION

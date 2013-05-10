@@ -20,5 +20,7 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  * tout comme son volume !
  * 
  */
+// ne jamais afficher les préfixes numériques des titres
+ $table_des_traitements['TITLE'][]= 'typo(supprimer_numero(%s))';
 
 ?>
