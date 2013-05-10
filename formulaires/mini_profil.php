@@ -1,6 +1,6 @@
 <?php
 
-spip_query("SET NAMES 'utf8'",'ectamembersdev');
+spip_query("SET NAMES 'utf8'");
 spip_query("SET NAMES 'utf8'");
 include_spip('inc/securiser_action');
 
@@ -10,7 +10,7 @@ include_spip('inc/securiser_action');
 		if (!autoriser("visiteur")) {
 			$valeurs['editable'] = false;
 		}
-		$u = sql_fetch(sql_select('*','spip_members','id_auteur = '.$id_auteur,'','','','','ectamembersdev'));
+		$u = sql_fetch(sql_select('*','spip_members','id_auteur = '.$id_auteur,'','','',''));
 		$valeurs = array(
 			"title" => $u['title'],
 			"name" => $u['name'],

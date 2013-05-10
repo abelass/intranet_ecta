@@ -6,7 +6,6 @@ include_spip('inc/safe_utf8');
 
 function exec_membre_spip_list(){
 	global $connect_statut, $connect_id_auteur;
-	spip_query("SET NAMES 'utf8'",'ectamembersdev');
 	spip_query("SET NAMES 'utf8'");
 	
 	$seq = _request('seq');
@@ -16,28 +15,28 @@ function exec_membre_spip_list(){
 	if ($action == 'delete')
 	{
 		$sql="SELECT id_auteur FROM spip_members where seq='$seq' ";
-		$reponse = spip_query($sql,'ectamembersdev');
+		$reponse = spip_query($sql);
 		$aut = spip_fetch_array($reponse);		
 
 		// SPIP-Liste : Abonnement à la liste "membres" (id = 4)
 		sql_delete('spip_auteurs_listes', 'id_auteur = '.$aut['id_auteur']);
 		sql_delete('spip_auteurs', 'id_auteur = '.$aut['id_auteur']);
-		sql_delete('spip_members', 'id_auteur = '.$aut['id_auteur'], 'ectamembersdev');
+		sql_delete('spip_members', 'id_auteur = '.$aut['id_auteur']);
 
 		$message_maj = "The member has been deleted";
 	}
 	if ($action == 'desactivate')
 	{
-		spip_query("update spip_members set active='No' where seq='$seq'",'ectamembersdev');
-		$q = spip_query("select id_auteur from spip_members where seq='$seq'",'ectamembersdev');
+		spip_query("update spip_members set active='No' where seq='$seq'");
+		$q = spip_query("select id_auteur from spip_members where seq='$seq'");
 		while ($result = spip_fetch_array($reponse))
 			spip_query("update spip_auteurs set statut='5poubelle' where id_auteur='{$result['id_auteur']}'");
 		$message_maj = "The member has been desactivated";
 	}
 	if ($action == 'activate')
 	{
-		spip_query("update spip_members set active='Yes' where seq='$seq'",'ectamembersdev');
-		$q = spip_query("select id_auteur from spip_members where seq='$seq'",'ectamembersdev');
+		spip_query("update spip_members set active='Yes' where seq='$seq'");
+		$q = spip_query("select id_auteur from spip_members where seq='$seq'");
 		while ($result = spip_fetch_array($reponse))
 			spip_query("update spip_auteurs set statut='6forum' where id_auteur='{$result['id_auteur']}'");
 		$message_maj = "The member has been activated";
@@ -178,7 +177,7 @@ function exec_membre_spip_list(){
 												<select name="membership_year">
 													<option value=''>YEAR</option>
 													<?php
-														$q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year",'ectamembersdev');
+														$q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year");
 														$year='';
 														while ($y = spip_fetch_array($q)) {
 															$year = $y['membership_year'];
@@ -192,7 +191,7 @@ function exec_membre_spip_list(){
 												<select name="membership_fee" id="membership_subscription_fee">
 													<option value=''>TYPE</option>
 													<?php 
-														$q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee",'ectamembersdev');
+														$q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee");
 
 														while($sub = spip_fetch_array($q)) {
 															echo "<option value='{$sub['membership_fee']}' ";
@@ -216,7 +215,7 @@ function exec_membre_spip_list(){
 												<option value='' <?php if (!_request('s_company')) echo 'selected';?>>ALL</option>
 																	<?php
 
-															$q = spip_query("select DISTINCT company FROM spip_members order by company",'ectamembersdev');
+															$q = spip_query("select DISTINCT company FROM spip_members order by company");
 															// Les apostrophe ne passe pas dans le js autocomplete, à defaut de mieux
 															$r_company=str_replace("_","'",_request('s_company'));
 															while($m = spip_fetch_array($q)) {
@@ -242,7 +241,7 @@ function exec_membre_spip_list(){
 			                while ($p = sql_fetch($q)) {
 			                    $list[$p['code_iso']] = $p['pays'];
 			                }
-			                $q = sql_query('select distinct country from spip_members order by country','ectamembersdev');
+			                $q = sql_query('select distinct country from spip_members order by country');
 			                while ($p=spip_fetch_array($q)) {
 												if (!$p['country']) {$p['country'] = 'NULL';$list[$p['country']] = 'NULL';}
 												$liste_c[$p['country']] = $p['country'];
@@ -354,7 +353,7 @@ function exec_membre_spip_list(){
 		
 		$sql=translitteration("SELECT seq,title,surname,name,company,country,membernumber,active FROM spip_members $where ORDER BY $ORDER_BY ");
 		
-		$reponse = spip_query($sql,'ectamembersdev');
+		$reponse = spip_query($sql);
 		if (!spip_num_rows($reponse)) echo ("<tr><td colspan=6>No result found <!-- (requete : ".$sql.") --></td></tr>");
 		else {
 		$il=0;

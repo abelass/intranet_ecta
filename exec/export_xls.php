@@ -145,7 +145,7 @@ function exec_export_xls() {
 
 /*
 		$sql = "select * from spip_members_type";
-		$q = spip_query($sql,'ectamembersdev');
+		$q = spip_query($sql);
 		$type['-'] = '';
 		while ($r = spip_fetch_array($q)) {
 			$type[$r['id_member_type'].'-'] = supprimer_numero($r['title']);

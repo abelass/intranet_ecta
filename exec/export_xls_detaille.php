@@ -143,7 +143,7 @@ function exec_export_xls() {
 		'49' => 'special_requests'
 	);
 	
-		spip_query("SET NAMES 'utf8'",'ectamembersdev');
+		spip_query("SET NAMES 'utf8'");
 		spip_query("SET NAMES 'utf8'");
 
 		// Type membre

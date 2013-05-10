@@ -16,11 +16,10 @@ function i2_import_csv_ligne($ligne, $delim = ',') {
 
 function exec_export_csv() {
 	include_spip('ecrire/inc/filtres');
-	spip_query("SET NAMES 'utf8'",'ectamembersdev');
 	spip_query("SET NAMES 'utf8'");
 
 $sql = "select * from spip_commitees";
-$q = spip_query($sql,'ectamembersdev');
+$q = spip_query($sql);
 $commitees= array();
 $commitee_titre= array();
 while($r = spip_fetch_array($q)) {
@@ -30,7 +29,7 @@ while($r = spip_fetch_array($q)) {
 
 
 	$sql = "select * from spip_members_type";
-	$q = spip_query($sql,'ectamembersdev');
+	$q = spip_query($sql);
 	while ($r = spip_fetch_array($q)) {
 		$type_name[$r['id_member_type']] = supprimer_numero($r['title']);
 	}
@@ -90,7 +89,7 @@ while($r = spip_fetch_array($q)) {
 		
 		$coms= array();
 		$sqlcoms = "select * from spip_commitees";
-			$qc = spip_query($sqlcoms,'ectamembersdev');
+			$qc = spip_query($sqlcoms);
 				while($rcoms = spip_fetch_array($qc)) {
 				$coms[$rcoms['id_commitee']] = $rcoms['title'];
 				$tablefield[]=$rcoms['title'];

@@ -1,6 +1,5 @@
 <?php
 
-spip_query("SET NAMES 'utf8'",'ectamembersdev');
 spip_query("SET NAMES 'utf8'");
 include_spip('inc/autoriser');
 
@@ -12,7 +11,7 @@ include_spip('inc/autoriser');
 
 		function option_entr($entr) {
 			$str = '';
-			$vals = sql_allfetsel('DISTINCT company','spip_members','1','','company ASC','','','ectamembersdev');
+			$vals = sql_allfetsel('DISTINCT company','spip_members','1','','company ASC','','');
 			foreach ($vals as $e) {
 				$replace=str_replace("'","__",$e['company']);
 				$str .= '<option value="'.$replace.'"'.($entr==$e['company']?' selected="selected"':'').">".$e['company']."</option>\n";
@@ -24,7 +23,7 @@ include_spip('inc/autoriser');
 		
 		function option_pays($pays) {
 			$str = '';
-			$c = sql_allfetsel('DISTINCT country','spip_members','1','','','','','ectamembersdev');
+			$c = sql_allfetsel('DISTINCT country','spip_members','1','','','','');
 			foreach ($c as $lc) {
 				$liste_c[] = $lc['country'];
 			}
@@ -58,9 +57,9 @@ include_spip('inc/autoriser');
 		
 			$where[] = "listed_in_dir = 'Yes'";
 			
-			$q = sql_query("SELECT country, id_auteur, title, name, surname, company from spip_members WHERE ".implode(' AND ',$where).' ORDER BY surname LIMIT 0,100','ectamembersdev');
+			$q = sql_query("SELECT country, id_auteur, title, name, surname, company from spip_members WHERE ".implode(' AND ',$where).' ORDER BY surname LIMIT 0,100');
 
-			while ($emc = sql_fetch($q,'ectamembersdev')) {
+			while ($emc = sql_fetch($q)) {
 				$valeurs['list_members'][$i++] = $emc;
 			}
 		}
@@ -68,9 +67,9 @@ include_spip('inc/autoriser');
 		// Recherche par initiale
 		
 		if (_request('init')) {
-			$q = sql_query("SELECT country, id_auteur, title, name, surname, company from spip_members WHERE surname LIKE '".translitteration(addslashes(_request('init')))."%' AND listed_in_dir = 'Yes' ORDER BY surname LIMIT 0,100",'ectamembersdev');
+			$q = sql_query("SELECT country, id_auteur, title, name, surname, company from spip_members WHERE surname LIKE '".translitteration(addslashes(_request('init')))."%' AND listed_in_dir = 'Yes' ORDER BY surname LIMIT 0,100");
 
-			while ($emc = sql_fetch($q,'ectamembersdev')) {
+			while ($emc = sql_fetch($q)) {
 				$valeurs['list_members'][$i++] = $emc;
 			}
 

@@ -27,7 +27,7 @@ function cp($long_pass)
 
 function exec_membre_spip_new(){
 	global $connect_statut, $connect_id_auteur;
-	spip_query("SET NAMES 'utf8'",'ectamembersdev');
+	spip_query("SET NAMES 'utf8'");
 	spip_query("SET NAMES 'utf8'");
 
 	if(_request('inmembernumber')){
@@ -38,7 +38,7 @@ function exec_membre_spip_new(){
 		// TODO : commencer par v�rifier si un membre existe
 		// TODO : charger_fond pour un formulaire (ou au min. copier/coller celui de l'�dition)
 		
-		$reponse = spip_query('desc spip_members','ectamembersdev');
+		$reponse = spip_query('desc spip_members');
 		while($result = spip_fetch_array($reponse))
 			$r[] = $result['Field'];
 		
@@ -76,10 +76,10 @@ function exec_membre_spip_new(){
 		
 		if (isset($maj['seq'])) unset($maj['seq']);
 		
-		spip_query("insert into spip_members(id_auteur) values ($id_auteur)",'ectamembersdev');
-		$q = spip_query("select seq FROM spip_members where id_auteur=$id_auteur",'ectamembersdev');
+		spip_query("insert into spip_members(id_auteur) values ($id_auteur)");
+		$q = spip_query("select seq FROM spip_members where id_auteur=$id_auteur");
 		$id_member = spip_fetch_array($q);
-		spip_query("UPDATE spip_members SET ".implode(',',$maj)." WHERE seq=".($id_member['seq']),'ectamembersdev');
+		spip_query("UPDATE spip_members SET ".implode(',',$maj)." WHERE seq=".($id_member['seq']));
 
 		// SPIP-Liste : Abonnement � la liste "membres" (id = 4)
 		$sql = array('id_auteur' => $id_auteur,'id_liste'=>4,'statut'=>'valide','format'=>'html');

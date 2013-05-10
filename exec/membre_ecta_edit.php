@@ -67,7 +67,6 @@ function exec_membre_spip_edit(){
 
     
 	global $connect_statut, $connect_id_auteur;
-	spip_query("SET NAMES 'utf8'",'ectamembersdev');
 	spip_query("SET NAMES 'utf8'");
 	$message_maj = $message_err = '';
     
@@ -118,11 +117,11 @@ function exec_membre_spip_edit(){
 		$maj['datestamp']  = "datestamp = '".date("d-m-Y H:i:s")."'";
 		if (!_request('listed_in_dir')) $maj['listed_in_dir'] = "listed_in_dir = 'No'";
 		
-		spip_query("update spip_members set ". implode(',',$maj) ." where seq='$sequp'",'ectamembersdev');
+		spip_query("update spip_members set ". implode(',',$maj) ." where seq='$sequp'");
         
 		
 		/* Confs */
-		spip_query("delete from spip_members_conferencies where id_member='$sequp'",'ectamembersdev');
+		spip_query("delete from spip_members_conferencies where id_member='$sequp'");
 		if (isset($_POST['spring_conferences']))
 			foreach ($_POST['spring_conferences'] as $key => $value) {
 				spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
@@ -178,17 +177,17 @@ function exec_membre_spip_edit(){
         
               
 			/* association */
-			spip_query("delete from spip_members_associations where id_member='$sequp'",'ectamembersdev');
+			spip_query("delete from spip_members_associations where id_member='$sequp'");
 			if (isset($_POST['associations']))
 				foreach ($_POST['associations'] as $value) {
-					spip_query("insert into spip_members_associations(id_member,id_association) VALUES('$sequp','$value')",'ectamembersdev');
+					spip_query("insert into spip_members_associations(id_member,id_association) VALUES('$sequp','$value')");
 				}
 
 			/* categories_of_professional */
-			spip_query("delete from spip_members_categories_of_professional where id_member='$sequp'",'ectamembersdev');
+			spip_query("delete from spip_members_categories_of_professional where id_member='$sequp'");
 			if (isset($_POST['categories_of_professional']))
 				{foreach ($_POST['categories_of_professional'] as $value) {
-					spip_query("insert into spip_members_categories_of_professional(id_member,id_category) VALUES('$sequp','$value')",'ectamembersdev');
+					spip_query("insert into spip_members_categories_of_professional(id_member,id_category) VALUES('$sequp','$value')");
 				}
 				}
 				
@@ -243,7 +242,7 @@ function exec_membre_spip_edit(){
 	echo $commencer_page('MEMBERS DIRECTORY - ADMINISTRATION', "naviguer", "articles", $id_rubrique);
 
 		$sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
-		$reponse = spip_query($sql, 'ectamembersdev');
+		$reponse = spip_query($sql);
 		$results = spip_fetch_array($reponse);
 		
 		if (!spip_num_rows($reponse)) die('Pb avec le membre '._request('seq'));
@@ -337,31 +336,6 @@ function exec_membre_spip_edit(){
 			echo fin_raccourcis();
 		echo debut_droite();
 		
-		
-		/* Confs */
-		/*$q = spip_query("select id_conference from spip_conferencies",'ectamembersdev');
-				
-		$spring_conferences = $autumn_council = array();
-		while ($conf = spip_fetch_array($q)) {
-			$q2 = spip_query("select spip_members_conferencies.id_conference, id_member 
-					from spip_members_conferencies
-					WHERE id_conference=".$conf['id_conference']." AND id_member=".$seq,'ectamembersdev');
-			$value=spip_num_rows($q2);
-			if ($conf['type']=='spring') $spring_conferences[$conf['id_conference']]=$conf['id_membre'];
-			else $autumn_council[$conf['id_conference']]=$conf['id_membre'];
-		}*/
-			
-		/* commities */
-		/*$q = spip_query("select id_conference from spip_commitees",'ectamembersdev');
-				
-		$commitee = array();
-		while ($c = spip_fetch_array($q)) {
-			$q2 = spip_query("select spip_members_commitees.* 
-					from spip_members_commitees
-					WHERE id_commitee=".$conf['id_commitee']." AND id_member=".$seq,'ectamembersdev');
-			$value=spip_num_rows($q2);
-			$commitee[$c['id_commitee']]=$value;
-		}	*/	
 		
 		if ($datestamp == '')
 		{
@@ -536,7 +510,7 @@ $("a .ajax >.hidden").unbind('click');
 								<select name="countrytype" id="countrytype" style="width:195px">
 									<?php
 									
-										$q = spip_query("select DISTINCT countrytype FROM spip_members order by countrytype",'ectamembersdev');
+										$q = spip_query("select DISTINCT countrytype FROM spip_members order by countrytype");
 											
 										while($p = spip_fetch_array($q)) {
 											echo "<option value='".$p['countrytype']."'";
@@ -637,7 +611,7 @@ $("a .ajax >.hidden").unbind('click');
 						<option value=''>Make a choice</option>
 						<?php
 						
-						$q = spip_query("select *, 0+title AS num_order FROM spip_members_type order by num_order",'ectamembersdev');
+						$q = spip_query("select *, 0+title AS num_order FROM spip_members_type order by num_order");
 						
 						while($type = spip_fetch_array($q)) {
 							$type['title'] = supprimer_numero($type['title']);
@@ -891,35 +865,17 @@ $("a .ajax >.hidden").unbind('click');
 					<label>Other Association
 					</label>
 					<fieldset><ul>
-					<!-- select name="otherassociations" id="otherassociations">
-						<option value=''>Make a choice</option>
 
-						<?php
-						
-						/* $q = spip_query("select *, 0+title AS num_order FROM spip_associations order by num_order",'ectamembersdev');
-						
-						while($association = spip_fetch_array($q)) {
-							$association['title'] = supprimer_numero($association['title']);
-
-							echo "<option value='{$association['title']}' ";
-							if ($otherassociations == $association['title'])  echo ' selected ';
-							echo ">{$association['title']}</option>";
-
-						} */
-						
-						?>
-						
-					</select -->
 
 							<?php
 							
-							$q = spip_query("select spip_associations.id_association, spip_associations.title, 0+title AS num_order FROM spip_associations order by num_order",'ectamembersdev');
+							$q = spip_query("select spip_associations.id_association, spip_associations.title, 0+title AS num_order FROM spip_associations order by num_order");
 							
 							while($association = spip_fetch_array($q)) {
 								$association['title'] = supprimer_numero($association['title']);
 							
 								$q2 = spip_query("select id_association FROM spip_members_associations 
-										where spip_members_associations.id_association='{$association['id_association']}' and id_member='$seq'",'ectamembersdev');
+										where spip_members_associations.id_association='{$association['id_association']}' and id_member='$seq'");
 							
 								if (spip_num_rows($q2)) $checked=" checked "; else $checked = '';
 							
@@ -988,13 +944,13 @@ $("a .ajax >.hidden").unbind('click');
 					<fieldset><ul>
 				<?php
 							
-							$q = spip_query("select spip_categories_of_professional.id_category, spip_categories_of_professional.title, 0+title AS num_order FROM spip_categories_of_professional order by num_order",'ectamembersdev');
+							$q = spip_query("select spip_categories_of_professional.id_category, spip_categories_of_professional.title, 0+title AS num_order FROM spip_categories_of_professional order by num_order");
 							
 							while($category = spip_fetch_array($q)) {
 								$category['title'] = supprimer_numero($category['title']);
 							
 								$q2 = spip_query("select id_category FROM spip_members_categories_of_professional 
-										where spip_members_categories_of_professional.id_category='{$category['id_category']}' and id_member='$seq'",'ectamembersdev');
+										where spip_members_categories_of_professional.id_category='{$category['id_category']}' and id_member='$seq'");
 							
 								if (spip_num_rows($q2)) $checked=" checked "; else $checked = '';
 							
@@ -1025,10 +981,10 @@ $("a .ajax >.hidden").unbind('click');
 					<fieldset>
 						<ul>
 <?php 
-	$q = spip_query("select * FROM spip_conferencies WHERE type='spring' order by spip_conferencies.year DESC",'ectamembersdev');
+	$q = spip_query("select * FROM spip_conferencies WHERE type='spring' order by spip_conferencies.year DESC");
 
 	while($conf = spip_fetch_array($q)) {
-		$q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'",'ectamembersdev');
+		$q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'");
 		$spring_conferences[$conf['id_conference']] = '';
 		if (spip_num_rows($q2)) {
 			$participation = spip_fetch_array($q2);
@@ -1056,10 +1012,10 @@ $("a .ajax >.hidden").unbind('click');
 					<fieldset>
 						<ul>
 <?php 
-	$q = spip_query("select * FROM spip_conferencies WHERE type='autumn' order by spip_conferencies.year DESC",'ectamembersdev');
+	$q = spip_query("select * FROM spip_conferencies WHERE type='autumn' order by spip_conferencies.year DESC");
 
 	while($conf = spip_fetch_array($q)) {
-		$q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'",'ectamembersdev');
+		$q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'");
 		$autumn_council[$conf['year']] = '';
 		if (spip_num_rows($q2)) {
 			$participation = spip_fetch_array($q2);
@@ -1101,7 +1057,7 @@ $("a .ajax >.hidden").unbind('click');
 								<select name="membership_year">
 									<option value=''></option>
 									<?php
-										$q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year",'ectamembersdev');
+										$q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year");
 										$year='';
 										while ($y = spip_fetch_array($q)) {
 											$year = $y['membership_year'];
@@ -1119,7 +1075,7 @@ $("a .ajax >.hidden").unbind('click');
 								<label>Type</label>
 								<select name="membership_fee" id="membership_subscription_fee">
 									<?php 
-										$q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee",'ectamembersdev');
+										$q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee");
 							
 										while($sub = spip_fetch_array($q)) {
 											echo "<option value='{$sub['membership_fee']}' ";
