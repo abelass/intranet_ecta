@@ -1,0 +1,34 @@
+[(#SET{defaut_tri,#ARRAY{
+	title,1, 
+	id_conference,1,
+	points,-1
+}})]<B_liste_conferencies>
+#ANCRE_PAGINATION
+<div class="liste-objets conferencies">
+<table class='spip liste'>
+	[<caption><strong class="caption">(#ENV*{titre,#GRAND_TOTAL|singulier_ou_pluriel{conference:info_1_conference,conference:info_nb_conferencies}})</strong></caption>]
+	<thead>
+		<tr class='first_row'>
+			<th class='picto' scope='col'></th>
+			<th class='title' scope='col'>[(#TRI{title,<:conference:label_title:>,ajax})]</th>
+			<th class='id' scope='col'>[(#TRI{id_conference,<:info_numero_abbreviation:>,ajax})]</th>
+		</tr>
+	</thead>
+	<tbody>
+	<BOUCLE_liste_conferencies(CONFERENCIES){id_mot?}{id_auteur?}{where?}{recherche?}{tri #ENV{par,num title},#GET{defaut_tri}}{par title}{pagination #ENV{nb,10}}>
+		<tr class='[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]'>
+			<td class='picto'>[(#CHEMIN_IMAGE{conference-16.png}|balise_img)]</td>
+			<td class='title principale'>[(#LOGO_CONFERENCE|image_reduire{20,26})]<a href="[(#ID_CONFERENCE|generer_url_entite{conference})]" title="<:info_numero_abbreviation|attribut_html:> #ID_CONFERENCE">[(#RANG). ]#TITLE</a></td>
+			<td class='id'>[(#AUTORISER{modifier,conference,#ID_CONFERENCE}|?{
+				<a href="[(#URL_ECRIRE{conference_edit,id_conference=#ID_CONFERENCE})]">#ID_CONFERENCE</a>,
+				#ID_CONFERENCE
+			})]</td>
+		</tr>
+	</BOUCLE_liste_conferencies>
+	</tbody>
+</table>
+[<p class='pagination'>(#PAGINATION{prive})</p>]
+</div>
+</B_liste_conferencies>[
+<div class="liste-objets conferencies caption-wrap"><strong class="caption">(#ENV*{sinon,''})</strong></div>
+]<//B_liste_conferencies>

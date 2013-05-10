@@ -1,0 +1,18 @@
+<BOUCLE_conference(CONFERENCIES){id_conference}>
+
+[<div class="champ contenu_title[ (#TITLE*|strlen|?{'',vide})]">
+	<label><:conference:label_title:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{title} title'>(#TITLE)</span>
+</div>]
+
+[<div class="champ contenu_type[ (#TYPE*|strlen|?{'',vide})]">
+	<label><:conference:label_type:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{type} type'>(#TYPE)</span>
+</div>]
+
+[<div class="champ contenu_year[ (#YEAR*|strlen|?{'',vide})]">
+	<label><:conference:label_year:> : </label>
+	<span dir='#LANG_DIR' class='#EDIT{year} year'>(#YEAR)</span>
+</div>]
+
+</BOUCLE_conference>

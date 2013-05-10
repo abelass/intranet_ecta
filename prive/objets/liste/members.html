@@ -1,0 +1,34 @@
+[(#SET{defaut_tri,#ARRAY{
+	title,1, 
+	seq,1,
+	points,-1
+}})]<B_liste_members>
+#ANCRE_PAGINATION
+<div class="liste-objets members">
+<table class='spip liste'>
+	[<caption><strong class="caption">(#ENV*{titre,#GRAND_TOTAL|singulier_ou_pluriel{member:info_1_member,member:info_nb_members}})</strong></caption>]
+	<thead>
+		<tr class='first_row'>
+			<th class='picto' scope='col'></th>
+			<th class='title' scope='col'>[(#TRI{title,<:member:label_title:>,ajax})]</th>
+			<th class='id' scope='col'>[(#TRI{seq,<:info_numero_abbreviation:>,ajax})]</th>
+		</tr>
+	</thead>
+	<tbody>
+	<BOUCLE_liste_members(MEMBERS){id_auteur?}{id_mot?}{id_auteur?}{where?}{recherche?}{tri #ENV{par,num title},#GET{defaut_tri}}{par title}{pagination #ENV{nb,10}}>
+		<tr class='[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]'>
+			<td class='picto'>[(#CHEMIN_IMAGE{member-16.png}|balise_img)]</td>
+			<td class='title principale'>[(#LOGO_MEMBER|image_reduire{20,26})]<a href="[(#SEQ|generer_url_entite{member})]" title="<:info_numero_abbreviation|attribut_html:> #SEQ">[(#RANG). ]#TITLE</a></td>
+			<td class='id'>[(#AUTORISER{modifier,member,#SEQ}|?{
+				<a href="[(#URL_ECRIRE{member_edit,seq=#SEQ})]">#SEQ</a>,
+				#SEQ
+			})]</td>
+		</tr>
+	</BOUCLE_liste_members>
+	</tbody>
+</table>
+[<p class='pagination'>(#PAGINATION{prive})</p>]
+</div>
+</B_liste_members>[
+<div class="liste-objets members caption-wrap"><strong class="caption">(#ENV*{sinon,''})</strong></div>
+]<//B_liste_members>

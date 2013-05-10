@@ -1,0 +1,55 @@
+<paquet
+	prefix="ecta"
+	categorie="divers"
+	version="1.0.0"
+	etat="test"
+	compatibilite="[3.0.8;3.0.*]"
+	logo="prive/themes/spip/images/ecta-64.png"
+	documentation=""
+	schema="1.0.0" 
+>
+	<!--
+		Paquet genere le 2013-05-10 17:17:01
+		(Vous pouvez bien entendu supprimer ces commentaires) 
+	-->
+
+	<nom>Intranete Ecta</nom>
+
+	<!-- cette balise peut etre presente plusieurs fois s'il y a plusieurs auteurs --> 
+	<auteur lien='http://websimple.be'>Rainer Müller</auteur>
+
+	<licence>GNU/GPL</licence>
+
+	<!--
+		Exemple de commandes
+		* dependances
+		<necessite nom="saisies" compatibilite="[1.21.0;]" />
+		<utilise nom="saisies" compatibilite="[1.21.0;]" />
+		<lib nom="simplehtmldom" lien="http://chemin_vers_archive.zip" />
+		* pipelines
+		<pipeline nom="autoriser" inclure="ecta_autorisations.php" />
+		<pipeline nom="insert_head" inclure="ecta_pipelines.php" />
+		* declarer un pipeline 
+		<pipeline nom="mon_pipeline" action="" />
+		* parents de menus de SPIP :
+				menu_accueil (A eviter), menu_edition, menu_publication,
+				menu_activite, menu_squelette, menu_administration, menu_configuration 
+		<menu nom="ecta" titre="ecta:ecta_titre" parent="menu_edition"  icone="images/ecta-16.png" />
+		* parents d'onglets... configuration, plugins, statistiques, ... 
+		<onglet nom="ecta" titre="ecta:ecta_titre" parent="configuration" icone="images/ecta-24.png" />
+	-->
+
+	<necessite nom="saisies" compatibilite="[1.24.0;]" /> 
+
+	<pipeline nom="autoriser" inclure="ecta_autorisations.php" /> 
+	<pipeline nom="formulaire_traiter" inclure="ecta_pipelines.php" /> 	
+	<pipeline nom="post_typo" inclure="ecta_pipelines.php" /> 		
+
+	<pipeline nom="declarer_tables_objets_sql" inclure="base/ecta.php" /> 
+	<pipeline nom="declarer_tables_interfaces" inclure="base/ecta.php" /> 
+
+	<menu nom="members" titre="member:titre_members" parent="menu_edition" icone="images/member-16.png" action="members" /> 
+	<menu nom="associations" titre="association:titre_associations" parent="menu_edition" icone="images/association-16.png" action="associations" /> 
+	<menu nom="commitees" titre="commitee:titre_commitees" parent="menu_edition" icone="images/commitee-16.png" action="commitees" /> 
+	<menu nom="conferencies" titre="conference:titre_conferencies" parent="menu_edition" icone="images/conference-16.png" action="conferencies" /> 
+</paquet>

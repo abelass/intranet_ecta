@@ -1,0 +1,34 @@
+[(#SET{defaut_tri,#ARRAY{
+	title,1, 
+	id_category,1,
+	points,-1
+}})]<B_liste_categories_of_professional>
+#ANCRE_PAGINATION
+<div class="liste-objets categories_of_professional">
+<table class='spip liste'>
+	[<caption><strong class="caption">(#ENV*{titre,#GRAND_TOTAL|singulier_ou_pluriel{category:info_1_category,category:info_nb_categories_of_professional}})</strong></caption>]
+	<thead>
+		<tr class='first_row'>
+			<th class='picto' scope='col'></th>
+			<th class='title' scope='col'>[(#TRI{title,<:category:label_title:>,ajax})]</th>
+			<th class='id' scope='col'>[(#TRI{id_category,<:info_numero_abbreviation:>,ajax})]</th>
+		</tr>
+	</thead>
+	<tbody>
+	<BOUCLE_liste_categories_of_professional(CATEGORIES_OF_PROFESSIONAL){id_mot?}{id_auteur?}{where?}{recherche?}{tri #ENV{par,num title},#GET{defaut_tri}}{par title}{pagination #ENV{nb,10}}>
+		<tr class='[(#COMPTEUR_BOUCLE|alterner{row_odd,row_even})]'>
+			<td class='picto'>[(#CHEMIN_IMAGE{category-16.png}|balise_img)]</td>
+			<td class='title principale'>[(#LOGO_CATEGORY|image_reduire{20,26})]<a href="[(#ID_CATEGORY|generer_url_entite{category})]" title="<:info_numero_abbreviation|attribut_html:> #ID_CATEGORY">[(#RANG). ]#TITLE</a></td>
+			<td class='id'>[(#AUTORISER{modifier,category,#ID_CATEGORY}|?{
+				<a href="[(#URL_ECRIRE{category_edit,id_category=#ID_CATEGORY})]">#ID_CATEGORY</a>,
+				#ID_CATEGORY
+			})]</td>
+		</tr>
+	</BOUCLE_liste_categories_of_professional>
+	</tbody>
+</table>
+[<p class='pagination'>(#PAGINATION{prive})</p>]
+</div>
+</B_liste_categories_of_professional>[
+<div class="liste-objets categories_of_professional caption-wrap"><strong class="caption">(#ENV*{sinon,''})</strong></div>
+]<//B_liste_categories_of_professional>

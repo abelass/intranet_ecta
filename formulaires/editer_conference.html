@@ -1,0 +1,24 @@
+<div class='formulaire_spip formulaire_editer formulaire_#FORM formulaire_#FORM-#ENV{id_conference,nouveau}'>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+	[(#ENV{editable})
+	<form method='post' action='#ENV{action}'><div>
+		#ACTION_FORMULAIRE{#ENV{action}}
+		<input type='hidden' name='id_conference' value='#ENV{id_conference}' />
+		<ul>
+
+			[(#SAISIE{selection, type, obligatoire=oui,
+				label=<:conference:label_type:>,
+				datas=[(#ARRAY{spring,Spring,autumn,Autumn})]})]
+
+			[(#SAISIE{input, year, obligatoire=oui,
+				label=<:conference:label_year:>})]
+
+		</ul>
+		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+		<!--extra-->
+		<p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
+	</div></form>
+	]
+</div>
