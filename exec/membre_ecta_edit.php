@@ -3,18 +3,18 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
 
 include_spip('inc/vieilles_defs');
 
-function exec_membre_ecta_edit(){
+function exec_membre_spip_edit(){
     
 
     
     /*Scripts de migration à priorio plus utile
-         $sql=sql_select('id_member,id_commitee','ecta_members_commitees');
+         $sql=sql_select('id_member,id_commitee','spip_members_commitees');
       $count=0;
     while($data=sql_fetch($sql)){
         $count++;
-        sql_update('ecta_members_commitees',array('id_membership'=>$count),'id_member='.$data['id_member'].' AND id_commitee='.$data['id_commitee']);
+        sql_update('spip_members_commitees',array('id_membership'=>$count),'id_member='.$data['id_member'].' AND id_commitee='.$data['id_commitee']);
     }
-    $sql=sql_select('*','ecta_members');
+    $sql=sql_select('*','spip_members');
       $count=0;
       $champs_coms=array(1=>'chaircommitee',2=>'vicechaircommitee',3=>'secretarycommitee');
     while($data=sql_fetch($sql)){
@@ -27,12 +27,12 @@ function exec_membre_ecta_edit(){
                  'start_date'=>$data['from_'.$com],                                 
                  );
                  echo serialize($valeurs);
-                 sql_insertq('ecta_members_commitees',$valeurs);
+                 sql_insertq('spip_members_commitees',$valeurs);
            
        }
         }  
     }
-        $sql=sql_select('*','ecta_members');
+        $sql=sql_select('*','spip_members');
       $count=0;
       $champs_coms=array(1=>'chaircommitee',2=>'vicechaircommitee',3=>'secretarycommitee');
     while($data=sql_fetch($sql)){
@@ -44,12 +44,12 @@ function exec_membre_ecta_edit(){
                  'id_member'=>$data['seq'], 
                  'start_date'=>$data['from_'.$com],                                 
                  );
-                 sql_insertq('ecta_members_commitees',$valeurs);
+                 sql_insertq('spip_members_commitees',$valeurs);
            
        }
         }  
     }
-    $sql=sql_select('*','ecta_members');
+    $sql=sql_select('*','spip_members');
 
     while($data=sql_fetch($sql)){
         if($data['councilmem']=='Yes' OR $data['councilmem']=='Com'){
@@ -58,7 +58,7 @@ function exec_membre_ecta_edit(){
                  'statut'=>$data['councilmem'],                                 
                  );
                  echo serialize($valeurs);
-                 sql_insertq('ecta_members_council',$valeurs);
+                 sql_insertq('spip_members_council',$valeurs);
              }
            }
 */
@@ -71,14 +71,14 @@ function exec_membre_ecta_edit(){
 	spip_query("SET NAMES 'utf8'");
 	$message_maj = $message_err = '';
     
-	if(_request('delete'))sql_delete('ecta_members_commitees','id_membership='._request('delete'));
-	if(_request('delete_council'))sql_delete('ecta_members_council','  id_membership_council='._request('delete_council'));    
+	if(_request('delete'))sql_delete('spip_members_commitees','id_membership='._request('delete'));
+	if(_request('delete_council'))sql_delete('spip_members_council','  id_membership_council='._request('delete_council'));    
 	if (_request('inlogin'))
 	{
 		$sequp = (int)_request('sequp');
 		
 		/* SPIP */
-		$sql="SELECT * FROM ecta_members where seq='$sequp' ";
+		$sql="SELECT * FROM spip_members where seq='$sequp' ";
 		$reponse = spip_query($sql);
 		$aut = spip_fetch_array($reponse);		
 		
@@ -103,8 +103,8 @@ function exec_membre_ecta_edit(){
 		
 		sql_updateq('spip_auteurs',$row,'id_auteur = '.$aut['id_auteur']);
 					
-		/* ECTA_members */
-		$reponse = spip_query('desc ecta_members');
+		/* spip_members */
+		$reponse = spip_query('desc spip_members');
 		while($result = spip_fetch_array($reponse))
 			$r[] = $result['Field'];
 
@@ -118,35 +118,33 @@ function exec_membre_ecta_edit(){
 		$maj['datestamp']  = "datestamp = '".date("d-m-Y H:i:s")."'";
 		if (!_request('listed_in_dir')) $maj['listed_in_dir'] = "listed_in_dir = 'No'";
 		
-		spip_query("update ecta_members set ". implode(',',$maj) ." where seq='$sequp'",'ectamembersdev');
+		spip_query("update spip_members set ". implode(',',$maj) ." where seq='$sequp'",'ectamembersdev');
         
 		
 		/* Confs */
-		spip_query("delete from ecta_members_conferencies where id_member='$sequp'",'ectamembersdev');
+		spip_query("delete from spip_members_conferencies where id_member='$sequp'",'ectamembersdev');
 		if (isset($_POST['spring_conferences']))
 			foreach ($_POST['spring_conferences'] as $key => $value) {
-				spip_query("insert into ecta_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')",'ectamembersdev');
+				spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
 			}
 		if (isset($_POST['autumn_council']))
 			foreach ($_POST['autumn_council'] as $key => $value) {
-				spip_query("insert into ecta_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')",'ectamembersdev');
+				spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
 			}
 			
-		/* committees */
-		/*spip_query("delete from ecta_members_commitees where id_member='$sequp'",'ectamembersdev');*/
 		$val_start_date=_request('start_date');
-		$val_end_date=_request('end_date');		
+		$vaspip__date=_request('end_date');		
         $id_commitee_role=_request('id_commitee_role');
 			foreach ($val_start_date as $id_commitee =>$start) {
 				$end=$val_end_date[$id_commitee];				
 				if(isset($start['new']) AND $start['new']>0){
-				    sql_insertq('ecta_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01','id_commitee_role'=>$id_commitee_role[$id_commitee]['new']));
+				    sql_insertq('spip_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01','id_commitee_role'=>$id_commitee_role[$id_commitee]['new']));
 				}
                 else{
                     foreach($start AS $id_membership=>$start_date){
                         if($start_date>0){
                             $end_date=$end[$id_membership].'-01-01';
-                            sql_updateq('ecta_members_commitees',array('start_date'=>$start_date.'-01-01','end_date'=>$end_date,'id_commitee_role'=>$id_commitee_role[$id_commitee][$id_membership]),'id_membership='.$id_membership);
+                            sql_updateq('spip_members_commitees',array('start_date'=>$start_date.'-01-01','end_date'=>$end_date,'id_commitee_role'=>$id_commitee_role[$id_commitee][$id_membership]),'id_membership='.$id_membership);
                             }
                         }
                 }
@@ -164,7 +162,7 @@ function exec_membre_ecta_edit(){
                 'end_date'=>$council_end_date['new'].'-01-01',
                 'start_date'=>$start_date.'-01-01',
                 'statut'=>$council_statut['new']?$council_statut['new']:'Yes');
-                sql_insertq('ecta_members_council',$valeurs);
+                sql_insertq('spip_members_council',$valeurs);
                 }
             elseif($start_date>0){
                 $valeurs=array(
@@ -174,23 +172,23 @@ function exec_membre_ecta_edit(){
                     'start_date'=>$start_date.'-01-01',
                      'statut'=>$council_statut[$id_membership_council]?$council_statut[$id_membership_council]:'Yes'
                     );
-                sql_updateq('ecta_members_council',$valeurs,'id_membership_council='.$id_membership_council);
+                sql_updateq('spip_members_council',$valeurs,'id_membership_council='.$id_membership_council);
             }
         }
         
               
 			/* association */
-			spip_query("delete from ecta_members_associations where id_member='$sequp'",'ectamembersdev');
+			spip_query("delete from spip_members_associations where id_member='$sequp'",'ectamembersdev');
 			if (isset($_POST['associations']))
 				foreach ($_POST['associations'] as $value) {
-					spip_query("insert into ecta_members_associations(id_member,id_association) VALUES('$sequp','$value')",'ectamembersdev');
+					spip_query("insert into spip_members_associations(id_member,id_association) VALUES('$sequp','$value')",'ectamembersdev');
 				}
 
 			/* categories_of_professional */
-			spip_query("delete from ecta_members_categories_of_professional where id_member='$sequp'",'ectamembersdev');
+			spip_query("delete from spip_members_categories_of_professional where id_member='$sequp'",'ectamembersdev');
 			if (isset($_POST['categories_of_professional']))
 				{foreach ($_POST['categories_of_professional'] as $value) {
-					spip_query("insert into ecta_members_categories_of_professional(id_member,id_category) VALUES('$sequp','$value')",'ectamembersdev');
+					spip_query("insert into spip_members_categories_of_professional(id_member,id_category) VALUES('$sequp','$value')",'ectamembersdev');
 				}
 				}
 				
@@ -244,7 +242,7 @@ function exec_membre_ecta_edit(){
 	$commencer_page = charger_fonction('commencer_page', 'inc');
 	echo $commencer_page('MEMBERS DIRECTORY - ADMINISTRATION', "naviguer", "articles", $id_rubrique);
 
-		$sql="SELECT * FROM ecta_members where seq = '".addslashes(_request('seq'))."'";
+		$sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
 		$reponse = spip_query($sql, 'ectamembersdev');
 		$results = spip_fetch_array($reponse);
 		
@@ -331,22 +329,22 @@ function exec_membre_ecta_edit(){
 		}
 			echo debut_raccourcis();
        if(0 && _request('seq')){
-				echo '<a href="?exec=membre_ecta_view&amp;seq='._request('seq').'"><b><img src="'._DIR_PLUGIN_ECTA.'img_pack/back.png" alt="retour" align="absmiddle"> Back to the member profile</b></a>';
+				echo '<a href="?exec=membre_spip_view&amp;seq='._request('seq').'"><b><img src="'._DIR_PLUGIN_ECTA.'img_pack/back.png" alt="retour" align="absmiddle"> Back to the member profile</b></a>';
 				}
 				else{
-					echo '<a href="?exec=membre_ecta_list"><b><img src="'._DIR_PLUGIN_ECTA.'img_pack/back.png" alt="retour" align="absmiddle"> Back</b></a>';
+					echo '<a href="?exec=membre_spip_list"><b><img src="'._DIR_PLUGIN_ECTA.'img_pack/back.png" alt="retour" align="absmiddle"> Back</b></a>';
 				}
 			echo fin_raccourcis();
 		echo debut_droite();
 		
 		
 		/* Confs */
-		/*$q = spip_query("select id_conference from ecta_conferencies",'ectamembersdev');
+		/*$q = spip_query("select id_conference from spip_conferencies",'ectamembersdev');
 				
 		$spring_conferences = $autumn_council = array();
 		while ($conf = spip_fetch_array($q)) {
-			$q2 = spip_query("select ecta_members_conferencies.id_conference, id_member 
-					from ecta_members_conferencies
+			$q2 = spip_query("select spip_members_conferencies.id_conference, id_member 
+					from spip_members_conferencies
 					WHERE id_conference=".$conf['id_conference']." AND id_member=".$seq,'ectamembersdev');
 			$value=spip_num_rows($q2);
 			if ($conf['type']=='spring') $spring_conferences[$conf['id_conference']]=$conf['id_membre'];
@@ -354,12 +352,12 @@ function exec_membre_ecta_edit(){
 		}*/
 			
 		/* commities */
-		/*$q = spip_query("select id_conference from ecta_commitees",'ectamembersdev');
+		/*$q = spip_query("select id_conference from spip_commitees",'ectamembersdev');
 				
 		$commitee = array();
 		while ($c = spip_fetch_array($q)) {
-			$q2 = spip_query("select ecta_members_commitees.* 
-					from ecta_members_commitees
+			$q2 = spip_query("select spip_members_commitees.* 
+					from spip_members_commitees
 					WHERE id_commitee=".$conf['id_commitee']." AND id_member=".$seq,'ectamembersdev');
 			$value=spip_num_rows($q2);
 			$commitee[$c['id_commitee']]=$value;
@@ -431,7 +429,7 @@ $("a .ajax >.hidden").unbind('click');
 <form action="" method="post" name="form1" class="style3" id="form1">
 	<input name="sequp" type="hidden" value="<?php echo $seq;?>">
 	<input name="act" type="hidden" value="edit">
-	<input name="exec" type="hidden" value="membre_ecta_list">
+	<input name="exec" type="hidden" value="membre_spip_list">
 		
 	<div id="tabs">
 		<ul class="nav">
@@ -538,7 +536,7 @@ $("a .ajax >.hidden").unbind('click');
 								<select name="countrytype" id="countrytype" style="width:195px">
 									<?php
 									
-										$q = spip_query("select DISTINCT countrytype FROM ecta_members order by countrytype",'ectamembersdev');
+										$q = spip_query("select DISTINCT countrytype FROM spip_members order by countrytype",'ectamembersdev');
 											
 										while($p = spip_fetch_array($q)) {
 											echo "<option value='".$p['countrytype']."'";
@@ -639,7 +637,7 @@ $("a .ajax >.hidden").unbind('click');
 						<option value=''>Make a choice</option>
 						<?php
 						
-						$q = spip_query("select *, 0+title AS num_order FROM ecta_members_type order by num_order",'ectamembersdev');
+						$q = spip_query("select *, 0+title AS num_order FROM spip_members_type order by num_order",'ectamembersdev');
 						
 						while($type = spip_fetch_array($q)) {
 							$type['title'] = supprimer_numero($type['title']);
@@ -678,14 +676,14 @@ $("a .ajax >.hidden").unbind('click');
                                 <small>Please specify a role and a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
                             </li>
 							<?php
-							$r=sql_select('*','ecta_commitee_role');
+							$r=sql_select('*','spip_commitee_role');
 							$roles=array();
 							while($rs=sql_fetch($r)){
 							  $roles[$rs['id_commitee_role']]=$rs['title'];  
 							}
 
 							
-							$q = spip_query("select ecta_commitees.id_commitee, ecta_commitees.title, 0+title AS num_order FROM ecta_commitees order by num_order");
+							$q = spip_query("select spip_commitees.id_commitee, spip_commitees.title, 0+title AS num_order FROM spip_commitees order by num_order");
 							while($commitee = spip_fetch_array($q)){
 							      
     							$commitee['title'] = supprimer_numero($commitee['title']);
@@ -710,7 +708,7 @@ $("a .ajax >.hidden").unbind('click');
                                                 <label>{$commitee['title']}</label> ";                   
 
                                 foreach($roles as $id=>$title){
-                                    $sql = sql_select('*','ecta_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','id_commitee_role,start_date DESC'); 
+                                    $sql = sql_select('*','spip_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','id_commitee_role,start_date DESC'); 
                                     
 
                                      $end_tag='';
@@ -773,7 +771,7 @@ $("a .ajax >.hidden").unbind('click');
 					<select name="executivebodies" id="executivebodies">
 						<option value=''>Make a choice</option>
 						<?php
-						$q = spip_query("select *, 0+title AS num_order FROM ecta_executive_bodies order by num_order");
+						$q = spip_query("select *, 0+title AS num_order FROM spip_executive_bodies order by num_order");
 						while($executive = spip_fetch_array($q)) {
 							$executive['title'] = supprimer_numero($executive['title']);
 
@@ -801,7 +799,7 @@ $("a .ajax >.hidden").unbind('click');
                    $champ1='<span> <b>From:</b> </span><input class="start_date" name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
                    $champ2='<span> <b>To:</b> </span><input class="start_date"  name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
                    $champs=$champ0.$champ1.$champ2;
-                    $sql=sql_select('*','ecta_members_council','seq='.$seq,'','start_date DESC');
+                    $sql=sql_select('*','spip_members_council','seq='.$seq,'','start_date DESC');
                     
                     if(sql_count( $sql)>0)$champs='';
                     $count=0;
@@ -898,7 +896,7 @@ $("a .ajax >.hidden").unbind('click');
 
 						<?php
 						
-						/* $q = spip_query("select *, 0+title AS num_order FROM ecta_associations order by num_order",'ectamembersdev');
+						/* $q = spip_query("select *, 0+title AS num_order FROM spip_associations order by num_order",'ectamembersdev');
 						
 						while($association = spip_fetch_array($q)) {
 							$association['title'] = supprimer_numero($association['title']);
@@ -915,13 +913,13 @@ $("a .ajax >.hidden").unbind('click');
 
 							<?php
 							
-							$q = spip_query("select ecta_associations.id_association, ecta_associations.title, 0+title AS num_order FROM ecta_associations order by num_order",'ectamembersdev');
+							$q = spip_query("select spip_associations.id_association, spip_associations.title, 0+title AS num_order FROM spip_associations order by num_order",'ectamembersdev');
 							
 							while($association = spip_fetch_array($q)) {
 								$association['title'] = supprimer_numero($association['title']);
 							
-								$q2 = spip_query("select id_association FROM ecta_members_associations 
-										where ecta_members_associations.id_association='{$association['id_association']}' and id_member='$seq'",'ectamembersdev');
+								$q2 = spip_query("select id_association FROM spip_members_associations 
+										where spip_members_associations.id_association='{$association['id_association']}' and id_member='$seq'",'ectamembersdev');
 							
 								if (spip_num_rows($q2)) $checked=" checked "; else $checked = '';
 							
@@ -990,13 +988,13 @@ $("a .ajax >.hidden").unbind('click');
 					<fieldset><ul>
 				<?php
 							
-							$q = spip_query("select ecta_categories_of_professional.id_category, ecta_categories_of_professional.title, 0+title AS num_order FROM ecta_categories_of_professional order by num_order",'ectamembersdev');
+							$q = spip_query("select spip_categories_of_professional.id_category, spip_categories_of_professional.title, 0+title AS num_order FROM spip_categories_of_professional order by num_order",'ectamembersdev');
 							
 							while($category = spip_fetch_array($q)) {
 								$category['title'] = supprimer_numero($category['title']);
 							
-								$q2 = spip_query("select id_category FROM ecta_members_categories_of_professional 
-										where ecta_members_categories_of_professional.id_category='{$category['id_category']}' and id_member='$seq'",'ectamembersdev');
+								$q2 = spip_query("select id_category FROM spip_members_categories_of_professional 
+										where spip_members_categories_of_professional.id_category='{$category['id_category']}' and id_member='$seq'",'ectamembersdev');
 							
 								if (spip_num_rows($q2)) $checked=" checked "; else $checked = '';
 							
@@ -1027,10 +1025,10 @@ $("a .ajax >.hidden").unbind('click');
 					<fieldset>
 						<ul>
 <?php 
-	$q = spip_query("select * FROM ecta_conferencies WHERE type='spring' order by ecta_conferencies.year DESC",'ectamembersdev');
+	$q = spip_query("select * FROM spip_conferencies WHERE type='spring' order by spip_conferencies.year DESC",'ectamembersdev');
 
 	while($conf = spip_fetch_array($q)) {
-		$q2 = spip_query("select * FROM ecta_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'",'ectamembersdev');
+		$q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'",'ectamembersdev');
 		$spring_conferences[$conf['id_conference']] = '';
 		if (spip_num_rows($q2)) {
 			$participation = spip_fetch_array($q2);
@@ -1058,10 +1056,10 @@ $("a .ajax >.hidden").unbind('click');
 					<fieldset>
 						<ul>
 <?php 
-	$q = spip_query("select * FROM ecta_conferencies WHERE type='autumn' order by ecta_conferencies.year DESC",'ectamembersdev');
+	$q = spip_query("select * FROM spip_conferencies WHERE type='autumn' order by spip_conferencies.year DESC",'ectamembersdev');
 
 	while($conf = spip_fetch_array($q)) {
-		$q2 = spip_query("select * FROM ecta_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'",'ectamembersdev');
+		$q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'",'ectamembersdev');
 		$autumn_council[$conf['year']] = '';
 		if (spip_num_rows($q2)) {
 			$participation = spip_fetch_array($q2);
@@ -1103,7 +1101,7 @@ $("a .ajax >.hidden").unbind('click');
 								<select name="membership_year">
 									<option value=''></option>
 									<?php
-										$q = spip_query("select DISTINCT membership_year FROM ecta_members WHERE membership_year!=0 ORDER BY membership_year",'ectamembersdev');
+										$q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year",'ectamembersdev');
 										$year='';
 										while ($y = spip_fetch_array($q)) {
 											$year = $y['membership_year'];
@@ -1121,7 +1119,7 @@ $("a .ajax >.hidden").unbind('click');
 								<label>Type</label>
 								<select name="membership_fee" id="membership_subscription_fee">
 									<?php 
-										$q = spip_query("select DISTINCT membership_fee FROM ecta_membership_type order by membership_fee",'ectamembersdev');
+										$q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee",'ectamembersdev');
 							
 										while($sub = spip_fetch_array($q)) {
 											echo "<option value='{$sub['membership_fee']}' ";
@@ -1178,7 +1176,7 @@ $("a .ajax >.hidden").unbind('click');
 
 
 <p align="center">
-	<a href="?exec=membre_ecta_list">Back to the main menu</a>
+	<a href="?exec=membre_spip_list">Back to the main menu</a>
 </p>
 		
 		<?php

@@ -6,7 +6,7 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
 $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	// E
-	'ecta_titre' => 'Intranete Ecta',
+	'spip_titre' => 'Intranete Ecta',
 );
 
 ?>

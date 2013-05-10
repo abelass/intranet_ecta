@@ -70,7 +70,7 @@ function exec_export_xls() {
   $worksheet->write('0', '49', 'Special requests');
 
 	// Commitees
-	$q = sql_select('*', 'ecta_commitees', '', '', 'title');
+	$q = sql_select('*', 'spip_commitees', '', '', 'title');
 	$i = 50;
 	while ($row = sql_fetch($q)) {
 	  $worksheet->write('0', $i, $row['title']);
@@ -79,7 +79,7 @@ function exec_export_xls() {
 	}
 
 	// Conferences
-	$q = sql_select('*', 'ecta_conferencies', '', '', 'year, type DESC');
+	$q = sql_select('*', 'spip_conferencies', '', '', 'year, type DESC');
 	while ($row = sql_fetch($q)) {
 	  $worksheet->write('0', $i,  "{$row['title']} {$row['year']} ({$row['type']})");
 		$conferencie[$row['id_conference']] = $i;
@@ -141,11 +141,10 @@ function exec_export_xls() {
 		'49' => 'special_requests'
 	);
 	
-		spip_query("SET NAMES 'utf8'",'ectamembersdev');
 		spip_query("SET NAMES 'utf8'");
 
 /*
-		$sql = "select * from ecta_members_type";
+		$sql = "select * from spip_members_type";
 		$q = spip_query($sql,'ectamembersdev');
 		$type['-'] = '';
 		while ($r = spip_fetch_array($q)) {
@@ -199,7 +198,7 @@ function exec_export_xls() {
 //echo '<pre>';
 
 		$sql=translitteration("SELECT seq, id_auteur, membernumber, gender, title, name, surname, birthdate, email, password, addr1, addr2, addr3, addr4, addr5, country, nationality, fax1, fax2, tel1, tel2, tel3, listed_in_dir, OHIM, membertype, incommitee, commem, executivebodies, memberofhonour, sponsoredby1,  sponsoredby2, datemembership, pastcouncil, company, practicein, inactivitysince, categoriesofprofessional, membership_fee,  membership_year, payment_error, method_of_payment, date_of_payment, reference, councilmem, 
-		pastpresident, active, vat_number, countrytype, special_requests FROM ecta_members $where ");
+		pastpresident, active, vat_number, countrytype, special_requests FROM spip_members $where ");
 	$reponse = sql_query($sql);
 	//echo("$sql\n\n");
 	
@@ -221,14 +220,14 @@ function exec_export_xls() {
 		}
 		
 		// Commitees
-		$q = sql_select('*', 'ecta_members_commitees', 'id_member = '.$row['seq']);
+		$q = sql_select('*', 'spip_members_commitees', 'id_member = '.$row['seq']);
 		while ($row_c = sql_fetch($q)) {
 		  $worksheet->write($i, $commitee[$row_c['id_commitee']], 'Yes');
 			//echo("\n comm : ".$commitee[$row_c['id_commitee']]." | ".$row_c['id_commitee']);
 		}
 
 		// Conferences
-		$q = sql_select('*', 'ecta_members_conferencies', 'id_member = '.$row['seq']);
+		$q = sql_select('*', 'spip_members_conferencies', 'id_member = '.$row['seq']);
 		while ($row_c = sql_fetch($q)) {
 		  $worksheet->write($i, $conferencie[$row_c['id_conference']], $row_c['participation']);
 			//echo("\n conf : ".$conferencie[$row_c['id_conference']]." | ".$row_c['participation']);

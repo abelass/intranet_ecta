@@ -14,7 +14,7 @@ function action_delete_periode_dist($arg=null) {
 	}
 	
 
-    sql_delete('ecta_members_commitees','id_membership='.$arg);
+    sql_delete('spip_members_commitees','id_membership='.$arg);
 
 
 	return ;

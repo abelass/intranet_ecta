@@ -20,11 +20,11 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
 /**
  * Fonction d'appel pour le pipeline
  * @pipeline autoriser */
-function ecta_autoriser(){}
+function spip_autoriser(){}
 
 
 /* Exemple
-function autoriser_configurer_ecta_dist($faire, $type, $id, $qui, $opt) {
+function autoriser_configurer_spip_dist($faire, $type, $id, $qui, $opt) {
 	// type est un objet (la plupart du temps) ou une chose.
 	// autoriser('configurer', '_ecta') => $type = 'ecta'
 	// au choix

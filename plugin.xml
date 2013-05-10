@@ -20,16 +20,16 @@
 	<pipeline>
 		<nom>ajouter_boutons</nom> 
 		<action>ajouter_boutons</action>
-		<inclure>ecta_pipelines_admin.php</inclure>
+		<inclure>spip_pipelines_admin.php</inclure>
 	</pipeline>
 	<pipeline>
 		<nom>post_typo</nom> 
 		<action>post_typo</action>
-		<inclure>ecta_pipelines_admin.php</inclure>
+		<inclure>spip_pipelines_admin.php</inclure>
 	</pipeline>	
 	<pipeline>
 		<nom>formulaire_traiter</nom> 
-		<inclure>ecta_pipelines_admin.php</inclure>
+		<inclure>spip_pipelines_admin.php</inclure>
 	</pipeline>		
 
 </plugin>

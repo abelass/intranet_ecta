@@ -25,7 +25,7 @@ function cp($long_pass)
 	 return $mdp;
  } 
 
-function exec_membre_ecta_new(){
+function exec_membre_spip_new(){
 	global $connect_statut, $connect_id_auteur;
 	spip_query("SET NAMES 'utf8'",'ectamembersdev');
 	spip_query("SET NAMES 'utf8'");
@@ -38,7 +38,7 @@ function exec_membre_ecta_new(){
 		// TODO : commencer par v�rifier si un membre existe
 		// TODO : charger_fond pour un formulaire (ou au min. copier/coller celui de l'�dition)
 		
-		$reponse = spip_query('desc ecta_members','ectamembersdev');
+		$reponse = spip_query('desc spip_members','ectamembersdev');
 		while($result = spip_fetch_array($reponse))
 			$r[] = $result['Field'];
 		
@@ -76,16 +76,16 @@ function exec_membre_ecta_new(){
 		
 		if (isset($maj['seq'])) unset($maj['seq']);
 		
-		spip_query("insert into ecta_members(id_auteur) values ($id_auteur)",'ectamembersdev');
-		$q = spip_query("select seq FROM ecta_members where id_auteur=$id_auteur",'ectamembersdev');
+		spip_query("insert into spip_members(id_auteur) values ($id_auteur)",'ectamembersdev');
+		$q = spip_query("select seq FROM spip_members where id_auteur=$id_auteur",'ectamembersdev');
 		$id_member = spip_fetch_array($q);
-		spip_query("UPDATE ecta_members SET ".implode(',',$maj)." WHERE seq=".($id_member['seq']),'ectamembersdev');
+		spip_query("UPDATE spip_members SET ".implode(',',$maj)." WHERE seq=".($id_member['seq']),'ectamembersdev');
 
 		// SPIP-Liste : Abonnement � la liste "membres" (id = 4)
 		$sql = array('id_auteur' => $id_auteur,'id_liste'=>4,'statut'=>'valide','format'=>'html');
 		sql_insertq('spip_auteurs_listes', $sql);
 		
-		header("Location: ?exec=membre_ecta_edit&seq=".($id_member['seq']));
+		header("Location: ?exec=membre_spip_edit&seq=".($id_member['seq']));
 		exit();
 	}
 		$commencer_page = charger_fonction('commencer_page', 'inc');
@@ -97,7 +97,7 @@ function exec_membre_ecta_new(){
 				echo '<p class="style1">MEMBERS DIRECTORY<br>ADMINISTRATION</p><p class="style1">INSERT A NEW MEMBER</li>';
 			echo fin_boite_info();
 			echo debut_raccourcis();
-       echo '<a href="?exec=membre_ecta_list"><b><img src="'._DIR_PLUGIN_ECTA.'img_pack/back.png" alt="retour" align="absmiddle"> Retour</b></a>';
+       echo '<a href="?exec=membre_spip_list"><b><img src="'._DIR_PLUGIN_ECTA.'img_pack/back.png" alt="retour" align="absmiddle"> Retour</b></a>';
 			echo fin_raccourcis();
 		echo debut_droite();
 		
@@ -217,7 +217,7 @@ function exec_membre_ecta_new(){
 
 
 		<p align="center">
-			<a href="?exec=membre_ecta_list">Back to the main menu</a>
+			<a href="?exec=membre_spip_list">Back to the main menu</a>
 		</p>
 		
 		<?php

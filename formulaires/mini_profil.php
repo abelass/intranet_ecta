@@ -10,7 +10,7 @@ include_spip('inc/securiser_action');
 		if (!autoriser("visiteur")) {
 			$valeurs['editable'] = false;
 		}
-		$u = sql_fetch(sql_select('*','ecta_members','id_auteur = '.$id_auteur,'','','','','ectamembersdev'));
+		$u = sql_fetch(sql_select('*','spip_members','id_auteur = '.$id_auteur,'','','','','ectamembersdev'));
 		$valeurs = array(
 			"title" => $u['title'],
 			"name" => $u['name'],

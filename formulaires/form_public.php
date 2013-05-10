@@ -11,14 +11,14 @@ spip_query("SET NAMES 'utf8'");
 		if (!autoriser("visiteur")) {
 			$valeurs['editable'] = false;
 		}
-		$u = sql_fetch(sql_select('*','ecta_members','id_auteur = '.session_get('id_auteur'),'','','','','ectamembersdev'));
+		$u = sql_fetch(sql_select('*','spip_members','id_auteur = '.session_get('id_auteur'),'','','','','ectamembersdev'));
 
 		$valeurs = $u;
 		$valeurs['password'] = '';
 		$valeurs['lastname'] = $u['name'];
 		$valeurs["firstname"] = $u['surname'];
 
-		$liste_conf = sql_allfetsel('*','ecta_conferencies','','','year DESC,type','','','ectamembersdev');
+		$liste_conf = sql_allfetsel('*','spip_conferencies','','','year DESC,type','','','ectamembersdev');
 		foreach($liste_conf as $conf) {
 			if ($conf['type']=='autumn')
 				$liste_autumn[$conf['id_conference']] = $conf;
@@ -27,7 +27,7 @@ spip_query("SET NAMES 'utf8'");
 			/// $l_conference[$conf['id_conference']] = $conf; Rollback du 24/12/09
 		}
 		
-		$l = sql_allfetsel('*','ecta_members_conferencies','id_member = "'.$u['seq'].'"','','','','','ectamembersdev');
+		$l = sql_allfetsel('*','spip_members_conferencies','id_member = "'.$u['seq'].'"','','','','','ectamembersdev');
 		foreach($l as $emc) {
 			$participation[$emc['id_conference']] = $emc['participation'];
 		}
@@ -35,7 +35,7 @@ spip_query("SET NAMES 'utf8'");
 		/*
 		function option_asso($asso) {
 			$str = '';
-			$vals = sql_allfetsel('DISTINCT title','ecta_associations','1','','title ASC','','','ectamembersdev');
+			$vals = sql_allfetsel('DISTINCT title','spip_associations','1','','title ASC','','','ectamembersdev');
 			foreach ($vals as $e) {
 				$str .= '<option value="'.$e['title'].'"'.($asso==$e['title']?' selected="selected"':'').">".$e['title']."</option>\n";
 			}
@@ -55,12 +55,12 @@ spip_query("SET NAMES 'utf8'");
 		$user = sql_fetsel('login','spip_auteurs','id_auteur='.$u['id_auteur']);
 		$valeurs['login'] = $user['login'];
 		
-		$mt = sql_fetsel('*','ecta_members_type','id_member_type='.$u['membertype'],'','','','','ectamembersdev');
+		$mt = sql_fetsel('*','spip_members_type','id_member_type='.$u['membertype'],'','','','','ectamembersdev');
 		$valeurs['membertype'] = supprimer_numero($mt['title']);
 		
 		$valeurs['list_commitee_member'] = array();
-		$sql="select ecta_commitees.title FROM ecta_commitees,ecta_members_commitees 
-					where ecta_members_commitees.id_commitee=ecta_commitees.id_commitee and id_member='{$u['seq']}'";
+		$sql="select spip_commitees.title FROM spip_commitees,spip_members_commitees 
+					where spip_members_commitees.id_commitee=spip_commitees.id_commitee and id_member='{$u['seq']}'";
 		$q = sql_query($sql,'ectamembersdev');
 		while ($emc = sql_fetch($q,'ectamembersdev'))
 			$valeurs['list_commitee_member'][] = $emc['title'];
@@ -68,22 +68,22 @@ spip_query("SET NAMES 'utf8'");
 		else $valeurs['list_commitee_member'] = implode(', ',$valeurs['list_commitee_member']);
 		
 		$valeurs['chaircommitee'] = "No";
-		$sql="select ecta_commitees.title FROM ecta_commitees,ecta_members 
-					where ecta_members.id_chaircommitee=ecta_commitees.id_commitee and seq='{$u['seq']}'";
+		$sql="select spip_commitees.title FROM spip_commitees,spip_members 
+					where spip_members.id_chaircommitee=spip_commitees.id_commitee and seq='{$u['seq']}'";
 		$q = sql_query($sql,'ectamembersdev');
 		while ($emc = sql_fetch($q,'ectamembersdev'))
 			$valeurs['chaircommitee'] = $emc['title'];
 		
 		$valeurs['vicechaircommitee'] = "No";
-		$sql="select ecta_commitees.title FROM ecta_commitees,ecta_members 
-					where ecta_members.id_vicechaircommitee=ecta_commitees.id_commitee and seq='{$u['seq']}'";
+		$sql="select spip_commitees.title FROM spip_commitees,spip_members 
+					where spip_members.id_vicechaircommitee=spip_commitees.id_commitee and seq='{$u['seq']}'";
 		$q = sql_query($sql,'ectamembersdev');
 		while ($emc = sql_fetch($q,'ectamembersdev'))
 			$valeurs['vicechaircommitee'] = $emc['title'];
 		
 		$valeurs['secretarycommitee'] = "No";
-		$sql="select ecta_commitees.title FROM ecta_commitees,ecta_members 
-					where ecta_members.id_secretarycommitee=ecta_commitees.id_commitee and seq='{$u['seq']}'";
+		$sql="select spip_commitees.title FROM spip_commitees,spip_members 
+					where spip_members.id_secretarycommitee=spip_commitees.id_commitee and seq='{$u['seq']}'";
 		$q = sql_query($sql,'ectamembersdev');
 		while ($emc = sql_fetch($q,'ectamembersdev'))
 			$valeurs['secretarycommitee'] = $emc['title'];
@@ -116,12 +116,12 @@ spip_query("SET NAMES 'utf8'");
 		} */
 		
 
-		$q = sql_query("select id_association, title, 0+title AS num_order FROM ecta_associations order by num_order",'ectamembersdev');
+		$q = sql_query("select id_association, title, 0+title AS num_order FROM spip_associations order by num_order",'ectamembersdev');
 		
 		while($association = spip_fetch_array($q)) {
 			$associations['title'] = supprimer_numero($associations['title']);
 		
-			$q2 = sql_query("select id_association FROM ecta_members_associations 
+			$q2 = sql_query("select id_association FROM spip_members_associations 
 					where id_association='{$association['id_association']}' and id_member='{$u['seq']}'",'ectamembersdev');
 		
 			if (spip_fetch_array($q2)) $checked=" checked "; else $checked = '';
@@ -138,12 +138,12 @@ spip_query("SET NAMES 'utf8'");
 		/* Categories of professionnal */
 		$valeurs['li_cat_professionnal'] = '';
 		
-		$q = spip_query("select id_category, title, 0+title AS num_order FROM ecta_categories_of_professional order by num_order",'ectamembersdev');
+		$q = spip_query("select id_category, title, 0+title AS num_order FROM spip_categories_of_professional order by num_order",'ectamembersdev');
 		
 		while($category = spip_fetch_array($q)) {
 			$category['title'] = supprimer_numero($category['title']);
 		
-			$q2 = sql_query("select id_category FROM ecta_members_categories_of_professional 
+			$q2 = sql_query("select id_category FROM spip_members_categories_of_professional 
 					where id_category='{$category['id_category']}' and id_member='{$u['seq']}'",'ectamembersdev');
 		
 			if (spip_fetch_array($q2)) $checked=" checked "; else $checked = '';
@@ -233,29 +233,29 @@ spip_query("SET NAMES 'utf8'");
 		$res=sql_query($sql);
 		
 		foreach ($update as $k => $v) {$tsql[] = "$k = '".addslashes($v)."'";}
-		sql_query('update ecta_members SET '.implode(',',$tsql).' where id_auteur='.$id_auteur,'ectamembersdev');
+		sql_query('update spip_members SET '.implode(',',$tsql).' where id_auteur='.$id_auteur,'ectamembersdev');
 
 		/* Conferences */
-		$member = sql_fetsel('seq','ecta_members','id_auteur='.$id_auteur,'','','','','ectamembersdev');
-		sql_query('delete from ecta_members_conferencies where id_member='.$member['seq'],'ectamembersdev');
+		$member = sql_fetsel('seq','spip_members','id_auteur='.$id_auteur,'','','','','ectamembersdev');
+		sql_query('delete from spip_members_conferencies where id_member='.$member['seq'],'ectamembersdev');
 		
 		if (_request('conferences'))
 		foreach(_request('conferences') as $id_conf => $participation)
-			sql_query('INSERT INTO ecta_members_conferencies(id_member, id_conference, participation) VALUES ('. $member['seq']. ', '. (int)$id_conf . ',"'. $participation.'")','ectamembersdev');
+			sql_query('INSERT INTO spip_members_conferencies(id_member, id_conference, participation) VALUES ('. $member['seq']. ', '. (int)$id_conf . ',"'. $participation.'")','ectamembersdev');
 			
 		/* Associations */
-		sql_query('delete from ecta_members_associations where id_member='.$member['seq'],'ectamembersdev');
+		sql_query('delete from spip_members_associations where id_member='.$member['seq'],'ectamembersdev');
 		
 		if (_request('associations'))
 		foreach(_request('associations') as $id_association)
-			sql_query('INSERT INTO ecta_members_associations(id_member, id_association) VALUES ('. $member['seq']. ', '. (int)$id_association.')','ectamembersdev');
+			sql_query('INSERT INTO spip_members_associations(id_member, id_association) VALUES ('. $member['seq']. ', '. (int)$id_association.')','ectamembersdev');
 			
 
 		/* categories_of_professional */
-		spip_query("delete from ecta_members_categories_of_professional where id_member='".$member['seq']."'",'ectamembersdev');
+		spip_query("delete from spip_members_categories_of_professional where id_member='".$member['seq']."'",'ectamembersdev');
 		if (isset($_POST['categories_of_professional']))
 			{foreach ($_POST['categories_of_professional'] as $value) {
-				spip_query("insert into ecta_members_categories_of_professional(id_member,id_category) VALUES('".$member['seq']."','$value')",'ectamembersdev');
+				spip_query("insert into spip_members_categories_of_professional(id_member,id_category) VALUES('".$member['seq']."','$value')",'ectamembersdev');
 			}
 		}
 			
@@ -285,7 +285,7 @@ spip_query("SET NAMES 'utf8'");
 		
 			
 			
-			$donnees_membre=sql_fetsel('name,surname','ecta_members','id_auteur='.$id_auteur);
+			$donnees_membre=sql_fetsel('name,surname','spip_members','id_auteur='.$id_auteur);
 			$membre=$donnees_membre['name'].($donnees_membre['surname']?' '.$donnees_membre['surname']:'');
 			if(!$membre)$membre='name not detected ,id_auteur'.$id_auteur;
 			$message_mail .="Last modification done from the frontend on : ".$update['datestamp']."  by ".$membre."\n\n";

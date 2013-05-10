@@ -13,14 +13,14 @@
 $coms=array();
 
 
-		$m= spip_query("select * from ecta_members");
+		$m= spip_query("select * from spip_members");
 		while($ms = spip_fetch_array($m)) {
 		$mcommitees = array();
 			echo '<div>';
 			$id_member=$ms['seq'];
 			echo '<h1>'.$id_member.'</h1>';
 			
-			$qc = spip_query("select * from ecta_members_commitees where id_member =$id_member");
+			$qc = spip_query("select * from spip_members_commitees where id_member =$id_member");
 			
 			while($rc = spip_fetch_array($qc)) {
 				if($rc['id_commitee'])$mcommitees[$rc['id_commitee']] = $rc['id_commitee'];
@@ -31,7 +31,7 @@ $coms=array();
 		$value =serialize($mcommitees);
 		echo $value ;	echo $id_member ;
 		echo '</div>';
-		sql_updateq('ecta_members',array('mem_coms'=>$value)," seq =$id_member");
+		sql_updateq('spip_members',array('mem_coms'=>$value)," seq =$id_member");
 		}
 
 

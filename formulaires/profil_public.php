@@ -9,7 +9,7 @@ spip_query("SET NAMES 'utf8'");
 		if (!autoriser("visiteur")) {
 			$valeurs['editable'] = false;
 		}
-		$u = sql_fetch(sql_select('*','ecta_members','id_auteur = '.$id_auteur,'','','','','ectamembersdev'));
+		$u = sql_fetch(sql_select('*','spip_members','id_auteur = '.$id_auteur,'','','','','ectamembersdev'));
 		
 		$tel1=($u['tel1_pn']?'+'.$u['tel1_pn'].' ':'').($u['tel1_pl']?$u['tel1_pl'].' ':'').$u['tel1'];
 		$tel2=($u['tel2_pn']?'+'.$u['tel2_pn'].' ':'').($u['tel2_pl']?$u['tel2_pl'].' ':'').$u['tel2'];

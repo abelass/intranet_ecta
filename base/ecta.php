@@ -21,7 +21,7 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  * @return array
  *     Déclarations d'interface pour le compilateur
  */
-function ecta_declarer_tables_interfaces($interfaces) {
+function spip_declarer_tables_interfaces($interfaces) {
 
 	$interfaces['table_des_tables']['members'] = 'members';
 	$interfaces['table_des_tables']['associations'] = 'associations';
@@ -49,7 +49,7 @@ function ecta_declarer_tables_interfaces($interfaces) {
  * @return array
  *     Description complétée des tables
  */
-function ecta_declarer_tables_objets_sql($tables) {
+function spip_declarer_tables_objets_sql($tables) {
 
 	$tables['spip_members'] = array(
 		'type' => 'member',
@@ -223,22 +223,22 @@ function ecta_declarer_tables_objets_sql($tables) {
 
 	return $tables;
 }
-function ecta_declarer_tables_principales($tables_principales){
+function spip_declarer_tables_principales($tables_principales){
     //-- Table spip_executive_bodies------------------
     $spip_executive_bodies = array(
-        "id_ecta_executive_body"  => "int(11) NOT NULL",
+        "id_spip_executive_body"  => "int(11) NOT NULL",
         "title" => "varchar(50) DEFAULT 'oui' NOT NULL",
         );
  
     $spip_executive_bodies_key = array(
-        "PRIMARY KEY"   => "id_ecta_executive_body",
+        "PRIMARY KEY"   => "id_spip_executive_body",
         );
  
     $tables_principales['spip_executive_bodies'] = array(
         'field' => &$spip_executive_bodies, 
         'key' => &$spip_executive_bodies_key, 
         'join'=>array(
-            'id_ecta_executive_body'=>'id_ecta_executive_body'
+            'id_spip_executive_body'=>'id_spip_executive_body'
         ));
         
     //-- Table spip_membership_type------------------
@@ -345,7 +345,7 @@ function ecta_declarer_tables_principales($tables_principales){
     return $tables_principales;
 }
 
-function ecta_declarer_tables_auxiliaires($tables_auxiliaires){
+function spip_declarer_tables_auxiliaires($tables_auxiliaires){
      
     //Table spip_members_associations
     $spip_members_associations = array(

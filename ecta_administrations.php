@@ -28,7 +28,7 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  *     Version du schéma de données dans ce plugin (déclaré dans paquet.xml)
  * @return void
 **/
-function ecta_upgrade($nom_meta_base_version, $version_cible) {
+function spip_upgrade($nom_meta_base_version, $version_cible) {
 	$maj = array();
 	# quelques exemples
 	# (que vous pouvez supprimer !)
@@ -50,21 +50,21 @@ function ecta_upgrade($nom_meta_base_version, $version_cible) {
 	# ...
 
 	$maj['create'] = array(
-	   array('sql_alter','TABLE ecta_associations RENAME TO spip_associations'),
-	   array('sql_alter','TABLE ecta_categories_of_professional RENAME TO spip_categories_of_professional'),
-	   array('sql_alter','TABLE ecta_commitees RENAME TO spip_commitees'),
-	   array('sql_alter','TABLE ecta_commitee_role RENAME TO spip_commitee_role'),  
-       array('sql_alter','TABLE ecta_conferencies RENAME TO spip_conferencies'),  
-       array('sql_alter','TABLE ecta_executive_bodies RENAME TO spip_executive_bodies'), 
-       array('sql_alter','TABLE ecta_members RENAME TO spip_members'), 
-       array('sql_alter','TABLE ecta_membership_type RENAME TO spip_membership_type'), 
-       array('sql_alter','TABLE ecta_members_associations RENAME TO spip_members_associations'),
-       array('sql_alter','TABLE ecta_members_categories_of_professional RENAME TO spip_members_categories_of_professional'),
-       array('sql_alter','TABLE ecta_members_commitees RENAME TO spip_members_commitees'),  
-       array('sql_alter','TABLE ecta_members_conferencies RENAME TO spip_members_conferencies'),  
-       array('sql_alter','TABLE ecta_members_council RENAME TO spip_members_council'), 
-       array('sql_alter','TABLE ecta_members_no_members RENAME TO spip_members_no_members'),     
-       array('sql_alter','TABLE ecta_members_type RENAME TO spip_members_type'),
+	   array('sql_alter','TABLE spip_associations RENAME TO spip_associations'),
+	   array('sql_alter','TABLE spip_categories_of_professional RENAME TO spip_categories_of_professional'),
+	   array('sql_alter','TABLE spip_commitees RENAME TO spip_commitees'),
+	   array('sql_alter','TABLE spip_commitee_role RENAME TO spip_commitee_role'),  
+       array('sql_alter','TABLE spip_conferencies RENAME TO spip_conferencies'),  
+       array('sql_alter','TABLE spip_executive_bodies RENAME TO spip_executive_bodies'), 
+       array('sql_alter','TABLE spip_members RENAME TO spip_members'), 
+       array('sql_alter','TABLE spip_membership_type RENAME TO spip_membership_type'), 
+       array('sql_alter','TABLE spip_members_associations RENAME TO spip_members_associations'),
+       array('sql_alter','TABLE spip_members_categories_of_professional RENAME TO spip_members_categories_of_professional'),
+       array('sql_alter','TABLE spip_members_commitees RENAME TO spip_members_commitees'),  
+       array('sql_alter','TABLE spip_members_conferencies RENAME TO spip_members_conferencies'),  
+       array('sql_alter','TABLE spip_members_council RENAME TO spip_members_council'), 
+       array('sql_alter','TABLE spip_members_no_members RENAME TO spip_members_no_members'),     
+       array('sql_alter','TABLE spip_members_type RENAME TO spip_members_type'),
 	   array('maj_tables', array('spip_members', 'spip_associations', 'spip_categories_of_professional', 'spip_commitees', 'spip_conferencies','spip_executive_bodies','spip_membership','spip_members_associations','spip_members_categories_of_professional','spip_members_commitees','spip_members_council','spip_members_type')));
 
 	include_spip('base/upgrade');
@@ -84,7 +84,7 @@ function ecta_upgrade($nom_meta_base_version, $version_cible) {
  *     Nom de la meta informant de la version du schéma de données du plugin installé dans SPIP
  * @return void
 **/
-function ecta_vider_tables($nom_meta_base_version) {
+function spip_vider_tables($nom_meta_base_version) {
 	# quelques exemples
 	# (que vous pouvez supprimer !)
 	# sql_drop_table("spip_xx");

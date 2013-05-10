@@ -4,7 +4,7 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
 include_spip('inc/vieilles_defs');
 include_spip('inc/safe_utf8');
 
-function exec_membre_ecta_list(){
+function exec_membre_spip_list(){
 	global $connect_statut, $connect_id_auteur;
 	spip_query("SET NAMES 'utf8'",'ectamembersdev');
 	spip_query("SET NAMES 'utf8'");
@@ -15,29 +15,29 @@ function exec_membre_ecta_list(){
 	
 	if ($action == 'delete')
 	{
-		$sql="SELECT id_auteur FROM ecta_members where seq='$seq' ";
+		$sql="SELECT id_auteur FROM spip_members where seq='$seq' ";
 		$reponse = spip_query($sql,'ectamembersdev');
 		$aut = spip_fetch_array($reponse);		
 
 		// SPIP-Liste : Abonnement à la liste "membres" (id = 4)
 		sql_delete('spip_auteurs_listes', 'id_auteur = '.$aut['id_auteur']);
 		sql_delete('spip_auteurs', 'id_auteur = '.$aut['id_auteur']);
-		sql_delete('ecta_members', 'id_auteur = '.$aut['id_auteur'], 'ectamembersdev');
+		sql_delete('spip_members', 'id_auteur = '.$aut['id_auteur'], 'ectamembersdev');
 
 		$message_maj = "The member has been deleted";
 	}
 	if ($action == 'desactivate')
 	{
-		spip_query("update ecta_members set active='No' where seq='$seq'",'ectamembersdev');
-		$q = spip_query("select id_auteur from ecta_members where seq='$seq'",'ectamembersdev');
+		spip_query("update spip_members set active='No' where seq='$seq'",'ectamembersdev');
+		$q = spip_query("select id_auteur from spip_members where seq='$seq'",'ectamembersdev');
 		while ($result = spip_fetch_array($reponse))
 			spip_query("update spip_auteurs set statut='5poubelle' where id_auteur='{$result['id_auteur']}'");
 		$message_maj = "The member has been desactivated";
 	}
 	if ($action == 'activate')
 	{
-		spip_query("update ecta_members set active='Yes' where seq='$seq'",'ectamembersdev');
-		$q = spip_query("select id_auteur from ecta_members where seq='$seq'",'ectamembersdev');
+		spip_query("update spip_members set active='Yes' where seq='$seq'",'ectamembersdev');
+		$q = spip_query("select id_auteur from spip_members where seq='$seq'",'ectamembersdev');
 		while ($result = spip_fetch_array($reponse))
 			spip_query("update spip_auteurs set statut='6forum' where id_auteur='{$result['id_auteur']}'");
 		$message_maj = "The member has been activated";
@@ -135,8 +135,8 @@ function exec_membre_ecta_list(){
     
     <li>
     <table class="cellule-h-table" style="vertical-align: middle;" cellpadding="0">
-    <tbody><tr><td><a href="?exec=membre_ecta_new" class="cellule-h"><span class="cell-i"><?php echo '<img src="'._DIR_PLUGIN_ECTA.'img_pack/user-add.png" alt="Add a new member">' ?></span></a></td>
-    <td class="cellule-h-lien"><a href="?exec=membre_ecta_new" class="cellule-h">Add a new member</a></td></tr></tbody></table>
+    <tbody><tr><td><a href="?exec=membre_spip_new" class="cellule-h"><span class="cell-i"><?php echo '<img src="'._DIR_PLUGIN_ECTA.'img_pack/user-add.png" alt="Add a new member">' ?></span></a></td>
+    <td class="cellule-h-lien"><a href="?exec=membre_spip_new" class="cellule-h">Add a new member</a></td></tr></tbody></table>
     </li>
         
     </ul>
@@ -169,7 +169,7 @@ function exec_membre_ecta_list(){
         <!-- filtres -->
         <div class="titrem cadre cadre-e">
         <form name="form1" method="get" action="" id="filtre_membres">
-        <input type="hidden" name="exec" value="membre_ecta_list">
+        <input type="hidden" name="exec" value="membre_spip_list">
 				<?php echo "<input type='hidden' name='init' value='".(_request('init')?_request('init'):'All')."'>";?>
             <input type="hidden" name="act" value="search">
 
@@ -178,7 +178,7 @@ function exec_membre_ecta_list(){
 												<select name="membership_year">
 													<option value=''>YEAR</option>
 													<?php
-														$q = spip_query("select DISTINCT membership_year FROM ecta_members WHERE membership_year!=0 ORDER BY membership_year",'ectamembersdev');
+														$q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year",'ectamembersdev');
 														$year='';
 														while ($y = spip_fetch_array($q)) {
 															$year = $y['membership_year'];
@@ -192,7 +192,7 @@ function exec_membre_ecta_list(){
 												<select name="membership_fee" id="membership_subscription_fee">
 													<option value=''>TYPE</option>
 													<?php 
-														$q = spip_query("select DISTINCT membership_fee FROM ecta_membership_type order by membership_fee",'ectamembersdev');
+														$q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee",'ectamembersdev');
 
 														while($sub = spip_fetch_array($q)) {
 															echo "<option value='{$sub['membership_fee']}' ";
@@ -216,7 +216,7 @@ function exec_membre_ecta_list(){
 												<option value='' <?php if (!_request('s_company')) echo 'selected';?>>ALL</option>
 																	<?php
 
-															$q = spip_query("select DISTINCT company FROM ecta_members order by company",'ectamembersdev');
+															$q = spip_query("select DISTINCT company FROM spip_members order by company",'ectamembersdev');
 															// Les apostrophe ne passe pas dans le js autocomplete, à defaut de mieux
 															$r_company=str_replace("_","'",_request('s_company'));
 															while($m = spip_fetch_array($q)) {
@@ -242,7 +242,7 @@ function exec_membre_ecta_list(){
 			                while ($p = sql_fetch($q)) {
 			                    $list[$p['code_iso']] = $p['pays'];
 			                }
-			                $q = sql_query('select distinct country from ecta_members order by country','ectamembersdev');
+			                $q = sql_query('select distinct country from spip_members order by country','ectamembersdev');
 			                while ($p=spip_fetch_array($q)) {
 												if (!$p['country']) {$p['country'] = 'NULL';$list[$p['country']] = 'NULL';}
 												$liste_c[$p['country']] = $p['country'];
@@ -274,12 +274,12 @@ function exec_membre_ecta_list(){
         <!-- alphabet -->
         <div class="titrem cadre cadre-e">
 					<?php
-						echo "<a href='?exec=membre_ecta_list&init=All&s_company=".urlencode(_request('s_company'))."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."' ",
+						echo "<a href='?exec=membre_spip_list&init=All&s_company=".urlencode(_request('s_company'))."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."' ",
 							(!_request('init') || _request('init')=='All')?'class="selected"':'',
 							"><strong>All</strong></a>&nbsp;|";
 						$alph = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
 						foreach($alph as $let) {
-							echo "&nbsp;<a href='?exec=membre_ecta_list&init=$let&s_company=".urlencode(_request('s_company'))."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."' ",
+							echo "&nbsp;<a href='?exec=membre_spip_list&init=$let&s_company=".urlencode(_request('s_company'))."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."' ",
 							(_request('init')==$let)?'class="selected"':'',
 							"><strong>$let</strong></a>";
 						}
@@ -300,10 +300,10 @@ function exec_membre_ecta_list(){
 			$sort_country = (_request('by')=='country' ? (_request('order')=='ASC' ?'DESC':'ASC') : '');
 			$sort_active = (_request('by')=='active' ? ( _request('order')=='ASC' ?'DESC':'ASC') : '');
 
-			echo '<a href="?exec=membre_ecta_list&by=surname&order='.$sort_name."&init="._request('init')."&s_company="._request('s_company')."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."".'" title="filter by name"><img src="'._DIR_PLUGIN_ECTA.'img_pack/puce_filter_'.$sort_name.'.gif" alt="Filter"></a>' ?></strong></div></th>
-			  <th><div align="center"><strong>Company <?php echo '<a href="?exec=membre_ecta_list&by=company&order='.$sort_company."&init="._request('init')."&s_company="._request('s_company')."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."".'" title="filter by company"><img src="'._DIR_PLUGIN_ECTA.'img_pack/puce_filter_'.$sort_company.'.gif" alt="Filter"></a>' ?></strong></div></th>
-			  <th width="5%"><div align="center"><?php echo '<a href="?exec=membre_ecta_list&by=country&order='.$sort_country."&init="._request('init')."&s_company="._request('s_company')."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."".'" title="filter by country"><img src="'._DIR_PLUGIN_ECTA.'img_pack/puce_filter_'.$sort_country.'.gif" alt="Filter"></a>' ?></div></th>
-			  <th width="5%"><div align="center"><?php echo '<a href="?exec=membre_ecta_list&by=active&order='.$sort_active."&init="._request('init')."&s_company="._request('s_company')."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."".'" title="filter by status"><img src="'._DIR_PLUGIN_ECTA.'img_pack/puce_filter_'.$sort_active.'.gif" alt="Filter"></a>' ?></div></th>
+			echo '<a href="?exec=membre_spip_list&by=surname&order='.$sort_name."&init="._request('init')."&s_company="._request('s_company')."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."".'" title="filter by name"><img src="'._DIR_PLUGIN_ECTA.'img_pack/puce_filter_'.$sort_name.'.gif" alt="Filter"></a>' ?></strong></div></th>
+			  <th><div align="center"><strong>Company <?php echo '<a href="?exec=membre_spip_list&by=company&order='.$sort_company."&init="._request('init')."&s_company="._request('s_company')."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."".'" title="filter by company"><img src="'._DIR_PLUGIN_ECTA.'img_pack/puce_filter_'.$sort_company.'.gif" alt="Filter"></a>' ?></strong></div></th>
+			  <th width="5%"><div align="center"><?php echo '<a href="?exec=membre_spip_list&by=country&order='.$sort_country."&init="._request('init')."&s_company="._request('s_company')."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."".'" title="filter by country"><img src="'._DIR_PLUGIN_ECTA.'img_pack/puce_filter_'.$sort_country.'.gif" alt="Filter"></a>' ?></div></th>
+			  <th width="5%"><div align="center"><?php echo '<a href="?exec=membre_spip_list&by=active&order='.$sort_active."&init="._request('init')."&s_company="._request('s_company')."&s_country="._request('s_country')."&membership_fee="._request('membership_fee')."&membership_year="._request('membership_year')."&s_name=".urlencode(_request('s_name'))."".'" title="filter by status"><img src="'._DIR_PLUGIN_ECTA.'img_pack/puce_filter_'.$sort_active.'.gif" alt="Filter"></a>' ?></div></th>
 		    <th width="5%"></th>
             <th width="5%"></th>
 		  </tr>
@@ -352,7 +352,7 @@ function exec_membre_ecta_list(){
 			}
 		}
 		
-		$sql=translitteration("SELECT seq,title,surname,name,company,country,membernumber,active FROM ecta_members $where ORDER BY $ORDER_BY ");
+		$sql=translitteration("SELECT seq,title,surname,name,company,country,membernumber,active FROM spip_members $where ORDER BY $ORDER_BY ");
 		
 		$reponse = spip_query($sql,'ectamembersdev');
 		if (!spip_num_rows($reponse)) echo ("<tr><td colspan=6>No result found <!-- (requete : ".$sql.") --></td></tr>");
@@ -378,12 +378,12 @@ function exec_membre_ecta_list(){
 			if ($row['active']=='Yes') {
 				echo "<tr class='tr_liste'>\n
 				<!-- td class='arial1'><center><div class='style3'><input type='checkbox' value='$rmembernumber'></div></center></td -->\n
-				<td class='arial1'><div class='style3'><a href='?exec=membre_ecta_edit&seq=$rseq'>$rsuffixe $rname $rsurname</a></div></td>\n
+				<td class='arial1'><div class='style3'><a href='?exec=membre_spip_edit&seq=$rseq'>$rsuffixe $rname $rsurname</a></div></td>\n
 				<td class='arial1'><div class='style3'>$rcompany</div></td>\n
 				<td class='arial1'><div class='style3'>$rcountry</div></td>\n
-				<td class='arial2'><center><div class='style3'><a href='?exec=membre_ecta_list&act=desactivate&seq=$rseq' title='disable this member'><img src='".find_in_path('img_pack/user-desactivate.png')."' border='0' /></a></center></div></td>\n
-				<td class='arial2'><center><div class='style3'><a href='?exec=membre_ecta_edit&seq=$rseq' title='edit this member'><img src='".find_in_path('img_pack/user-edit.png')."' border='0' /></a></center></div></td>\n
-				<td class='arial2'><center><div class='style3'><a href='?exec=membre_ecta_list&act=delete&seq=$rseq' onCLick=\"return confirm('Are you SURE you want to delete this member ?')\" title='delete this member'><img src='".find_in_path('img_pack/user-delete.png')."' border='0' /></a></center></div></td>\n
+				<td class='arial2'><center><div class='style3'><a href='?exec=membre_spip_list&act=desactivate&seq=$rseq' title='disable this member'><img src='".find_in_path('img_pack/user-desactivate.png')."' border='0' /></a></center></div></td>\n
+				<td class='arial2'><center><div class='style3'><a href='?exec=membre_spip_edit&seq=$rseq' title='edit this member'><img src='".find_in_path('img_pack/user-edit.png')."' border='0' /></a></center></div></td>\n
+				<td class='arial2'><center><div class='style3'><a href='?exec=membre_spip_list&act=delete&seq=$rseq' onCLick=\"return confirm('Are you SURE you want to delete this member ?')\" title='delete this member'><img src='".find_in_path('img_pack/user-delete.png')."' border='0' /></a></center></div></td>\n
 				</tr>\n";
 			} else {
 				echo "<tr class='tr_liste disabled'>\n
@@ -391,9 +391,9 @@ function exec_membre_ecta_list(){
 				<td class='arial1'><div class='style3'>$rsuffixe $rname $rsurname</div></td>\n
 				<td class='arial1'><div class='style3'>$rcompany</div></td>\n
 				<td class='arial1'><div class='style3'>$rcountry</div></td>\n
-				<td class='arial2'><center><div class='style3'><a href='?exec=membre_ecta_list&act=activate&seq=$rseq' title='activate this member'><img src='".find_in_path('img_pack/user-activate.png')."' border='0' /></a></center></div></td>\n
-				<td class='arial2'><center><div class='style3'><a href='?exec=membre_ecta_edit&seq=$rseq' title='edit this member'><img src='".find_in_path('img_pack/user-edit.png')."' border='0' /></a></center></div></td>\n
-				<td class='arial2'><center><div class='style3'><a href='?exec=membre_ecta_list&act=delete&seq=$rseq' onCLick=\"return confirm('Are you SURE you want to delete this member ?')\" title='delete this member'><img src='".find_in_path('img_pack/user-delete.png')."' border='0' /></a></center></div></td>\n
+				<td class='arial2'><center><div class='style3'><a href='?exec=membre_spip_list&act=activate&seq=$rseq' title='activate this member'><img src='".find_in_path('img_pack/user-activate.png')."' border='0' /></a></center></div></td>\n
+				<td class='arial2'><center><div class='style3'><a href='?exec=membre_spip_edit&seq=$rseq' title='edit this member'><img src='".find_in_path('img_pack/user-edit.png')."' border='0' /></a></center></div></td>\n
+				<td class='arial2'><center><div class='style3'><a href='?exec=membre_spip_list&act=delete&seq=$rseq' onCLick=\"return confirm('Are you SURE you want to delete this member ?')\" title='delete this member'><img src='".find_in_path('img_pack/user-delete.png')."' border='0' /></a></center></div></td>\n
 				</tr>\n";			
 			} // if
 			} // while
@@ -410,6 +410,6 @@ function exec_membre_ecta_list(){
 			echo fin_gauche(); 
 			echo fin_page();
 	}
-// http://www.ecta.org/ecrire/?exec=membre_ecta_list&init=All&act=search&membership_year=&membership_fee=&s_name=&s_company=&s_country=&Submit=Search
+// http://www.ecta.org/ecrire/?exec=membre_spip_list&init=All&act=search&membership_year=&membership_fee=&s_name=&s_company=&s_country=&Submit=Search
 
 ?>
