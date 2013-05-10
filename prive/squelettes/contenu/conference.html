@@ -1,0 +1,46 @@
+[(#AUTORISER{voir,conference,#ID_CONFERENCE}|sinon_interdire_acces)]
+<BOUCLE_conference(CONFERENCIES){id_conference}{si #ENV{exec}|=={conference}}>
+[(#BOITE_OUVRIR{[
+	[(#AUTORISER{modifier,conference,#ID_CONFERENCE})
+		[(#ID_CONFERENCE|afficher_qui_edite{conference}|non)
+			[(#URL_ECRIRE{conference_edit,id_conference=#ID_CONFERENCE}|icone_verticale{<:conference:icone_modifier_conference:>,conference,edit,right ajax preload})]
+		]
+		[(#ID_CONFERENCE|afficher_qui_edite{conference}|oui)
+			[(#URL_ECRIRE{conference_edit,id_conference=#ID_CONFERENCE}|icone_verticale{#ID_CONFERENCE|afficher_qui_edite{conference},warning-24,'',right edition_deja ajax preload})]
+		]
+	]
+
+	<h1>[(#RANG). ](#TITLE|sinon{<:info_sans_titre:>})[(#CHEMIN_IMAGE{conference-24.png}|balise_img{conference,cadre-icone})]</h1>
+
+],simple fiche_objet})]
+
+<div class="ajax">
+	#FORMULAIRE_DATER{conference,#ID_CONFERENCE}
+</div>
+
+<!--affiche_milieu-->
+
+<div id="wysiwyg">
+<INCLURE{fond=prive/objets/contenu/conference,id=#ID_CONFERENCE,id_conference=#ID_CONFERENCE,virtuel=oui,ajax=wysiwyg,wysiwyg=1}>
+</div>
+
+<div class="nettoyeur"></div>
+
+[(#AUTORISER{modifier,conference,#ID_CONFERENCE})
+	[(#ID_CONFERENCE|afficher_qui_edite{conference}|non)
+		[(#URL_ECRIRE{conference_edit,id_conference=#ID_CONFERENCE}|icone_verticale{<:conference:icone_modifier_conference:>,conference,edit,right ajax preload})]
+	]
+	[(#ID_CONFERENCE|afficher_qui_edite{conference}|oui)
+		[(#URL_ECRIRE{conference_edit,id_conference=#ID_CONFERENCE}|icone_verticale{#ID_CONFERENCE|afficher_qui_edite{conference},warning-24,'',right edition_deja ajax preload})]
+	]
+]
+
+#PIPELINE{afficher_complement_objet,#ARRAY{args,#ARRAY{type,conference,id,#ID_CONFERENCE},data,'<div class="nettoyeur"></div>'}}
+
+#BOITE_FERMER
+[(#EVAL{_AJAX}|oui)
+	<script type="text/javascript">/*<!\\[CDATA\\[*/reloadExecPage('#ENV{exec}','#navigation,#chemin');/*\\]\\]>*/</script>
+]
+</BOUCLE_conference>
+[(#ENV**{exec}|=={conference_edit}|?{#INCLURE{fond=prive/squelettes/contenu/conference_edit,redirect='',env,retourajax=oui},#REM|sinon_interdire_acces})]
+<//B_conference>

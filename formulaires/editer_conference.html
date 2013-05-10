@@ -7,6 +7,9 @@
 		#ACTION_FORMULAIRE{#ENV{action}}
 		<input type='hidden' name='id_conference' value='#ENV{id_conference}' />
 		<ul>
+		    
+		      [(#SAISIE{input, title, obligatoire=oui,
+                label=<:conference:label_title:>})]
 
 			[(#SAISIE{selection, type, obligatoire=oui,
 				label=<:conference:label_type:>,

@@ -1,0 +1,46 @@
+[(#AUTORISER{voir,category,#ID_CATEGORY}|sinon_interdire_acces)]
+<BOUCLE_category(CATEGORIES_OF_PROFESSIONAL){id_category}{si #ENV{exec}|=={category}}>
+[(#BOITE_OUVRIR{[
+	[(#AUTORISER{modifier,category,#ID_CATEGORY})
+		[(#ID_CATEGORY|afficher_qui_edite{category}|non)
+			[(#URL_ECRIRE{category_edit,id_category=#ID_CATEGORY}|icone_verticale{<:category:icone_modifier_category:>,category,edit,right ajax preload})]
+		]
+		[(#ID_CATEGORY|afficher_qui_edite{category}|oui)
+			[(#URL_ECRIRE{category_edit,id_category=#ID_CATEGORY}|icone_verticale{#ID_CATEGORY|afficher_qui_edite{category},warning-24,'',right edition_deja ajax preload})]
+		]
+	]
+
+	<h1>[(#RANG). ](#TITLE|sinon{<:info_sans_titre:>})[(#CHEMIN_IMAGE{category-24.png}|balise_img{category,cadre-icone})]</h1>
+
+],simple fiche_objet})]
+
+<div class="ajax">
+	#FORMULAIRE_DATER{category,#ID_CATEGORY}
+</div>
+
+<!--affiche_milieu-->
+
+<div id="wysiwyg">
+<INCLURE{fond=prive/objets/contenu/category,id=#ID_CATEGORY,id_category=#ID_CATEGORY,virtuel=oui,ajax=wysiwyg,wysiwyg=1}>
+</div>
+
+<div class="nettoyeur"></div>
+
+[(#AUTORISER{modifier,category,#ID_CATEGORY})
+	[(#ID_CATEGORY|afficher_qui_edite{category}|non)
+		[(#URL_ECRIRE{category_edit,id_category=#ID_CATEGORY}|icone_verticale{<:category:icone_modifier_category:>,category,edit,right ajax preload})]
+	]
+	[(#ID_CATEGORY|afficher_qui_edite{category}|oui)
+		[(#URL_ECRIRE{category_edit,id_category=#ID_CATEGORY}|icone_verticale{#ID_CATEGORY|afficher_qui_edite{category},warning-24,'',right edition_deja ajax preload})]
+	]
+]
+
+#PIPELINE{afficher_complement_objet,#ARRAY{args,#ARRAY{type,category,id,#ID_CATEGORY},data,'<div class="nettoyeur"></div>'}}
+
+#BOITE_FERMER
+[(#EVAL{_AJAX}|oui)
+	<script type="text/javascript">/*<!\\[CDATA\\[*/reloadExecPage('#ENV{exec}','#navigation,#chemin');/*\\]\\]>*/</script>
+]
+</BOUCLE_category>
+[(#ENV**{exec}|=={category_edit}|?{#INCLURE{fond=prive/squelettes/contenu/category_edit,redirect='',env,retourajax=oui},#REM|sinon_interdire_acces})]
+<//B_category>

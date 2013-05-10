@@ -1,0 +1,7 @@
+<BOUCLE_conference(CONFERENCIES){id_conference=#ENV{id}}>
+<div class='infos'>
+[(#SET{texte_objet,<:conference:titre_conference:>})]
+<div class='numero'><:titre_cadre_numero_objet{objet=#GET{texte_objet}}:><p>#ID_CONFERENCE</p></div>
+
+</div>
+</BOUCLE_conference>

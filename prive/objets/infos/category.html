@@ -1,0 +1,7 @@
+<BOUCLE_category(CATEGORIES_OF_PROFESSIONAL){id_category=#ENV{id}}>
+<div class='infos'>
+[(#SET{texte_objet,<:category:titre_category:>})]
+<div class='numero'><:titre_cadre_numero_objet{objet=#GET{texte_objet}}:><p>#ID_CATEGORY</p></div>
+
+</div>
+</BOUCLE_category>

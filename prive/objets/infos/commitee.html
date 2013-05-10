@@ -1,0 +1,7 @@
+<BOUCLE_commitee(COMMITEES){id_commitee=#ENV{id}}>
+<div class='infos'>
+[(#SET{texte_objet,<:commitee:titre_commitee:>})]
+<div class='numero'><:titre_cadre_numero_objet{objet=#GET{texte_objet}}:><p>#ID_COMMITEE</p></div>
+
+</div>
+</BOUCLE_commitee>

@@ -1,0 +1,8 @@
+#FORMULAIRE_RECHERCHE_ECRIRE{#SELF,ajax}
+<div class="nettoyeur"></div>
+
+<INCLURE{fond=prive/objets/liste/commitees, par=title, env, ajax, sinon=<:commitee:info_aucun_commitee:>}>
+
+[(#AUTORISER{creer,commitee})
+	[(#URL_ECRIRE{commitee_edit,new=oui}|icone_verticale{<:commitee:icone_creer_commitee:>,commitee,new,right})]
+]

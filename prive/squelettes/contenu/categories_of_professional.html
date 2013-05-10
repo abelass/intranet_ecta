@@ -1,0 +1,8 @@
+#FORMULAIRE_RECHERCHE_ECRIRE{#SELF,ajax}
+<div class="nettoyeur"></div>
+
+<INCLURE{fond=prive/objets/liste/categories_of_professional, par=title, env, ajax, sinon=<:category:info_aucun_category:>}>
+
+[(#AUTORISER{creer,category})
+	[(#URL_ECRIRE{category_edit,new=oui}|icone_verticale{<:category:icone_creer_category:>,category,new,right})]
+]

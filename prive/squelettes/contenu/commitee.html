@@ -1,0 +1,46 @@
+[(#AUTORISER{voir,commitee,#ID_COMMITEE}|sinon_interdire_acces)]
+<BOUCLE_commitee(COMMITEES){id_commitee}{si #ENV{exec}|=={commitee}}>
+[(#BOITE_OUVRIR{[
+	[(#AUTORISER{modifier,commitee,#ID_COMMITEE})
+		[(#ID_COMMITEE|afficher_qui_edite{commitee}|non)
+			[(#URL_ECRIRE{commitee_edit,id_commitee=#ID_COMMITEE}|icone_verticale{<:commitee:icone_modifier_commitee:>,commitee,edit,right ajax preload})]
+		]
+		[(#ID_COMMITEE|afficher_qui_edite{commitee}|oui)
+			[(#URL_ECRIRE{commitee_edit,id_commitee=#ID_COMMITEE}|icone_verticale{#ID_COMMITEE|afficher_qui_edite{commitee},warning-24,'',right edition_deja ajax preload})]
+		]
+	]
+
+	<h1>[(#RANG). ](#TITLE|sinon{<:info_sans_titre:>})[(#CHEMIN_IMAGE{commitee-24.png}|balise_img{commitee,cadre-icone})]</h1>
+
+],simple fiche_objet})]
+
+<div class="ajax">
+	#FORMULAIRE_DATER{commitee,#ID_COMMITEE}
+</div>
+
+<!--affiche_milieu-->
+
+<div id="wysiwyg">
+<INCLURE{fond=prive/objets/contenu/commitee,id=#ID_COMMITEE,id_commitee=#ID_COMMITEE,virtuel=oui,ajax=wysiwyg,wysiwyg=1}>
+</div>
+
+<div class="nettoyeur"></div>
+
+[(#AUTORISER{modifier,commitee,#ID_COMMITEE})
+	[(#ID_COMMITEE|afficher_qui_edite{commitee}|non)
+		[(#URL_ECRIRE{commitee_edit,id_commitee=#ID_COMMITEE}|icone_verticale{<:commitee:icone_modifier_commitee:>,commitee,edit,right ajax preload})]
+	]
+	[(#ID_COMMITEE|afficher_qui_edite{commitee}|oui)
+		[(#URL_ECRIRE{commitee_edit,id_commitee=#ID_COMMITEE}|icone_verticale{#ID_COMMITEE|afficher_qui_edite{commitee},warning-24,'',right edition_deja ajax preload})]
+	]
+]
+
+#PIPELINE{afficher_complement_objet,#ARRAY{args,#ARRAY{type,commitee,id,#ID_COMMITEE},data,'<div class="nettoyeur"></div>'}}
+
+#BOITE_FERMER
+[(#EVAL{_AJAX}|oui)
+	<script type="text/javascript">/*<!\\[CDATA\\[*/reloadExecPage('#ENV{exec}','#navigation,#chemin');/*\\]\\]>*/</script>
+]
+</BOUCLE_commitee>
+[(#ENV**{exec}|=={commitee_edit}|?{#INCLURE{fond=prive/squelettes/contenu/commitee_edit,redirect='',env,retourajax=oui},#REM|sinon_interdire_acces})]
+<//B_commitee>
