@@ -20,7 +20,7 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
 
 
 
-function spip_post_typo($texte) {
+function ecta_post_typo($texte) {
 
 
  $texte=preg_replace('/\n= /','-', $texte);
@@ -28,7 +28,7 @@ function spip_post_typo($texte) {
     return $texte;
 }
 
-function spip_formulaire_traiter($flux){
+function ecta_formulaire_traiter($flux){
     //actualiser le email dans ecta members si changé via le formulaire editer_auteur
     if ($flux['args']['form'] == 'editer_auteur') {
         sql_updateq('spip_members',array('email'=>_request('email')),'id_auteur='._request('id_auteur'));

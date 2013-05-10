@@ -21,7 +21,7 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  * @return array
  *     Déclarations d'interface pour le compilateur
  */
-function spip_declarer_tables_interfaces($interfaces) {
+function ecta_declarer_tables_interfaces($interfaces) {
 
 	$interfaces['table_des_tables']['members'] = 'members';
 	$interfaces['table_des_tables']['associations'] = 'associations';
@@ -33,7 +33,6 @@ function spip_declarer_tables_interfaces($interfaces) {
 	$interfaces['table_des_tables']['members_associations'] = 'members_associations';
 	$interfaces['table_des_tables']['members_categories_of_professional'] = 'members_categories_of_professional';
     $interfaces['table_des_tables']['members_commitees'] = 'members_commitees';
-	return $interfaces;
     $interfaces['table_des_tables']['members_council'] = 'members_council';
     $interfaces['table_des_tables']['spip_members_type'] = 'spip_members_type';
     
@@ -49,7 +48,7 @@ function spip_declarer_tables_interfaces($interfaces) {
  * @return array
  *     Description complétée des tables
  */
-function spip_declarer_tables_objets_sql($tables) {
+function ecta_declarer_tables_objets_sql($tables) {
 
 	$tables['spip_members'] = array(
 		'type' => 'member',
@@ -223,7 +222,8 @@ function spip_declarer_tables_objets_sql($tables) {
 
 	return $tables;
 }
-function spip_declarer_tables_principales($tables_principales){
+
+function ecta_declarer_tables_principales($tables_principales){
     //-- Table spip_executive_bodies------------------
     $spip_executive_bodies = array(
         "id_spip_executive_body"  => "int(11) NOT NULL",
