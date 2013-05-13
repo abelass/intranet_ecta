@@ -32,7 +32,6 @@ function action_gestion_member_dist($arg=null) {
             break;
             
         case 'activate':
-    
             sql_updateq('spip_members',array('active'=>'Yes'),'id_auteur='.$id_auteur);
             sql_updateq('spip_auteurs',array('statut'=>'6forum'),'id_auteur='.$id_auteur);               
             $message_maj = "The member has been activated";
