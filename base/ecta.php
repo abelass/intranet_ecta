@@ -34,7 +34,8 @@ function ecta_declarer_tables_interfaces($interfaces) {
 	$interfaces['table_des_tables']['members_categories_of_professional'] = 'members_categories_of_professional';
     $interfaces['table_des_tables']['members_commitees'] = 'members_commitees';
     $interfaces['table_des_tables']['members_council'] = 'members_council';
-    $interfaces['table_des_tables']['spip_members_type'] = 'spip_members_type';
+    $interfaces['table_des_tables']['members_type'] = 'members_type';
+    $interfaces['table_des_tables']['membership_type'] = 'membership_type';    
     
 	return $interfaces;
 }
