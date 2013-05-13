@@ -1,0 +1,107 @@
+
+                echo '<p class="style1" style="text-align:center"><img src="'._DIR_PLUGIN_ECTA.'img_pack/admin-logo.png" alt="ECTA"></p>';
+                echo '<p class="style1" style="text-align:center"><strong>SUBSCRIPTIONS</strong></p>';
+
+
+            if ($message_maj || $message_err) {
+
+                echo "
+                    <style>
+                    .message_ok {
+                        padding:10px;
+                        background:#99FF99;
+                        color:green;
+                        font-size:14px;
+                        font-weight:bold;
+                        margin-bottom:10px;
+                    }
+                    .message_err {
+                        padding:10px;
+                        background:#FF9999;
+                        color:red;
+                        font-size:14px;
+                        font-weight:bold;
+                        margin-bottom:10px;
+                    }
+                    </style>".
+                    
+                    ($message_maj ?"    <div class='message_ok'>
+                         $message_maj
+                        </div>":"").
+
+                        ($message_err ?"    <div class='message_err'>
+                             $message_err
+                            </div>":'').
+                "<script>
+                        /*
+                         * jQuery Timer Plugin
+                         * http://www.evanbot.com/article/jquery-timer-plugin/23
+                         *
+                         * @version      1.0
+                         * @copyright    2009 Evan Byrne (http://www.evanbot.com)
+                         */ 
+
+                        jQuery.timer = function(time,func,callback){
+                            var a = {timer:setTimeout(func,time),callback:null}
+                            if(typeof(callback) == 'function'){a.callback = callback;}
+                            return a;
+                        };
+
+                        jQuery.clearTimer = function(a){
+                            clearTimeout(a.timer);
+                            if(typeof(a.callback) == 'function'){a.callback();};
+                            return this;
+                        };
+
+                        jQuery.timer(2000,function(){jQuery('.message_ok').slideUp('slow')})
+                    </script>
+                ";
+                
+
+            }
+
+            ?>
+    <style type="text/css">
+        a.cellule-h {text-decoration:none;}
+                tr.disabled td {color:#999 !important;}
+                tr.disabled {
+                    background-color:#F6F6F6;
+                }
+                .titrem a.selected {
+                    color:#000;
+                    text-decoration: underline;
+                }   
+        </style>   
+
+                    
+     
+    <div style="" class="cadre cadre-e">
+    <div class="cadre_padding formulaire_spip" style="padding: 6px;">
+    <span class="verdana2" style="font-size: 80%; text-transform: uppercase; font-weight: bold;">SHORTCUTS:</span>
+    <ul class="verdana2">
+    
+    <li>
+    <table class="cellule-h-table" style="vertical-align: middle;" cellpadding="0">
+    <tbody><tr><td><a href="?exec=membre_spip_new" class="cellule-h"><span class="cell-i"><?php echo '<img src="'._DIR_PLUGIN_ECTA.'img_pack/user-add.png" alt="Add a new member">' ?></span></a></td>
+    <td class="cellule-h-lien"><a href="?exec=membre_spip_new" class="cellule-h">Add a new member</a></td></tr></tbody></table>
+    </li>
+        
+    </ul>
+    
+    <div class="nettoyeur"/></div>
+    
+</div>          
+</div>  
+
+        <link rel="stylesheet" type="text/css" href="<?php echo chemin('js/autocomplete.css'); ?>">
+        <script type="text/javascript" src="<?php echo chemin('js/jquery-1.3.1.min.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo chemin('js/jquery.autocomplete.pack.js'); ?>"></script>
+            <script type="text/javascript" src="<?php echo chemin('js/jquery.select-autocomplete.js'); ?>"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+    $('select.s_company').select_autocomplete();
+    $('select.s_country').select_autocomplete()
+    });
+    
+    </script>

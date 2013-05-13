@@ -1,0 +1,12 @@
+<div class="nettoyeur"></div>
+
+[(#ENV{name}|intval|?{
+    #SET{where,membernumber=#ENV{name}}
+    ,
+    [(#ENV{name}|oui) #SET{where,LOWER(name) LIKE '%#ENV{name}%' OR LOWER(surname) LIKE '%#ENV{name}%'}]
+    }
+)
+
+]
+<INCLURE{fond=prive/objets/liste/members, par=title, env,where=#GET{where}, ajax, sinon=<:association:info_aucun_association:>}>
+

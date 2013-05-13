@@ -18,8 +18,6 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  * sur des pipelines existants.
  */
 
-
-
 function ecta_post_typo($texte) {
 
 
@@ -35,7 +33,11 @@ function ecta_formulaire_traiter($flux){
     }
     return $flux;
 }
- 
+
+function ecta_header_prive($flux){
+    $flux .= '<link rel="stylesheet" href="' .find_in_path('css/ecta_prive.css').'" type="text/css" media="all" />';
+    return $flux;
+}
 
 
 ?>

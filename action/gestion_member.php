@@ -13,7 +13,7 @@ function action_gestion_member_dist($arg=null) {
 		$arg = $securiser_action();
 	}
 	
-    list($action,$id_auteur)=explode($arg);
+    list($action,$id_auteur)=explode('-',$arg);
     
     switch($action){
         case 'delete':
