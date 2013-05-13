@@ -12,14 +12,7 @@ include_spip('inc/safe_utf8');
     $sequp = _request('sequp');
     
 
-    if ($action == 'activate')
-    {
-        spip_query("update spip_members set active='Yes' where seq='$seq'");
-        $q = spip_query("select id_auteur from spip_members where seq='$seq'");
-        while ($result = spip_fetch_array($reponse))
-            spip_query("update spip_auteurs set statut='6forum' where id_auteur='{$result['id_auteur']}'");
-        $message_maj = "The member has been activated";
-    }
+
 
     $commencer_page = charger_fonction('commencer_page', 'inc');
     echo $commencer_page('SUBSCRIPTIONS - ADMINISTRATION', "naviguer", "articles", $id_rubrique);
