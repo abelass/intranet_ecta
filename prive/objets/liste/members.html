@@ -1,11 +1,8 @@
-
-        <div class="liste">
-        <div style="position: relative;margin-top:20px;">
-        <div style="position: absolute; top: -36px; left: 10px;"><img src="#CHEMIN{prive/squelettes/themes/spip/images/memmber-16.png}" alt="member administration"/></div>
-        <div style='background-color:white; color:black; padding:3px; padding:10px; border-bottom:1px solid #444;' class='verdana2'>
-        <strong></strong><br />
-        <!-- filtres -->
-        <div class="titrem cadre cadre-e">
+[(#BOITE_OUVRIR{
+    [(#CHEMIN_IMAGE{member-24.png}|balise_img{member,cadre-icone})]
+    ,'simple personnel infos'})]
+    <h2>List</h2>
+    <div class="formulaire_spip">
         <form name="form1" method="get" action="" id="filtre_membres">
         <input type="hidden" name="exec" value="membre_spip_list"/>
         <input type='hidden' name='init' value='#ENV{init,All}'/>
@@ -39,9 +36,9 @@
             <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
                 Filter by Company :
             </label>
-            
+             #SET{company,#ENV{company}|replace{'_','''}}
+
             <B_company>
-            #SET{company,#ENV{company}|replace{'_','''}}
             <select name="s_company" class="s_company" style="width:200px">
                <option value=''>ALL</option> 
                <BOUCLE_company(MEMBERS){fusion company}{par company}>
@@ -54,11 +51,18 @@
             <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
                 Filter by Country :
             </label>
+            #SET{pays,#ARRAY}
+               <BOUCLE_pays(GEO_PAYS)>
+                #SET{pays,#GET{pays}|array_merge{#ARRAY{#CODE_ISO,#PAYS}}}
+               </BOUCLE_pays>
+
+            [(#GET{pays}|serialize)]
+             <//B_pays>
             <B_country>
             <select name="s_country" class="s_country" style="width:200px">
                 <option value=''>ALL</option> 
                <BOUCLE_country(MEMBERS){fusion country}{par country}>
-                <option value="#COUNTRY"[ (#ENV{country}|=={#COUNTRY}|oui) selected="selected"]>#COUNTRY</option>
+                [<option value="(#COUNTRY)"[ (#ENV{country}|=={#COUNTRY}|oui) selected="selected"]>[(#GET{pays}|table_valeur{#COUNTRY})]</option>]
                </BOUCLE_country>
             
             </B_country>
@@ -78,6 +82,5 @@
 
         </div>
         </form>
-        </div>
-        <!-- filtres -->
-
+</div>
+[(#BOITE_FERMER)]
