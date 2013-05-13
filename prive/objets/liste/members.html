@@ -1,12 +1,5 @@
-<?php
-if (!defined("_ECRIRE_INC_VERSION")) return;
 
-include_spip('inc/vieilles_defs');
-include_spip('inc/safe_utf8');
 
-    global $connect_statut, $connect_id_auteur;
-    spip_query("SET NAMES 'utf8'");
-    
     $seq = _request('seq');
     $action = _request('act');
     $sequp = _request('sequp');
@@ -14,56 +7,37 @@ include_spip('inc/safe_utf8');
 
 
 
-    $commencer_page = charger_fonction('commencer_page', 'inc');
-    echo $commencer_page('SUBSCRIPTIONS - ADMINISTRATION', "naviguer", "articles", $id_rubrique);
-
-
-
-        
-
-
 
         <div class="liste">
         <div style="position: relative;margin-top:20px;">
-        <div style="position: absolute; top: -36px; left: 10px;"><?php echo '<img src="'._DIR_PLUGIN_ECTA.'img_pack/admin.png" alt="member administration">' ?></div>
+        <div style="position: absolute; top: -36px; left: 10px;"><img src="#CHEMIN{prive/squelettes/themes/spip/images/memmber-16.png}" alt="member administration"/></div>
         <div style='background-color:white; color:black; padding:3px; padding:10px; border-bottom:1px solid #444;' class='verdana2'>
         <strong></strong><br />
         <!-- filtres -->
         <div class="titrem cadre cadre-e">
         <form name="form1" method="get" action="" id="filtre_membres">
-        <input type="hidden" name="exec" value="membre_spip_list">
-                <?php echo "<input type='hidden' name='init' value='".(_request('init')?_request('init'):'All')."'>";?>
-            <input type="hidden" name="act" value="search">
-
-                                <div style="padding-top:3px">
-                                    <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">Subscription :</label>
-                                                <select name="membership_year">
-                                                    <option value=''>YEAR</option>
-                                                    <?php
-                                                        $q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year");
-                                                        $year='';
-                                                        while ($y = spip_fetch_array($q)) {
-                                                            $year = $y['membership_year'];
-                                                            echo "<option";
-                                                            if (_request('membership_year') == $y['membership_year']) { echo ' selected'; }
-                                                            echo ">{$y['membership_year']}</option>";
-                                                        }
-                                                    ?>
-                                                </select>
-                                                &nbsp;
-                                                <select name="membership_fee" id="membership_subscription_fee">
-                                                    <option value=''>TYPE</option>
-                                                    <?php 
-                                                        $q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee");
-
-                                                        while($sub = spip_fetch_array($q)) {
-                                                            echo "<option value='{$sub['membership_fee']}' ";
-                                                            if (_request('membership_fee') == $sub['membership_fee']) { echo 'selected'; }
-                                                            echo ">{$sub[membership_fee]}</option>";
-                                                        }   
-                                                        ?>
-                                                </select>
-                                </div>
+        <input type="hidden" name="exec" value="membre_spip_list"/>
+        <input type='hidden' name='init' value='#ENV{init,All}'/>
+        <input type="hidden" name="act" value="search">
+        <div style="padding-top:3px">
+            <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">Subscription :</label>
+            <B_years>
+            <select name="membership_year">
+               <option value=''>YEAR</option>
+               <BOUCLE_years(MEMBERS){fusion membership_year}{membership_year!=0}{par membership_year}>
+               <option value="#MEMBERSHIP_YEAR"[ (#MEMBERSHIP_YEAR|=={#ENV{membership_year}}|oui)selected="selected"]>#MEMBERSHIP_YEAR</option>
+               </BOUCLE_years
+            </select>
+            <B_years> &nbsp;
+            <B_fee>
+            <select name="membership_fee" id="membership_subscription_fee">
+                <option value=''>TYPE</option>
+               <BOUCLE_fee(MEMBERSHIP_TYPE){par membership_fee}>
+                <option value="#MEMBERSHIP_FEE"[ (#MEMBERSHIP_FEE|=={#ENV{membership_fee}}|oui)selected="selected"]>#MEMBERSHIP_FEE</option>
+               </BOUCLE_fee>
+            </select>
+            </B_fee>
+       </div>
 
 
                         <div style="padding-top:3px">
