@@ -13,11 +13,10 @@ function action_gestion_member_dist($arg=null) {
 		$arg = $securiser_action();
 	}
 	
-    list($action,$seq)=explode($arg);
+    list($action,$id_auteur)=explode($arg);
     
     switch($action){
         case 'delete':
-            $id_auteur=sql_getfetsel('id_auteur','spip_members','seq='.$seq);
 
             // SPIP-Liste : Abonnement à la liste "membres" (id = 4)
             sql_delete('spip_auteurs_listes', 'id_auteur = '.$id_auteur);
@@ -26,10 +25,15 @@ function action_gestion_member_dist($arg=null) {
     
             $message_maj = "The member has been deleted";
             break;
-    
+            
+         case 'desactivate':
+            sql_updateq('spip_members',array('active'=>'No'),'id_auteur='.$id_auteur);
+            sql_updateq('spip_auteurs',array('statut'=>'5poubelle'),'id_auteur='.$id_auteur);             
+            $message_maj = "The member has been desactivated";
+            break;
         
-    }
-    sql_delete('spip_members','id_membership='.$arg);
+        
+    
 
 
 	return ;
