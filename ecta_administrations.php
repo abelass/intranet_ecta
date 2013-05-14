@@ -28,7 +28,7 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  *     Version du schéma de données dans ce plugin (déclaré dans paquet.xml)
  * @return void
 **/
-function spip_upgrade($nom_meta_base_version, $version_cible) {
+function ecta_upgrade($nom_meta_base_version, $version_cible) {
 	$maj = array();
 	# quelques exemples
 	# (que vous pouvez supprimer !)
@@ -65,8 +65,15 @@ function spip_upgrade($nom_meta_base_version, $version_cible) {
        array('sql_alter','TABLE spip_members_council RENAME TO spip_members_council'), 
        array('sql_alter','TABLE spip_members_no_members RENAME TO spip_members_no_members'),     
        array('sql_alter','TABLE spip_members_type RENAME TO spip_members_type'),
+       
 	   array('maj_tables', array('spip_members', 'spip_associations', 'spip_categories_of_professional', 'spip_commitees', 'spip_conferencies','spip_executive_bodies','spip_membership','spip_members_associations','spip_members_categories_of_professional','spip_members_commitees','spip_members_council','spip_members_type')));
-
+       
+  $maj['1.0.2']  = array(
+    array('sql_alter','TABLE spip_members CHANGE incommitee incommitee enum(\'Yes\',\'No\',\'Com\')  NOT NULL DEFAULT \'No\'')
+    );
+  $maj['1.0.5']  = array(
+    array('sql_alter','TABLE spip_members CHANGE ohim ohim varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT \'\'')
+    );
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -84,7 +91,7 @@ function spip_upgrade($nom_meta_base_version, $version_cible) {
  *     Nom de la meta informant de la version du schéma de données du plugin installé dans SPIP
  * @return void
 **/
-function spip_vider_tables($nom_meta_base_version) {
+function ecta_vider_tables($nom_meta_base_version) {
 	# quelques exemples
 	# (que vous pouvez supprimer !)
 	# sql_drop_table("spip_xx");

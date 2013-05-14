@@ -91,7 +91,7 @@ function ecta_declarer_tables_objets_sql($tables) {
 			"listed_in_dir"      => "enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'Yes'",
 			"ohim"               => "varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT ''",
 			"membertype"         => "varchar(100) CHARACTER SET utf8 NOT NULL DEFAULT ''",
-			"incommitee"         => "enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No'",
+			"incommitee"         => "enum('Yes','No','Com') CHARACTER SET utf8 NOT NULL DEFAULT 'No'",
 			"commem"             => "varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT ''",
 			"executivebodies"    => "varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT ''",
 			"memberofhonour"     => "enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'No'",
