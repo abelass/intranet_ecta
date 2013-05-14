@@ -52,7 +52,7 @@
         <tbody>
        <BOUCLE_members(MEMBERS){where?}{par #ENV{by,surname}}{inverse #GET{sort}}{pagination 30}>
        <tr class="tr_liste[(#ACTIVE|=={No}|oui) disabled]">
-                <td class='arial1'><div class='style3'><a href='#URL_ECRIRE{membre_edit,seq=#SEQ}'>#SUFFIXE #NAME #SURNAME</a></div></td>
+                <td class='arial1'><div class='style3'><a href='#URL_ECRIRE{member_edit,seq=#SEQ}'>#SUFFIXE #NAME #SURNAME</a></div></td>
                 <td class='arial1'><div class='style3'>#COMPANY</div></td>
                 <td class='arial1'><div class='style3'>#COUNTRY</div></td>
                 <td class='arial2'><center><div class='style3'>
@@ -66,7 +66,7 @@
                     </center></div>
                 </td>
                 <td class='arial2'>
-                    <center><div class='style3'><a href='#URL_ECRIRE{membre_edit,seq=#SEQ}' title='edit this member'>
+                    <center><div class='style3'><a href='#URL_ECRIRE{member_edit,seq=#SEQ}' title='edit this member'>
                         <img src='#CHEMIN{prive/themes/spip/images/user-edit.png}' border='0' /></a></center></div>
                 </td>
                 <td class='arial2'><center><div class='style3'><a class="ajax" href="#URL_ACTION_AUTEUR{gestion_member,delete-#ID_AUTEUR,#SELF}" onCLick="return confirm('Are you SURE you want to delete this member ?')" title='delete this member'>
