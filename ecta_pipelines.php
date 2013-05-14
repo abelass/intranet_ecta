@@ -40,4 +40,13 @@ function ecta_header_prive($flux){
 }
 
 
+function ecta_jqueryui_plugins($scripts){
+
+   $scripts[] = "jquery.ui.tabs";    
+   $scripts[] = "jquery.ui.autocomplete";
+
+   return $scripts;
+
+}
+
 ?>

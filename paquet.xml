@@ -45,7 +45,8 @@
 	<pipeline nom="autoriser" inclure="ecta_autorisations.php" /> 
 	<pipeline nom="formulaire_traiter" inclure="ecta_pipelines.php" /> 	
 	<pipeline nom="post_typo" inclure="ecta_pipelines.php" /> 	
-	<pipeline nom="header_prive" inclure="ecta_pipelines.php" /> 			
+	<pipeline nom="header_prive" inclure="ecta_pipelines.php" /> 
+	<pipeline nom="jqueryui_plugins" inclure="ecta_pipelines.php" />			
 
 	<pipeline nom="declarer_tables_objets_sql" inclure="base/ecta.php" /> 
 	<pipeline nom="declarer_tables_principales" inclure="base/ecta.php" /> 	
