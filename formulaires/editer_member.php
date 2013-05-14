@@ -113,11 +113,14 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
  *     Tableau des erreurs
  */
 function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
+    $login=_request('inlogin');
+    $id_auteur=_request('id_auteur');
     $check_login = spip_query($sql);
-        if (!spip_num_rows($check_login)) {
-            sql_updateq('spip_auteurs',array('login'=>trim(_request('inlogin'))),'id_auteur = '.$aut['id_auteur']);
+    $erreurs=array();
+        if (!sql_getfetsel('login','spip_auteurs','login='.sql_quote( $login))) {
+            sql_updateq('spip_auteurs',array('login'=>trim($login)),'id_auteur = '.$id_auteur);
         } else {
-            $message_err = "Error : this login already exists";
+            $erreurs['login']="Error : this login already exists";
         }
   
     return formulaires_editer_objet_verifier('member',$seq);

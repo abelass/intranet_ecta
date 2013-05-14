@@ -1,5 +1,9 @@
-        <div id="membership" class="tab">
-            <ul>
+
+<B_member>
+<div id="membership" class="tab">
+    <ul>
+   <BOUCLE_member(Members){seq}>
+
                 <li>
                     <label>Member number</label> <?php echo $inmembernumber;?>
                 </li>
@@ -8,10 +12,7 @@
                 </li>                           
                 <li>
                     <label>Member type</label> 
-                    <select name="inmembertype" id="inmembertype">
-                        <option value=''>Make a choice</option>
-                        <?php
-                        
+
                         $q = spip_query("select *, 0+title AS num_order FROM spip_members_type order by num_order");
                         
                         while($type = spip_fetch_array($q)) {
@@ -19,12 +20,18 @@
 
                             echo "<option value='{$type['id_member_type']}' ";
                             if ($inmembertype == $type['id_member_type'])  echo ' selected ';
-                            echo ">{$type['title']}</option>";
-
-                        }
-                        
-                        ?>
+            
+                    
+                    <B_member_type>
+                    <select name="member_type" id="member_type">
+                        <option value=''>Make a choice</option>
+                       <BOUCLE_member_type(MEMBER_TYPE){par num title}>
+                        <option value='#ID_MEMBERTYPE'[(#ID_MEMBERTYPE|=={#ENV{member_type}|oui) selected="selected"]>#TITLE</option>
+                       </BOUCLE_member_type>
                     </select>
+                    </B_member_type>
+                    
+                     <//B_member_type>
                 </li>
 
                 <li class="com">
@@ -304,9 +311,13 @@
                         </option>
                     </select>
                 </li>
+   </BOUCLE_member>
+     </ul>
+</B_member>
+
+ <//B_member>
+
                 
-            </ul>
-            <p class='boutons_formulaire'>
-                <input type="submit" name="Submit" value="Submit">
-            </p>
+
+
         </div><!-- membership -->
