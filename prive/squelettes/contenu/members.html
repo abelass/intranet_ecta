@@ -1,12 +1,101 @@
 <div class="nettoyeur"></div>
+[(#BOITE_OUVRIR{
+    [(#CHEMIN_IMAGE{member-24.png}|balise_img{member,cadre-icone})]
+    ,'simple personnel infos'})]
+    <h2>List</h2>
+    <div class="formulaire_spip member_liste">
+        <form name="form1" method="get" action="#SELF" id="filtre_membres">
+        <input type="hidden" name="exec" value="members"/>
+        <input type='hidden' name='init' value='#ENV{init}'/>
+        <input type="hidden" name="act" value="search">
+        <div style="padding-top:3px">
+            <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">Subscription :</label>
+            <B_years>
+            <select name="membership_year" class="year">
+               <option value=''>YEAR</option>
+               <BOUCLE_years(MEMBERS){fusion membership_year}{membership_year!=0000}{par membership_year}>
+               <option value="#MEMBERSHIP_YEAR"[ (#MEMBERSHIP_YEAR|=={#ENV{membership_year}}|oui)selected="selected"]>#MEMBERSHIP_YEAR</option>
+               </BOUCLE_years>
+            </select>
+            </B_years> &nbsp;
+            <B_fee>
+            <select name="membership_fee" id="membership_subscription_fee" class="fee">
+                <option value=''>TYPE</option>
+               <BOUCLE_fee(MEMBERSHIP_TYPE){par membership_fee}>
+                <option value="#MEMBERSHIP_FEE"[ (#MEMBERSHIP_FEE|=={#ENV{membership_fee}}|oui)selected="selected"]>#MEMBERSHIP_FEE</option>
+               </BOUCLE_fee>
+            </select>
+            </B_fee>
+       </div>
+       <div style="padding-top:3px">
+           <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
+               Name or member number :
+           </label>
+            <input type="text" class="text" name="name" value="#ENV{name}" style="width:160px"/> 
+       </div>
+       <div style="padding-top:3px">
+            <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
+                Filter by Company :
+            </label>
+             #SET{company,#ENV{company}|replace{'_','''}}
 
+            <B_company>
+            <select name="company" class="company" style="width:200px">
+               <option value=''>ALL</option> 
+               <BOUCLE_company(MEMBERS){fusion company}{par company}>
+                <option value="[(#COMPANY|replace{''','_'})]"[ (#GET{company}|=={#COMPANY}|oui) selected="selected"]>#COMPANY</option>
+               </BOUCLE_company>
+            </select>
+            </B_company>
+       </div>
+       <div style="padding-top:3px">
+            <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
+                Filter by Country :
+            </label>
+            #SET{pays,#ARRAY}
+               <BOUCLE_pays(GEO_PAYS)>
+                #SET{pays,#GET{pays}|array_merge{#ARRAY{#CODE_ISO,#PAYS}}}
+               </BOUCLE_pays>
+               
+            <B_country>
+            <select name="country" class="country" style="width:200px">
+                <option value=''>ALL</option> 
+               <BOUCLE_country(MEMBERS){fusion country}{par country}>
+                [<option value="(#COUNTRY)"[ (#ENV{country}|=={#COUNTRY}|oui) selected="selected"]>[(#GET{pays}|table_valeur{#COUNTRY})]</option>]
+               </BOUCLE_country>
+            
+            </B_country>
+        </div>
+        <div style="padding-top:12px;text-align:right">
+            <input type="submit" name="Submit" value="Search"/>&nbsp;
+            [(#ENV{init}|oui)
+                <a target="_blank" href="[(#URL{ecrire,export_csv}
+                |parametre_url{init,#ENV{init}}
+                |parametre_url{s_company,#ENV{company}|urlencode}
+                |parametre_url{s_country,#ENV{country}}
+                |parametre_url{membership_fee,#ENV{membership_fee}}  
+                |parametre_url{membership_year,#ENV{membership_year}}   
+                |parametre_url{s_name,#ENV{s_name}|urlencode}                                            
+                ))]">export CSV</a>
+                ]                
+
+        </div>
+        </form>
+</div>
+
+#SET{where,#ARRAY}
 [(#ENV{name}|intval|?{
-    #SET{where,membernumber=#ENV{name}}
+    #SET{where,#GET{where}|push{membernumber=#ENV{name}}}
     ,
-    [(#ENV{name}|oui) #SET{where,LOWER(name) LIKE '%#ENV{name}%' OR LOWER(surname) LIKE '%#ENV{name}%'}]
+    [(#ENV{name}|oui)#SET{where,#GET{where}|push{(LOWER(name) LIKE '%#ENV{name}%' OR LOWER(surname) LIKE '%#ENV{name}%')}}]
     }
-)
+)]
+[(#ENV{init}|oui)#SET{where,#GET{where}|push{surname LIKE '#ENV{init}%'}}]
+[(#ENV{country}|oui)#SET{where,#GET{where}|push{country =#ENV{country}|sql_quote}}]
+[(#ENV{company}|oui)#SET{where,#GET{where}|push{company LIKE '%#ENV{company}%'}}]
+[(#ENV{membership_year}|oui)#SET{where,#GET{where}|push{membership_year=#ENV{membership_year}|sql_quote}}]
+[(#ENV{membership_fee}|oui)#SET{where,#GET{where}|push{membership_fee=#ENV{membership_fee}|sql_quote}}]
 
-]
-<INCLURE{fond=prive/objets/liste/members, par=title, env,where=#GET{where}, ajax, sinon=<:association:info_aucun_association:>}>
+<INCLURE{fond=prive/objets/liste/members, par=title, env,where=#GET{where}|implode{' AND '}, sinon=<:association:info_aucun_association:>}>
 
+[(#BOITE_FERMER)]
