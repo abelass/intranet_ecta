@@ -25,9 +25,10 @@ select.year, select.fee{width:auto}
         width:98px;
     }
 .ui-tabs .ui-tabs-nav li a {
-	padding:0.4em
+	padding:0.4em;
 }
-    
+    .formulaire_spip input.tel{width:100px}
+
     input.start_date, input.end_date{width:40px;}
     .formulaire_spip li.membership label{    float: none;
     margin-left: 0;
