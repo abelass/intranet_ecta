@@ -61,7 +61,7 @@ function formulaires_editer_member_identifier_dist($seq='new', $retour='', $lier
 function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
     
     $valeurs = formulaires_editer_objet_charger('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
-    
+    $valeurs['tab']=_request('tab');
         /*$sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
         $reponse = spip_query($sql);
         $results = spip_fetch_array($reponse);

@@ -1,0 +1,312 @@
+        <div id="membership" class="tab">
+            <ul>
+                <li>
+                    <label>Member number</label> <?php echo $inmembernumber;?>
+                </li>
+                <li>
+                    <label>OHIM number</label> <input name="OHIM" type="text" class="text"id="ohimnumber" value="<?php echo $OHIM;?>">
+                </li>                           
+                <li>
+                    <label>Member type</label> 
+                    <select name="inmembertype" id="inmembertype">
+                        <option value=''>Make a choice</option>
+                        <?php
+                        
+                        $q = spip_query("select *, 0+title AS num_order FROM spip_members_type order by num_order");
+                        
+                        while($type = spip_fetch_array($q)) {
+                            $type['title'] = supprimer_numero($type['title']);
+
+                            echo "<option value='{$type['id_member_type']}' ";
+                            if ($inmembertype == $type['id_member_type'])  echo ' selected ';
+                            echo ">{$type['title']}</option>";
+
+                        }
+                        
+                        ?>
+                    </select>
+                </li>
+
+                <li class="com">
+                    <label>Committee member</label>
+                    <fieldset>
+                        
+                        <ul>
+
+                            <li>
+                                <label>Committee member</label> <select name="incommem" id="incommem">
+                                    <option value=''>Make a choice</option>
+                                    <option value="Yes" <?php if ($incommem == 'Yes') { echo 'selected'; } ?>>
+                                        Yes
+                                    </option>
+                                    <option value="No" <?php if ($incommem == 'No') { echo 'selected'; } ?>>
+                                        No
+                                    </option>
+                                    <option value="Com" <?php if ($incommem == 'Com') { echo 'selected'; } ?>>
+                                        Com
+                                    </option>
+                                </select>
+                            </li>
+                            <li class="explication">
+                                <small>Please specify a role and a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
+                            </li>
+                            <?php
+                            $r=sql_select('*','spip_commitee_role');
+                            $roles=array();
+                            while($rs=sql_fetch($r)){
+                              $roles[$rs['id_commitee_role']]=$rs['title'];  
+                            }
+
+                            
+                            $q = spip_query("select spip_commitees.id_commitee, spip_commitees.title, 0+title AS num_order FROM spip_commitees order by num_order");
+                            while($commitee = spip_fetch_array($q)){
+                                  
+                                $commitee['title'] = supprimer_numero($commitee['title']);
+                                $start_date=0000;    
+                                $end_date=0000;
+                                $select.='';    
+                                $champ1='<span> <b>From:</b> </span><input class="start_date" name="start_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$start_date.'"/>';
+                                $champ2='<span> <b>To:</b> </span><input class="end_date"  name="end_date['.$commitee['id_commitee'].'][new]" type="text" value="'.$end_date.'"/></div>';
+                                 $select='';                                                
+                                foreach($roles as $id=>$title){
+                                    $selected='';
+                                    if($id==0)$selected='selected="selected"';          
+                                    $select.='<option value="'.$id.'" ' .$selected.'>'.$title.'</option>';                          
+                                                                   
+                                    }                               
+                                $champ0='<div><span> <b>Role:</b> </span><select class="member_role" name="id_commitee_role['.$commitee['id_commitee'].'][new]">'.$select.'</select>';  
+
+                                $champs='';
+                                $champs.=$champ0.$champ1.$champ2;
+                                echo "
+                                            <li class='membership'>
+                                                <label>{$commitee['title']}</label> ";                   
+
+                                foreach($roles as $id=>$title){
+                                    $sql = sql_select('*','spip_members_commitees','id_commitee='.$commitee['id_commitee'].' AND id_member='.$seq.' AND id_commitee_role='.$id,'','id_commitee_role,start_date DESC'); 
+                                    
+
+                                     $end_tag='';
+                                      $count=0;
+     
+                                    while($data=sql_fetch($sql)){
+                              $start_date=0000;    
+                                        $end_date=''; 
+                                        $begin_tag='';
+                                        $end_tag='';
+                                        $limit=3;
+                                        $count++;
+     
+                                        if($data['start_date']>0)$start_date=affdate($data['start_date'],'Y');
+                                        if($data['end_date']>0){
+                                            $end_date=affdate($data['end_date'],'Y');
+                                            if( $count==1){
+                                               // if($data['start_date']>0)$champs.=$champ0.$champ1.$champ2;
+                                                 //$limit= 2;
+                                            }
+                                        }
+                                        if($count==$limit){
+                                            $begin_tag='<span class="switch">
+                                                <span class="open">+</span>
+                                                <span class="close">-</span>
+                                                </span><div class="hidden">';
+                                            $end_tag='</div>';
+                                        }
+                                        
+                                        $champs.=recuperer_fond('formulaires/field_period',
+                                            array(
+                                            'begin_tag'=>$begin_tag,
+                                            'end_tag'=>$end_tag, 
+                                            'id_commitee'=>$commitee['id_commitee'],
+                                            'id_membership'=>$data['id_membership'], 
+                                            'id_commitee_role'=>$data['id_commitee_role'],
+                                            'start_date'=>$start_date,
+                                            'end_date'=>$end_date,
+                                            'roles'=>$roles, 
+                                            'seq'=>$seq,                                             
+                                            ));
+                                        }  
+                              $champs.=$end_tag;
+                                        
+                           echo "<div>$champs</div>";
+                           $champs='';
+                                     }
+                           echo"</li>";
+                                          
+                              $l_commitees[$commitee['id_commitee']] = $commitee['title'];
+                                 }
+                            ?>
+                            
+                        </ul>
+                    </fieldset>
+                </li>   
+                <li>
+                    <label>Executive Bodies
+                    </label>
+                    <select name="executivebodies" id="executivebodies">
+                        <option value=''>Make a choice</option>
+                        <?php
+                        $q = spip_query("select *, 0+title AS num_order FROM spip_executive_bodies order by num_order");
+                        while($executive = spip_fetch_array($q)) {
+                            $executive['title'] = supprimer_numero($executive['title']);
+
+                            echo "<option value='{$executive['title']}' ";
+                            if ($executivebodies == $executive['title'])  echo ' selected ';
+                            echo ">{$executive['title']}</option>";
+                        }
+                        ?>
+                        
+                    </select>
+                </li>
+                <li><label>Council Member</label>
+                    <div class="explication">
+                        <small>Please specify a type and a year in the fields below. Once you have saved you will be able to add a new period.</small>
+                    </div>
+                <?php
+                    $start_date=0000;    
+                    $end_date=0000;  
+                    
+                   $champ0='<div><select class="statut" name="council_statut[new]">
+                        <option value="">No</option>
+                        <option value="Yes">Yes</option>
+                        <option value="Com">Com</option>                                        
+                   </select>';  
+                   $champ1='<span> <b>From:</b> </span><input class="start_date" name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
+                   $champ2='<span> <b>To:</b> </span><input class="start_date"  name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
+                   $champs=$champ0.$champ1.$champ2;
+                    $sql=sql_select('*','spip_members_council','seq='.$seq,'','start_date DESC');
+                    
+                    if(sql_count( $sql)>0)$champs='';
+                    $count=0;
+                                     
+                    while($councils=sql_fetch($sql)){
+                        $start_date=0000;    
+                        $end_date=''; 
+                        $begin_tag='';
+                        $end_tag='';
+                        $limit=3;   
+                        $count++;
+     
+                        if($councils['start_date']>0)$start_date=affdate($councils['start_date'],'Y');
+                        if($councils['end_date']>0){
+                            $end_date=affdate($councils['end_date'],'Y');
+                            if($count==1){
+                                if($councils['start_date']>0)$champs=$champ0.$champ1.$champ2;
+                                 $limit= 2;
+                            }
+                        }
+                        if($count==$limit){
+                            $begin_tag='<span class="switch">
+                                <span class="open">+</span>
+                                <span class="close">-</span>
+                                </span><div class="hidden">';
+                            $end_tag='</div>';
+                        }
+                        
+                        $champs.=recuperer_fond('formulaires/field_period_councils',
+                            array(
+                            'begin_tag'=>$begin_tag,
+                            'end_tag'=>$end_tag, 
+                            'id_membership_council'=>$councils['id_membership_council'], 
+                            'statut'=>$councils['statut'],
+                            'start_date'=>$start_date,
+                            'end_date'=>$end_date,
+                            'seq'=>$seq
+                            ));       
+                             
+                           }
+ $champs.=$end_tag;
+                           echo "<div>$champs</div>";
+                          
+
+                    
+                    ?>
+                </li>
+                <li>
+                    <label>Members of Honours
+                    </label>
+                    <select name="memberofhonour" id="memberofhonour">
+                        <option value=''>Make a choice</option>
+                        <option value="Yes" <?php if ($memberofhonour == 'Yes') { echo 'selected'; } ?>>
+                            Yes
+                        </option>
+                        <option value="No" <?php if ($memberofhonour == 'No') { echo 'selected'; } ?>>
+                            No
+                        </option>
+                    </select>
+                </li>
+                <li>
+                    <label>Past President
+                    </label>
+                    <select name="pastpresident" id="pastpresident">
+                        <option value=''>Make a choice</option>
+                        <option value="Yes" <?php if ($pastpresident == 'Yes') { echo 'selected'; } ?>>
+                            Yes
+                        </option>
+                        <option value="N                            echo 1;o" <?php if ($pastpresident == 'No') { echo 'selected'; } ?>>
+                            No
+                        </option>
+                    </select>
+                </li>
+                <li>
+                    <label>Sponsored by (1)
+                    </label>
+                    <input name="sponsoredby1" type="text" class="text"id="sponsoredby1" value="<?php echo $sponsoredby1;?>">
+                </li>
+                <li>
+                    <label>Sponsored by (2)</label>
+                    <input name="sponsoredby2" type="text" class="text"id="sponsoredby2" value="<?php echo $sponsoredby2;?>">
+                </li>
+                <li>
+                    <label>Date of membership
+                    </label>
+                    <input name="datemembership" type="text" class="text"id="datemembership" value="<?php echo $datemembership;?>">
+                </li>
+                <li>
+                    <label>Other Association
+                    </label>
+                    <fieldset><ul>
+
+
+                            <?php
+                            
+                            $q = spip_query("select spip_associations.id_association, spip_associations.title, 0+title AS num_order FROM spip_associations order by num_order");
+                            
+                            while($association = spip_fetch_array($q)) {
+                                $association['title'] = supprimer_numero($association['title']);
+                            
+                                $q2 = spip_query("select id_association FROM spip_members_associations 
+                                        where spip_members_associations.id_association='{$association['id_association']}' and id_member='$seq'");
+                            
+                                if (spip_num_rows($q2)) $checked=" checked "; else $checked = '';
+                            
+                                echo "
+                                        <li>
+                                            <label>{$association['title']}</label> <input name='associations[{$association['id_association']}]' type='checkbox' value='{$association['id_association']}' $checked>
+                                        </li>
+                                    ";
+                            }
+                            
+                            ?>
+    
+
+                    </ul></fieldset>
+                <li>
+                    <label>Past member of Council/ Committees
+                    </label>
+                    <select name="pastcouncil" id="pastcouncil">
+                        <option value=''>Make a choice</option>
+                        <option value="Yes" <?php if ($pastcouncil == 'Yes') { echo 'selected'; } ?>>
+                            Yes
+                        </option>
+                        <option value="No" <?php if ($pastcouncil == 'No') { echo 'selected'; } ?>>
+                            No
+                        </option>
+                    </select>
+                </li>
+                
+            </ul>
+            <p class='boutons_formulaire'>
+                <input type="submit" name="Submit" value="Submit">
+            </p>
+        </div><!-- membership -->

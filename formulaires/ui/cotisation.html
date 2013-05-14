@@ -1,0 +1,81 @@
+        <div id="cotisation" class="tab">
+            <ul>
+                <li>
+                    <label>Member number</label> <?php echo $inmembernumber;?>
+                </li>
+                <li>
+                    <label>Membership fee</label>
+                    <fieldset>
+                        <ul>
+                            <li>
+                                <label>Year</label>
+                                <select name="membership_year">
+                                    <option value=''></option>
+                                    <?php
+                                        $q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year");
+                                        $year='';
+                                        while ($y = spip_fetch_array($q)) {
+                                            $year = $y['membership_year'];
+                                            echo "<option";
+                                            if ($membership_year == $y['membership_year']) { echo ' selected'; }
+                                            echo ">{$y['membership_year']}</option>";
+                                        }
+                                        if ($year < date('Y')-1) echo "<option>".(date('Y')-1)."</option>";
+                                        if ($year < date('Y')) echo "<option>".(date('Y'))."</option>";
+                                        if ($year < date('Y')+1) echo "<option>".(date('Y')+1)."</option>";
+                                    ?>
+                                </select>
+                            </li>
+                            <li>
+                                <label>Type</label>
+                                <select name="membership_fee" id="membership_subscription_fee">
+                                    <?php 
+                                        $q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee");
+                            
+                                        while($sub = spip_fetch_array($q)) {
+                                            echo "<option value='{$sub['membership_fee']}' ";
+                                            if ($membership_fee == $sub['membership_fee']) { echo 'selected'; }
+                                            echo ">{$sub[membership_fee]}</option>";
+                                        }   
+                                        ?>
+                                </select>
+                            </li>
+                        </ul>
+                    </fieldset> 
+                </li>
+                <li>
+                    <label>Payment</label>
+                    <fieldset>
+                        <ul>
+                            <li>
+                                <label>Error / Delayed reason</label>
+                                <input type="text" name="payment_error" value="<?php echo $payment_error; ?>" />
+                            </li>   
+                            <li>
+                                <label>Method of payment</label>
+                                <input type="text" name="method_of_payment" value="<?php echo $method_of_payment; ?>" />
+                            </li>   
+                            <li>
+                                <label>Date of payment</label>
+                                <input type="text" name="date_of_payment" value="<?php echo $date_of_payment; ?>" />
+                            </li>   
+                        </ul>
+                    </fieldset>
+                </li>
+                <li>
+                    <label>Reference</label>
+                    <input type="text" name="reference" class="text" value="<?php echo $reference; ?>" />
+                </li>   
+                <li>
+                    <label>VAT Number</label>
+                    <input type="text" name="vat_number" class="text" value="<?php echo $vat_number; ?>" />
+                </li>   
+                <li>
+                    <label>Special requests</label>
+                    <textarea name="special_requests" rows=10><?php echo $special_requests; ?></textarea>
+                </li>   
+            </ul>
+            <p class='boutons_formulaire'>
+                <input type="submit" name="Submit" value="Submit">
+            </p>
+        </div>   <!-- cotisation -->

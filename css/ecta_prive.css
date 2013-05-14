@@ -2,15 +2,14 @@ select.year, select.fee{width:auto}
 
 /*form member edit*/
 
-    #contenu {
-        font-size:10px;
-    }
+
     .formulaire_member li fieldset {
         border:0;
     }
     .formulaire_member ul ul input.text, .formulaire_spip ul ul input.password, .formulaire_spip ul ul textarea, .formulaire_spip ul ul select  {
         width:190px!important;
     }
+    .formulaire_spip #nav li{clear:none}
     .ui-tabs .ui-tabs-hide {
          display: none;
     }
@@ -25,16 +24,16 @@ select.year, select.fee{width:auto}
         padding:0.5em 0;
         width:98px;
     }
-    input.start_date, input.end_date, input{width:40px;}
+.ui-tabs .ui-tabs-nav li a {
+	padding:0.4em
+}
+    
+    input.start_date, input.end_date{width:40px;}
     .formulaire_spip li.membership label{    float: none;
     margin-left: 0;
     width: auto;}
     .formulaire_spip li.membership,.formulaire_spip li.explication {padding-left:0;width:350px;
     }
-    .formulaire_spip span{font-weight:bold;cursor: pointer}
-    .formulaire_spip span .open{color:green}
-    .formulaire_spip span .close{display:none; color:red}
-    .formulaire_spip span.open .open{display:none}  
-    .formulaire_spip span.open .close{display:inline} 
+
     small{font-size: 10px;color:#7f7f7f;display:block}
     .formulaire_spip ul ul .member_role, select.statut{width:auto !important}

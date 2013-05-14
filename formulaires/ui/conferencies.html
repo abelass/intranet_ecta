@@ -1,0 +1,71 @@
+<div id="conferencies" class="tab">
+            <ul>
+                <li>
+                    <label>Member number</label> <?php echo $inmembernumber;?>
+                </li>
+                <li>
+                    <label>Spring conferences attended</label>
+                    <fieldset>
+                        <ul>
+<?php 
+    $q = spip_query("select * FROM spip_conferencies WHERE type='spring' order by spip_conferencies.year DESC");
+
+    while($conf = spip_fetch_array($q)) {
+        $q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'");
+        $spring_conferences[$conf['id_conference']] = '';
+        if (spip_num_rows($q2)) {
+            $participation = spip_fetch_array($q2);
+            $spring_conferences[$conf['id_conference']] = $participation['participation'];
+        }
+    
+?>
+                        <li>
+                                <label><?php echo $conf['title'].' '.$conf['year']; ?></label>
+                                <select name="spring_conferences[<?=$conf['id_conference']?>]">
+                                    <option>No</option>
+                                    <option <?php if ($spring_conferences[$conf['id_conference']]=='Speaker') echo 'selected';?> >Speaker</option>
+                                    <option <?php if ($spring_conferences[$conf['id_conference']]=='Chair') echo 'selected';?> >Chair</option>
+                                    <option <?php if ($spring_conferences[$conf['id_conference']]=='Delegate') echo 'selected';?> >Delegate</option>
+                                </select>
+                            </li>
+<?php
+    }
+?>
+                        </ul>
+                    </fieldset>
+                </li>
+                <li>
+                    <label>Autumn Council meeting attended</label>
+                    <fieldset>
+                        <ul>
+<?php 
+    $q = spip_query("select * FROM spip_conferencies WHERE type='autumn' order by spip_conferencies.year DESC");
+
+    while($conf = spip_fetch_array($q)) {
+        $q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'");
+        $autumn_council[$conf['year']] = '';
+        if (spip_num_rows($q2)) {
+            $participation = spip_fetch_array($q2);
+            $autumn_council[$conf['id_conference']] = $participation['participation'];
+        }
+?>
+                        <li>
+                                <label><?php echo $conf['title'].' '.$conf['year']; ?></label>
+                                <select name="autumn_council[<?=$conf['id_conference']?>]">
+                                    <option>No</option>
+                                    <option <?php if ($autumn_council[$conf['id_conference']]=='Speaker') echo 'selected';?> >Speaker</option>
+                                    <option <?php if ($autumn_council[$conf['id_conference']]=='Chair') echo 'selected';?> >Chair</option>
+                                    <option <?php if ($autumn_council[$conf['id_conference']]=='Delegate') echo 'selected';?> >Delegate</option>
+                                </select>
+                            </li>
+<?php
+    }
+?>
+                        </ul>
+                    </fieldset>
+                </li>
+            </ul>
+            <p class='boutons_formulaire'>
+                <input type="submit" name="Submit" value="Submit">
+            </p>
+        </div>   <!-- conferencies -->
