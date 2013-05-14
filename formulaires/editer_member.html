@@ -10,10 +10,10 @@
     <div id="tabs">
         <ul id="nav">
             <li><a href="#general">General</a></li>
-            <li><a href="[(#ENV{action}|parametre_url{tab,membership})]#membership">Membership</a></li>
-            <li><a href="[(#ENV{action}|parametre_url{tab,professional})]#professional">Professional</a></li>
-            <li><a href="[(#ENV{action}|parametre_url{tab,conferencies})]#conferencies">Conferences</a></li>
-            <li><a href="[(#ENV{action}|parametre_url{tab,conferencies})]#conferencies">Cotisation</a></li>
+            <li><a href="[(#SELF|parametre_url{tab,membership})]#membership">Membership</a></li>
+            <li><a href="[(#SELF|parametre_url{tab,professional})]#professional">Professional</a></li>
+            <li><a href="[(#SELF|parametre_url{tab,conferencies})]#conferencies">Conferences</a></li>
+            <li><a href="[(#SELF|parametre_url{tab,conferencies})]#conferencies">Cotisation</a></li>
         </ul>
         
 
