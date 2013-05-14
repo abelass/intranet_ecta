@@ -1,8 +1,7 @@
 select.year, select.fee{width:auto}
 
 /*form member edit*/
-
-
+.cadre-formulaire-editer{font-size:11px}
     .formulaire_member li fieldset {
         border:0;
     }

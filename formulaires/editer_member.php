@@ -117,11 +117,8 @@ function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_t
     $id_auteur=_request('id_auteur');
     $check_login = spip_query($sql);
     $erreurs=array();
-        if (!sql_getfetsel('login','spip_auteurs','login='.sql_quote( $login))) {
-            sql_updateq('spip_auteurs',array('login'=>trim($login)),'id_auteur = '.$id_auteur);
-        } else {
-            $erreurs['login']="Error : this login already exists";
-        }
+        /*if ($login AND !sql_getfetsel('login','spip_auteurs','login='.sql_quote( $login))) $erreurs['login']="Error : this login already exists";*/
+        
   
     return formulaires_editer_objet_verifier('member',$seq);
 }
@@ -149,7 +146,7 @@ function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_t
  *     Retours des traitements
  */
 function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
-    $row['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
+ /*   $row['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
         if (!trim($row['nom'])) $row['nom'] = '-';
         $row['email'] = _request('inemail');
         
@@ -164,8 +161,9 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
         }
         
         sql_updateq('spip_auteurs',$row,'id_auteur = '.$aut['id_auteur']);
-                    
+            */        
         /* spip_members */
+/*
         $reponse = spip_query('desc spip_members');
         while($result = spip_fetch_array($reponse))
             $r[] = $result['Field'];
@@ -181,8 +179,9 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
         if (!_request('listed_in_dir')) $maj['listed_in_dir'] = "listed_in_dir = 'No'";
         
         spip_query("update spip_members set ". implode(',',$maj) ." where seq='$sequp'");
-        
+        */
 /* Confs */
+/*
         spip_query("delete from spip_members_conferencies where id_member='$sequp'");
         if (isset($_POST['spring_conferences']))
             foreach ($_POST['spring_conferences'] as $key => $value) {
@@ -210,8 +209,9 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
                         }
                 }
             }               
-        
+       */ 
         /*Councils*/
+ /*       
         $council_statut=_request('council_statut');
         $council_start_date=_request('council_start_date');        
         $council_end_date=_request('council_end_date'); 
@@ -237,15 +237,18 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
             }
         }
         
-              
+     */         
             /* association */
+            /*
             spip_query("delete from spip_members_associations where id_member='$sequp'");
             if (isset($_POST['associations']))
                 foreach ($_POST['associations'] as $value) {
                     spip_query("insert into spip_members_associations(id_member,id_association) VALUES('$sequp','$value')");
                 }
+*/
 
             /* categories_of_professional */
+            /*
             spip_query("delete from spip_members_categories_of_professional where id_member='$sequp'");
             if (isset($_POST['categories_of_professional']))
                 {foreach ($_POST['categories_of_professional'] as $value) {
@@ -297,7 +300,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
             spip_log($message_mail,'teste');
             
              $message_maj = "The member has been successfully updated";
-         }        
+         }        */
     
     return formulaires_editer_objet_traiter('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
 }
