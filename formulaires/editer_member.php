@@ -59,7 +59,28 @@ function formulaires_editer_member_identifier_dist($seq='new', $retour='', $lier
  *     Environnement du formulaire
  */
 function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
+    
     $valeurs = formulaires_editer_objet_charger('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
+    
+        $sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
+        $reponse = spip_query($sql);
+        $results = spip_fetch_array($reponse);
+        
+        if (!spip_num_rows($reponse)) die('Pb avec le membre '._request('seq'));
+        
+        $seq = (int)_request('seq');
+        
+        foreach($results as $k=>$v){
+            // On prévoit le cas où il y a eu unne maj via le formulaire (on est passé en UTF8)
+            $$k = $v; //htmlentities($v,ENT_QUOTES,'UTF-8');
+            ${"in$k"} = $v; //htmlentities($v,ENT_QUOTES,'UTF-8'); // Compatibilité du code
+        }
+                $user = sql_fetsel('login','spip_auteurs','id_auteur='.$inid_auteur);
+        $inlogin = $user['login'];
+    $sequp = (int)_request('sequp');
+    if(_request('delete'))sql_delete('spip_members_commitees','id_membership='._request('delete'));
+    if(_request('delete_council'))sql_delete('spip_members_council','  id_membership_council='._request('delete_council'));   
+    
     return $valeurs;
 }
 
@@ -86,6 +107,13 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
  *     Tableau des erreurs
  */
 function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
+    $check_login = spip_query($sql);
+        if (!spip_num_rows($check_login)) {
+            sql_updateq('spip_auteurs',array('login'=>trim(_request('inlogin'))),'id_auteur = '.$aut['id_auteur']);
+        } else {
+            $message_err = "Error : this login already exists";
+        }
+  
     return formulaires_editer_objet_verifier('member',$seq);
 }
 
@@ -112,147 +140,58 @@ function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_t
  *     Retours des traitements
  */
 function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
-    return formulaires_editer_objet_traiter('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
-}
-
-
-
-function exec_membre_spip_edit(){
-    
-
-    
-    /*Scripts de migration à priorio plus utile
-         $sql=sql_select('id_member,id_commitee','spip_members_commitees');
-      $count=0;
-    while($data=sql_fetch($sql)){
-        $count++;
-        sql_update('spip_members_commitees',array('id_membership'=>$count),'id_member='.$data['id_member'].' AND id_commitee='.$data['id_commitee']);
-    }
-    $sql=sql_select('*','spip_members');
-      $count=0;
-      $champs_coms=array(1=>'chaircommitee',2=>'vicechaircommitee',3=>'secretarycommitee');
-    while($data=sql_fetch($sql)){
-        foreach($champs_coms as $id_com_mem => $com) {
-             if($id=$data['id_'.$com]>0){
-                 $valeurs=array(
-                 'id_commitee_role'=>$id_com_mem,
-                 'id_commitee'=>$id, 
-                 'id_member'=>$data['seq'], 
-                 'start_date'=>$data['from_'.$com],                                 
-                 );
-                 echo serialize($valeurs);
-                 sql_insertq('spip_members_commitees',$valeurs);
-           
-       }
-        }  
-    }
-        $sql=sql_select('*','spip_members');
-      $count=0;
-      $champs_coms=array(1=>'chaircommitee',2=>'vicechaircommitee',3=>'secretarycommitee');
-    while($data=sql_fetch($sql)){
-        foreach($champs_coms as $id_com_mem => $com) {
-             if($data['id_'.$com]>0){
-                 $valeurs=array(
-                 'id_commitee_role'=>$id_com_mem,
-                 'id_commitee'=>$data['id_'.$com], 
-                 'id_member'=>$data['seq'], 
-                 'start_date'=>$data['from_'.$com],                                 
-                 );
-                 sql_insertq('spip_members_commitees',$valeurs);
-           
-       }
-        }  
-    }
-    $sql=sql_select('*','spip_members');
-
-    while($data=sql_fetch($sql)){
-        if($data['councilmem']=='Yes' OR $data['councilmem']=='Com'){
-                 $valeurs=array(
-                 'seq'=>$data['seq'], 
-                 'statut'=>$data['councilmem'],                                 
-                 );
-                 echo serialize($valeurs);
-                 sql_insertq('spip_members_council',$valeurs);
-             }
-           }
-*/
-
-
-
-    
-	global $connect_statut, $connect_id_auteur;
-	spip_query("SET NAMES 'utf8'");
-	$message_maj = $message_err = '';
-    
-	if(_request('delete'))sql_delete('spip_members_commitees','id_membership='._request('delete'));
-	if(_request('delete_council'))sql_delete('spip_members_council','  id_membership_council='._request('delete_council'));    
-	if (_request('inlogin'))
-	{
-		$sequp = (int)_request('sequp');
-		
-		/* SPIP */
-		$sql="SELECT * FROM spip_members where seq='$sequp' ";
-		$reponse = spip_query($sql);
-		$aut = spip_fetch_array($reponse);		
-		
-		$row['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
-		if (!trim($row['nom'])) $row['nom'] = '-';
-		$row['email'] = _request('inemail');
-		
-		$sql="SELECT id_auteur FROM spip_auteurs where login = ".sql_quote(trim(_request('inlogin')))." AND id_auteur != ".$aut['id_auteur'];
-		//SELECT id_auteur FROM spip_auteurs where login = 'Smideberga' AND id_auteur != 8703
-		
-		$check_login = spip_query($sql);
-		if (!spip_num_rows($check_login)) {
-			sql_updateq('spip_auteurs',array('login'=>trim(_request('inlogin'))),'id_auteur = '.$aut['id_auteur']);
-		} else {
-			$message_err = "Error : this login already exists";
-		}
-		
-		if (_request('inpassword')) {
-			$row['pass'] = md5('1545607746460151d1d63984.51604272'._request('inpassword'));
-			$row['alea_actuel'] = '1545607746460151d1d63984.51604272';
-		}
-		
-		sql_updateq('spip_auteurs',$row,'id_auteur = '.$aut['id_auteur']);
-					
-		/* spip_members */
-		$reponse = spip_query('desc spip_members');
-		while($result = spip_fetch_array($reponse))
-			$r[] = $result['Field'];
-
-		foreach($_POST as $k=>$v) {
-			if (in_array($k,$r)) 
-				$maj[$k] = "$k = '".addslashes(trim($v))."'";
-			if (in_array(substr($k,2),$r)) 
-				$maj[substr($k,2)] = substr($k,2)." = '".addslashes(trim($v))."'";
-		}
-		
-		$maj['datestamp']  = "datestamp = '".date("d-m-Y H:i:s")."'";
-		if (!_request('listed_in_dir')) $maj['listed_in_dir'] = "listed_in_dir = 'No'";
-		
-		spip_query("update spip_members set ". implode(',',$maj) ." where seq='$sequp'");
+    $row['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
+        if (!trim($row['nom'])) $row['nom'] = '-';
+        $row['email'] = _request('inemail');
         
-		
-		/* Confs */
-		spip_query("delete from spip_members_conferencies where id_member='$sequp'");
-		if (isset($_POST['spring_conferences']))
-			foreach ($_POST['spring_conferences'] as $key => $value) {
-				spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
-			}
-		if (isset($_POST['autumn_council']))
-			foreach ($_POST['autumn_council'] as $key => $value) {
-				spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
-			}
-			
-		$val_start_date=_request('start_date');
-		$vaspip__date=_request('end_date');		
+        $sql="SELECT id_auteur FROM spip_auteurs where login = ".sql_quote(trim(_request('inlogin')))." AND id_auteur != ".$aut['id_auteur'];
+
+        
+        
+        
+        if (_request('inpassword')) {
+            $row['pass'] = md5('1545607746460151d1d63984.51604272'._request('inpassword'));
+            $row['alea_actuel'] = '1545607746460151d1d63984.51604272';
+        }
+        
+        sql_updateq('spip_auteurs',$row,'id_auteur = '.$aut['id_auteur']);
+                    
+        /* spip_members */
+        $reponse = spip_query('desc spip_members');
+        while($result = spip_fetch_array($reponse))
+            $r[] = $result['Field'];
+
+        foreach($_POST as $k=>$v) {
+            if (in_array($k,$r)) 
+                $maj[$k] = "$k = '".addslashes(trim($v))."'";
+            if (in_array(substr($k,2),$r)) 
+                $maj[substr($k,2)] = substr($k,2)." = '".addslashes(trim($v))."'";
+        }
+        
+        $maj['datestamp']  = "datestamp = '".date("d-m-Y H:i:s")."'";
+        if (!_request('listed_in_dir')) $maj['listed_in_dir'] = "listed_in_dir = 'No'";
+        
+        spip_query("update spip_members set ". implode(',',$maj) ." where seq='$sequp'");
+        
+/* Confs */
+        spip_query("delete from spip_members_conferencies where id_member='$sequp'");
+        if (isset($_POST['spring_conferences']))
+            foreach ($_POST['spring_conferences'] as $key => $value) {
+                spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
+            }
+        if (isset($_POST['autumn_council']))
+            foreach ($_POST['autumn_council'] as $key => $value) {
+                spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
+            }
+            
+        $val_start_date=_request('start_date');
+        $vaspip__date=_request('end_date');     
         $id_commitee_role=_request('id_commitee_role');
-			foreach ($val_start_date as $id_commitee =>$start) {
-				$end=$val_end_date[$id_commitee];				
-				if(isset($start['new']) AND $start['new']>0){
-				    sql_insertq('spip_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01','id_commitee_role'=>$id_commitee_role[$id_commitee]['new']));
-				}
+            foreach ($val_start_date as $id_commitee =>$start) {
+                $end=$val_end_date[$id_commitee];               
+                if(isset($start['new']) AND $start['new']>0){
+                    sql_insertq('spip_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01','id_commitee_role'=>$id_commitee_role[$id_commitee]['new']));
+                }
                 else{
                     foreach($start AS $id_membership=>$start_date){
                         if($start_date>0){
@@ -261,8 +200,8 @@ function exec_membre_spip_edit(){
                             }
                         }
                 }
-			}				
-		
+            }               
+        
         /*Councils*/
         $council_statut=_request('council_statut');
         $council_start_date=_request('council_start_date');        
@@ -290,164 +229,97 @@ function exec_membre_spip_edit(){
         }
         
               
-			/* association */
-			spip_query("delete from spip_members_associations where id_member='$sequp'");
-			if (isset($_POST['associations']))
-				foreach ($_POST['associations'] as $value) {
-					spip_query("insert into spip_members_associations(id_member,id_association) VALUES('$sequp','$value')");
-				}
+            /* association */
+            spip_query("delete from spip_members_associations where id_member='$sequp'");
+            if (isset($_POST['associations']))
+                foreach ($_POST['associations'] as $value) {
+                    spip_query("insert into spip_members_associations(id_member,id_association) VALUES('$sequp','$value')");
+                }
 
-			/* categories_of_professional */
-			spip_query("delete from spip_members_categories_of_professional where id_member='$sequp'");
-			if (isset($_POST['categories_of_professional']))
-				{foreach ($_POST['categories_of_professional'] as $value) {
-					spip_query("insert into spip_members_categories_of_professional(id_member,id_category) VALUES('$sequp','$value')");
-				}
-				}
-				
-				
-		if (!$message_err){
-			$ch = array();	
+            /* categories_of_professional */
+            spip_query("delete from spip_members_categories_of_professional where id_member='$sequp'");
+            if (isset($_POST['categories_of_professional']))
+                {foreach ($_POST['categories_of_professional'] as $value) {
+                    spip_query("insert into spip_members_categories_of_professional(id_member,id_category) VALUES('$sequp','$value')");
+                }
+                }
+                
+                
+        if (!$message_err){
+            $ch = array();  
 
-			foreach($aut AS $key=>$val){ 
-				if(($req=_request($key) AND _request($key)!=$val) OR ($req=_request('in'.$key) AND _request('in'.$key)!=$val))$ch[$key]=$req;				
-			}
-			
-			if(count($ch)>0){
-			//actualisation mailchimp
-			
-				spip_log('actualisation profil intranet','sclp');
-				$flux=array(
-					'data'=>array('id_auteur'=>$aut['id_auteur'])
-					);
+            foreach($aut AS $key=>$val){ 
+                if(($req=_request($key) AND _request($key)!=$val) OR ($req=_request('in'.$key) AND _request('in'.$key)!=$val))$ch[$key]=$req;               
+            }
+            
+            if(count($ch)>0){
+            //actualisation mailchimp
+            
+                spip_log('actualisation profil intranet','sclp');
+                $flux=array(
+                    'data'=>array('id_auteur'=>$aut['id_auteur'])
+                    );
                     
 
-				$flux['args']['args'][4]['email']=$aut['email'];	
-				
-				$traitement=charger_fonction('editer_auteur_traiter_listes','inc');
-				$flux=$traitement($flux);
-				
-				
-				include_spip('inc/session');
-				$id_auteur_session=session_get('id_auteur');	
-				$nom_session=sql_getfetsel('nom','spip_auteurs','id_auteur='.$id_auteur_session);
-				if(!$nom_session)$nom_session='name not detected ,id_auteur'.$id_auteur_session;
-				$message_mail .="Last modification done from the backend on : ".date('d-m-Y H:i:s')."  by ".$nom_session."\n\n";
-				$message_mail .="Modification - Member number:".$aut['membernumber']."\n\n";
-				$message_mail .="The following modifications have been made:\n\n";	
-												
-				foreach($ch as $key=>$val){
-					if(is_array($val))$val=implode(',',$val);
-					$message_mail .= $key.': '.$val."\n\n";
-					}
+                $flux['args']['args'][4]['email']=$aut['email'];    
+                
+                $traitement=charger_fonction('editer_auteur_traiter_listes','inc');
+                $flux=$traitement($flux);
+                
+                
+                include_spip('inc/session');
+                $id_auteur_session=session_get('id_auteur');    
+                $nom_session=sql_getfetsel('nom','spip_auteurs','id_auteur='.$id_auteur_session);
+                if(!$nom_session)$nom_session='name not detected ,id_auteur'.$id_auteur_session;
+                $message_mail .="Last modification done from the backend on : ".date('d-m-Y H:i:s')."  by ".$nom_session."\n\n";
+                $message_mail .="Modification - Member number:".$aut['membernumber']."\n\n";
+                $message_mail .="The following modifications have been made:\n\n";  
+                                                
+                foreach($ch as $key=>$val){
+                    if(is_array($val))$val=implode(',',$val);
+                    $message_mail .= $key.': '.$val."\n\n";
+                    }
 
-			$envoyer_mail = charger_fonction('envoyer_mail','inc');
-   			//$envoyer_mail($GLOBALS['meta']['email_webmaster'], "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail, true);
-   			//$envoyer_mail('websolutions@mychacra.net', "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail, true);
-   			 $envoyer_mail('ecta@ecta.org', "Modification of a public profile (Nr ".$aut['membernumber'].")", $message_mail, true);
-			}				
-			spip_log($message_mail,'teste');
-			
-			 $message_maj = "The member has been successfully updated";
-		 }
+            $envoyer_mail = charger_fonction('envoyer_mail','inc');
+            //$envoyer_mail($GLOBALS['meta']['email_webmaster'], "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail, true);
+            //$envoyer_mail('websolutions@mychacra.net', "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail, true);
+             $envoyer_mail('ecta@ecta.org', "Modification of a public profile (Nr ".$aut['membernumber'].")", $message_mail, true);
+            }               
+            spip_log($message_mail,'teste');
+            
+             $message_maj = "The member has been successfully updated";
+         }        
+    
+    return formulaires_editer_objet_traiter('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
+}
+
+
+
+function exec_membre_spip_edit(){
+
+ 
+	if (_request('inlogin'))
+	{
+
+		
+		/* SPIP */
+		$sql="SELECT * FROM spip_members where seq='$sequp' ";
+		$reponse = spip_query($sql);
+		$aut = spip_fetch_array($reponse);		
+		
+		
+        
+		
+		
 	}
 
-	$commencer_page = charger_fonction('commencer_page', 'inc');
-	echo $commencer_page('MEMBERS DIRECTORY - ADMINISTRATION', "naviguer", "articles", $id_rubrique);
 
-		$sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
-		$reponse = spip_query($sql);
-		$results = spip_fetch_array($reponse);
+
+
+
+
 		
-		if (!spip_num_rows($reponse)) die('Pb avec le membre '._request('seq'));
-		
-		$seq = (int)_request('seq');
-		
-		foreach($results as $k=>$v){
-			// On prévoit le cas où il y a eu unne maj via le formulaire (on est passé en UTF8)
-			$$k = $v; //htmlentities($v,ENT_QUOTES,'UTF-8');
-			${"in$k"} = $v; //htmlentities($v,ENT_QUOTES,'UTF-8'); // Compatibilité du code
-		}
 
-		$user = sql_fetsel('login','spip_auteurs','id_auteur='.$inid_auteur);
-		$inlogin = $user['login'];
-		
-		echo debut_gauche();
-			echo pipeline('affiche_gauche',array('args'=>array('exec'=>'membres_page'),'data'=>''));
-			echo debut_boite_info();
-				echo '<p class="style1" style="text-align:center"><img src="'._DIR_PLUGIN_ECTA.'img_pack/admin-logo.png" alt="ECTA"></p>';
-				echo '<p class="style1" style="text-align:center"><strong>MEMBERS DATABASE</strong></p>';
-			echo fin_boite_info();
-
-			if ($spip_display != 4) {
-			$iconifier = charger_fonction('iconifier', 'inc');
-			if ($id_auteur > 0)
-				echo $iconifier('id_auteur', $id_auteur, 'auteur_infos');
-		}
-
-			if ($message_maj || $message_err) {
-
-				echo "
-					<style>
-					.message_ok {
-						padding:10px;
-						background:#99FF99;
-						color:green;
-						font-size:14px;
-						font-weight:bold;
-						margin-bottom:10px;
-					}
-					.message_err {
-						padding:10px;
-						background:#FF9999;
-						color:red;
-						font-size:14px;
-						font-weight:bold;
-						margin-bottom:10px;
-					}
-					</style>".
-					
-					($message_maj ?"	<div class='message_ok'>
-						 $message_maj
-						</div>":"").
-
-						($message_err ?"	<div class='message_err'>
-							 $message_err
-							</div>":'').
-				"<script>
-					/*
-					 * jQuery Timer Plugin
-					 * http://www.evanbot.com/article/jquery-timer-plugin/23
-					 *
-					 * @version      1.0
-					 * @copyright    2009 Evan Byrne (http://www.evanbot.com)
-					 */ 
-
-					jQuery.timer = function(time,func,callback){
-						var a = {timer:setTimeout(func,time),callback:null}
-						if(typeof(callback) == 'function'){a.callback = callback;}
-						return a;
-					};
-
-					jQuery.clearTimer = function(a){
-						clearTimeout(a.timer);
-						if(typeof(a.callback) == 'function'){a.callback();};
-						return this;
-					};
-					
-					jQuery.timer(2000,function(){jQuery('.message_ok').slideUp()})
-				</script>
-			";
-			
-		}
-			echo debut_raccourcis();
-       if(0 && _request('seq')){
-				echo '<a href="?exec=membre_spip_view&amp;seq='._request('seq').'"><b><img src="'._DIR_PLUGIN_ECTA.'img_pack/back.png" alt="retour" align="absmiddle"> Back to the member profile</b></a>';
-				}
-				else{
-					echo '<a href="?exec=membre_spip_list"><b><img src="'._DIR_PLUGIN_ECTA.'img_pack/back.png" alt="retour" align="absmiddle"> Back</b></a>';
-				}
-			echo fin_raccourcis();
 		echo debut_droite();
 		
 		
