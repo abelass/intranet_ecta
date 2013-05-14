@@ -6,20 +6,21 @@
         <a href="[(#URL_ECRIRE{members})]"><strong[ (#ENV{init}|non|ou{#ENV{init}|=={All}|oui})class="on"]>All</strong></a>|
        <BOUCLE_data(DATA){source tableau, #GET{alpha}}{'|'}><a href="[(#SELF|parametre_url{init,#VALEUR})]"><strong[ (#ENV{init}|=={#VALEUR}|oui)class="on"]>#VALEUR</strong></a> </BOUCLE_data>
     </div>
-
+#SET{sort,0}
 [(#ENV{by}|=={company}|?{
-    [(#ENV{order}|=={ASC}|?{#SET{sort_company,DESC},#SET{sort_company,ASC}})]
+    [(#ENV{order}|=={ASC}|?{#SET{sort_company,DESC} #SET{sort,1},
+    #SET{sort_company,ASC}
+    })]
     ,#SET{sort_company,''}})]
 [(#ENV{by}|=={surname}|?{
-    [(#ENV{order}|=={ASC}|?{#SET{sort_name,DESC},#SET{sort_name,ASC}})]
+    [(#ENV{order}|=={ASC}|?{#SET{sort_name,DESC} #SET{sort,1},#SET{sort_name,ASC}})]
     ,#SET{sort_name,''}})]
 [(#ENV{by}|=={country}|?{
-    [(#ENV{order}|=={ASC}|?{#SET{sort_country,DESC},#SET{sort_country,ASC}})]
+    [(#ENV{order}|=={ASC}|?{#SET{sort_country,DESC} #SET{sort,1},#SET{sort_country,ASC}})]
     ,#SET{sort_country,''}})] 
 [(#ENV{by}|=={active}|?{
-    [(#ENV{order}|=={ASC}|?{#SET{sort_active,DESC},#SET{sort_active,ASC}})]
+    [(#ENV{order}|=={ASC}|?{#SET{sort_active,DESC} #SET{sort,1},#SET{sort_active,ASC}})]
     ,#SET{sort_active,''}})] 
-
 
     <B_members>
     #ANCRE_PAGINATION
@@ -49,7 +50,7 @@
           </tr>
         </thead>  
         <tbody>
-       <BOUCLE_members(MEMBERS){where?}{par #ENV{by,surname}}{pagination 30}>
+       <BOUCLE_members(MEMBERS){where?}{par #ENV{by,surname}}{inverse #GET{sort}}{pagination 30}>
        <tr class="tr_liste[(#ACTIVE|=={No}|oui) disabled]">
                 <td class='arial1'><div class='style3'><a href='#URL_ECRIRE{membre_edit,seq=#SEQ}'>#SUFFIXE #NAME #SURNAME</a></div></td>
                 <td class='arial1'><div class='style3'>#COMPANY</div></td>
