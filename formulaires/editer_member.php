@@ -62,7 +62,7 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
     
     $valeurs = formulaires_editer_objet_charger('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
     
-        $sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
+        /*$sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
         $reponse = spip_query($sql);
         $results = spip_fetch_array($reponse);
         
@@ -86,7 +86,7 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
     
     if(_request('delete'))sql_delete('spip_members_commitees','id_membership='._request('delete'));
     if(_request('delete_council'))sql_delete('spip_members_council','  id_membership_council='._request('delete_council'));   
-    
+    */
     return $valeurs;
 }
 

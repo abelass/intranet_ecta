@@ -14,64 +14,6 @@
 		<p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
 	</div></form>
 	]
-	
-	
-        
-        <link type="text/css" href="<?php echo find_in_path('css/custom-theme/ui.all.css'); ?>" rel="stylesheet" />
-        <script type="text/javascript" src="<?php echo find_in_path('js/jquery-ui-1.6.custom.min.js'); ?>"></script>
-
-            
-<script type="text/javascript">
-    jQuery(document).ready(function(){
-      
-$("a .ajax >.hidden").unbind('click');
-        $('.hidden').hide('fast');
-        $('.switch').click(function(){
-            $(this).toggleClass('open').next().toggle('fast');       
-            }
-            
-           );
-});   
-</script>
-                
-<style>
-    #contenu {
-        font-size:10px;
-    }
-    .formulaire_spip li fieldset {
-        border:0;
-    }
-    .formulaire_spip ul ul input.text, .formulaire_spip ul ul input.password, .formulaire_spip ul ul textarea, .formulaire_spip ul ul select  {
-        width:190px!important;
-    }
-    .ui-tabs .ui-tabs-hide {
-         display: none;
-    }
-    .ui-tabs-panel {
-        padding:0;
-        border-top:0;
-    }
-    .ui-tabs-nav ul.nav li {
-        text-align:center;
-    }
-    .ui-tabs-nav ul.nav li a {
-        padding:0.5em 0;
-        width:98px;
-    }
-    input.start_date, input.end_date, input{width:40px;}
-    .formulaire_spip li.membership label{    float: none;
-    margin-left: 0;
-    width: auto;}
-    .formulaire_spip li.membership,.formulaire_spip li.explication {padding-left:0;width:350px;
-    }
-    .formulaire_spip span{font-weight:bold;cursor: pointer}
-    .formulaire_spip span .open{color:green}
-    .formulaire_spip span .close{display:none; color:red}
-    .formulaire_spip span.open .open{display:none}  
-    .formulaire_spip span.open .close{display:inline} 
-    small{font-size: 10px;color:#7f7f7f;display:block}
-    .formulaire_spip ul ul .member_role, select.statut{width:auto !important}
-</style>
 
 <form action="" method="post" name="form1" class="style3" id="form1">
     <input name="sequp" type="hidden" value="<?php echo $seq;?>">
@@ -813,6 +755,16 @@ $("a .ajax >.hidden").unbind('click');
         ?>
         
 <script type="text/javascript">
+    jQuery(document).ready(function(){
+      
+$("a .ajax >.hidden").unbind('click');
+        $('.hidden').hide('fast');
+        $('.switch').click(function(){
+            $(this).toggleClass('open').next().toggle('fast');       
+            }
+            
+           );
+});   
 
    $("#tabs").tabs({
     load: function(event, ui) {
@@ -826,4 +778,5 @@ $("a .ajax >.hidden").unbind('click');
 });
 
 </script>
+
 </div>
