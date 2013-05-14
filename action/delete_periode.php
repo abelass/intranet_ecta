@@ -13,8 +13,17 @@ function action_delete_periode_dist($arg=null) {
 		$arg = $securiser_action();
 	}
 	
-
-    sql_delete('spip_members_commitees','id_membership='.$arg);
+    list($id,$action)=explode('-',$arg);
+    
+    switch($action){
+        case 'commitee':
+            sql_delete('spip_members_commitees','id_membership='.$id);
+            break;
+        case 'council':
+            sql_delete('spip_members_council','id_membership_council='.$id);
+            break;            
+    }
+    
 
 
 	return ;
