@@ -1,3 +1,9 @@
+#SET{tab,#ENV{tab,general}}    
+[(#ENV{seq}|=={oui}|oui|ou{#ENV{seq}|non})
+    #SET{tab,general}
+    #SET{deactivated,class="deactivated"}
+]
+
 <div class='cadre-formulaire-editer'>
 <div class="entete-formulaire">
     [(#SEQ|oui)
@@ -6,36 +12,36 @@
 
     <div class="barre_onglet clearfix">
         <ul>
-            <li>[(#ENV{tab}|=={general}|ou{#ENV{tab}|non}|?{
+            <li>[(#GET{tab}|=={general}|ou{#ENV{tab}|non}|?{
                <strong class="on">General</strong>
                 ,
                 <a class="ajax nocache" href="[(#SELF|parametre_url{tab,general})]">General</a>
             })]
             </li>
-            <li>
-                [(#ENV{tab}|=={membership}|?{
+            <li[ (#GET{deactivated})]>
+                [(#GET{tab}|=={membership}|ou{#GET{deactivated}|oui}|?{
                <strong class="on">Membership</strong>
                 ,
                 <a class="ajax nocache" href="[(#SELF|parametre_url{tab,membership})]">Membership</a>
             })]
             </li>
-            <li>
-               [(#ENV{tab}|=={professional}|?{
+            <li[ (#GET{deactivated})]>
+               [(#GET{tab}|=={professional}|ou{#GET{deactivated}|oui}|?{
                <strong class="on">Professional</strong>
                 ,
                 <a class="ajax nocache" href="[(#SELF|parametre_url{tab,professional})]">Professional</a>
             })]
             </li>
                 
-            <li>
-                 [(#ENV{tab}|=={Cotisation}|?{
+            <li[ (#GET{deactivated})]>
+                 [(#GET{tab}|=={Cotisation}|ou{#GET{deactivated}|oui}|?{
                    <strong class="on">Conferences</strong>
                     ,
                     <a class="ajax nocache" href="[(#SELF|parametre_url{tab,conferencies})]">Conferences</a>
                 })]
             </li>
-            <li>
-                 [(#ENV{tab}|=={cotisation}|?{
+            <li[ (#GET{deactivated})]>
+                 [(#GET{tab}|=={cotisation}|ou{#GET{deactivated}|oui}|?{
                    <strong class="on">Cotisation</strong>
                     ,
                     <a class="ajax nocache" href="[(#SELF|parametre_url{tab,cotisation})]">Cotisation</a>
@@ -43,7 +49,8 @@
             </li>
         </ul>
         </div>
-#INCLURE{fond=prive/squelettes/contenu/member_edit,redirect='',env,seq=#ENV{seq},retourajax=oui,ajax}
+        
+#INCLURE{fond=prive/squelettes/contenu/member_edit,redirect='',env,tab=#GET{tab},seq=#ENV{seq},retourajax=oui,ajax}
     
     </div>
 </div>

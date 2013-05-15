@@ -1,146 +1,131 @@
+<div id="general" class="tab">
+        <ul>
+            [(#SAISIE{input, membernumber, obligatoire=oui,
+            label=<:member:label_membernumber:>})]
 
-[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
-[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
-
-
-<form method='post' action='#ENV{action}'><div>
-    #ACTION_FORMULAIRE{#ENV{action}}
-    <input type='hidden' name='seq' value='#ENV{seq}' />
-    <input name="sequp" type="hidden" value="#ENV{seq}">
-
-        
-    <div id="general" class="tab">
-            <ul>
-                [(#SAISIE{input, membernumber, obligatoire=oui,
-                label=<:member:label_membernumber:>})]
-
-                <li>
-                    <label>Details</label>
-                    <fieldset>
-                     <ul>
-                         [(#SAISIE{radio, gender,
-                             label=<:member:label_gender:>,
-                             datas=#ARRAY{F,F,M,M}})]                    
+            <li>
+                <label>Details</label>
+                <fieldset>
+                 <ul>
+                     [(#SAISIE{radio, gender,
+                         label=<:member:label_gender:>,
+                         datas=#ARRAY{F,F,M,M}})]                    
+                        
+                    [(#SAISIE{input, title,
+                        label=<:member:label_title:>})] 
                             
-                        [(#SAISIE{input, title,
-                            label=<:member:label_title:>})] 
-                                
-                        [(#SAISIE{input, name,
-                            obligatoire=oui,
-                            label=<:member:label_name:>})]
-                            
-                        [(#SAISIE{input, surname,
-                             obligatoire=oui,
-                             label=<:member:label_surname:>})]
+                    [(#SAISIE{input, name,
+                        obligatoire=oui,
+                        label=<:member:label_name:>})]
                         
-                        [(#SAISIE{input,birthdate,
-                            label=<:member:label_birthdate:>})]
-                        [(#SAISIE{input, email,
-                            label=<:member:label_email:>})]
-                                    </ul>
-                    </fieldset>
-                </li>
-
-                <li>
-                    <label>Login</label>
-                    <fieldset>
-                        <ul>
-                        [(#SAISIE{input, login,
-                            label=<:member:label_login:>})] 
-                        [(#SAISIE{input, password,
-                            label=<:member:label_password:>})]
-                        </ul>
-                    </fieldset>
-                </li>
-
-            [(#SAISIE{input, company,
-                label=<:member:label_company:>})]
-
-                <li>
-                    <label>Address</label>
-                    <fieldset>
-                        
-                        <ul>
-                        [(#SAISIE{input, addr1,
-                            label=<:member:label_addr1:>})]
-            
-                        [(#SAISIE{input, addr2,
-                            label=<:member:label_addr2:>})]
-            
-                        [(#SAISIE{input, addr3,
-                            label=<:member:label_addr3:>})]
-            
-                        [(#SAISIE{input, addr4,
-                            label=<:member:label_addr4:>})]
-            
-                        [(#SAISIE{input, addr5,
-                            label=<:member:label_addr5:>})]
-
-                        [(#SAISIE{pays_code, country,
-                label=<:member:label_country:>})]
-                        [(#SAISIE{selection, countrytype,
-                            label=<:member:label_countrytype:>,
-                            datas=[(#ARRAY{'',Make a Choice,EU,EU,Out EU,Out EU})]})]
-                        [(#SAISIE{pays_code, nationality,
-                            label=<:member:label_nationality:>})]
-                            </ul>
-                   
-
-                    </fieldset>
-                </li>
-
-                <li>
-                    <label>Phone / Fax</label>
-                    <fieldset>
-                        
-                        <ul>
-                            <li>
-                                <label>Fax 1</label>
-                                + <input name="fax1_pn" type="text" class="text-mini" style="width:30px;" id="fax1_pn" value="#ENV{fax1_pn}">
-                                <input name="fax1_pl" type="text"  class="text-mini" style="width:30px;" id="fax1_pl" value="#ENV{fax1_pl}">
-                                <input name="fax1" type="text" class="tel text" id="fax1" value="#ENV{fax1}">
-                            </li>
-                            <li>
+                    [(#SAISIE{input, surname,
+                         obligatoire=oui,
+                         label=<:member:label_surname:>})]
                     
-                                <label>Fax 2</label>
-                                + <input name="fax2_pn" type="text" class="text-mini" style="width:30px;" id="fax2_pn" value="#ENV{fax2_pn}">                
-                                <input name="fax2_pl" type="text" class="text-mini" style="width:30px;" id="fax2_pl" value="#ENV{fax2_pl}">              
-                                <input name="fax2" type="text" class="text tel" id="fax2" value="#ENV{fax2}">
-                            </li>
-                            <li>
-                                <label>Telephone 1</label>
-                                + <input name="tel1_pn" type="text" class="text-mini" style="width:30px;" id="intel1_pn" value="#ENV{tel1_pn}">                
-                                <input name="tel1_pl" type="text" class="text-mini" style="width:30px;" id="tel1_pl" value="#ENV{tel1_pl}">
-                                <input name="tel1" type="text" class="text tel" id="tel1" value="#ENV{tel1}">
-                            </li>
-                            <li>
-                                <label>Telephone 2</label>
-                                + <input name="tel2_pn" type="text" class="text-mini" style="width:30px;" style="width:30px;" id="tel2_pn" value="#ENV{tel2_pn}">    
-                                <input name="tel2_pl" type="text" class="text-mini" style="width:30px;" id="tel2_pl" value="#ENV{tel2_pl}">
-                                <input name="tel2" type="text" class="text tel" id="tel2" value="#ENV{tel2}">
-                            </li>
-                            <li>
-                                <label>Telephone 3</label>
-                                + <input name="tel3_pn" type="text" class="text-mini" style="width:30px;" id="tel3_pn" value="#ENV{tel3_pn}">
-                                <input name="tel3_pl" type="text" class="text-mini" style="width:30px;" id="tel3_pl" value="#ENV{tel3_pl}">
-                                <input name="tel3" type="text" class="text tel" id="tel3" value="#ENV{tel3}">
-                            </li>                           
+                    [(#SAISIE{input,birthdate,
+                        label=<:member:label_birthdate:>})]
+                    [(#SAISIE{input, email,
+                        label=<:member:label_email:>})]
+                                </ul>
+                </fieldset>
+            </li>
+
+            <li>
+                <label>Login</label>
+                <fieldset>
+                    <ul>
+                    [(#SAISIE{input, login,
+                        label=<:member:label_login:>})] 
+                    [(#SAISIE{input, password,
+                        label=<:member:label_password:>})]
+                    </ul>
+                </fieldset>
+            </li>
+
+        [(#SAISIE{input, company,
+            label=<:member:label_company:>})]
+
+            <li>
+                <label>Address</label>
+                <fieldset>
+                    
+                    <ul>
+                    [(#SAISIE{input, addr1,
+                        label=<:member:label_addr1:>})]
+        
+                    [(#SAISIE{input, addr2,
+                        label=<:member:label_addr2:>})]
+        
+                    [(#SAISIE{input, addr3,
+                        label=<:member:label_addr3:>})]
+        
+                    [(#SAISIE{input, addr4,
+                        label=<:member:label_addr4:>})]
+        
+                    [(#SAISIE{input, addr5,
+                        label=<:member:label_addr5:>})]
+
+                    [(#SAISIE{pays_code, country,
+            label=<:member:label_country:>})]
+                    [(#SAISIE{selection, countrytype,
+                        label=<:member:label_countrytype:>,
+                        datas=[(#ARRAY{'',Make a Choice,EU,EU,Out EU,Out EU})]})]
+                    [(#SAISIE{pays_code, nationality,
+                        label=<:member:label_nationality:>})]
                         </ul>
-                    </fieldset>
-                </li>
+               
 
-                [(#SAISIE{radio, listed_in_dir,
-                                label=<:member:label_listed_in_dir:>,
-                                datas=[(#ARRAY{Yes,Yes,No,No})]})]
-                <li>
-                    <strong>Last modification done on : </strong>[(#LAST_MODIFIED|affdate{d-m-Y H:i:s})]
-                </li>
+                </fieldset>
+            </li>
 
-            </ul>
-            
-        </div><!-- general -->
+            <li>
+                <label>Phone / Fax</label>
+                <fieldset>
+                    
+                    <ul>
+                        <li>
+                            <label>Fax 1</label>
+                            + <input name="fax1_pn" type="text" class="text-mini" style="width:30px;" id="fax1_pn" value="#ENV{fax1_pn}">
+                            <input name="fax1_pl" type="text"  class="text-mini" style="width:30px;" id="fax1_pl" value="#ENV{fax1_pl}">
+                            <input name="fax1" type="text" class="tel text" id="fax1" value="#ENV{fax1}">
+                        </li>
+                        <li>
+                
+                            <label>Fax 2</label>
+                            + <input name="fax2_pn" type="text" class="text-mini" style="width:30px;" id="fax2_pn" value="#ENV{fax2_pn}">                
+                            <input name="fax2_pl" type="text" class="text-mini" style="width:30px;" id="fax2_pl" value="#ENV{fax2_pl}">              
+                            <input name="fax2" type="text" class="text tel" id="fax2" value="#ENV{fax2}">
+                        </li>
+                        <li>
+                            <label>Telephone 1</label>
+                            + <input name="tel1_pn" type="text" class="text-mini" style="width:30px;" id="intel1_pn" value="#ENV{tel1_pn}">                
+                            <input name="tel1_pl" type="text" class="text-mini" style="width:30px;" id="tel1_pl" value="#ENV{tel1_pl}">
+                            <input name="tel1" type="text" class="text tel" id="tel1" value="#ENV{tel1}">
+                        </li>
+                        <li>
+                            <label>Telephone 2</label>
+                            + <input name="tel2_pn" type="text" class="text-mini" style="width:30px;" style="width:30px;" id="tel2_pn" value="#ENV{tel2_pn}">    
+                            <input name="tel2_pl" type="text" class="text-mini" style="width:30px;" id="tel2_pl" value="#ENV{tel2_pl}">
+                            <input name="tel2" type="text" class="text tel" id="tel2" value="#ENV{tel2}">
+                        </li>
+                        <li>
+                            <label>Telephone 3</label>
+                            + <input name="tel3_pn" type="text" class="text-mini" style="width:30px;" id="tel3_pn" value="#ENV{tel3_pn}">
+                            <input name="tel3_pl" type="text" class="text-mini" style="width:30px;" id="tel3_pl" value="#ENV{tel3_pl}">
+                            <input name="tel3" type="text" class="text tel" id="tel3" value="#ENV{tel3}">
+                        </li>                           
+                    </ul>
+                </fieldset>
+            </li>
 
-    [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
-    <!--extra-->
-    <p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
-</div></form>
+            [(#SAISIE{radio, listed_in_dir,
+                            label=<:member:label_listed_in_dir:>,
+                            datas=[(#ARRAY{Yes,Yes,No,No})]})]
+            <li>
+                <strong>Last modification done on : </strong>[(#LAST_MODIFIED|affdate{d-m-Y H:i:s})]
+            </li>
+
+        </ul>
+        
+    </div><!-- general -->
+

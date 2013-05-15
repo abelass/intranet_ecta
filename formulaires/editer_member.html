@@ -1,9 +1,18 @@
 <div class='formulaire_spip formulaire_editer formulaire_#FORM formulaire_#FORM-#ENV{seq,nouveau} ajax'>
-        <div id="content">
-        <INCLURE{fond=formulaires/ui/#ENV{tab,general},env,seq=#ENV{seq}}/>
-        </div>
-</div>        
+[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
+<form method='post' action='#ENV{action}'><div>
+    #ACTION_FORMULAIRE{#ENV{action}}
+    <input type='hidden' name='seq' value='#ENV{seq}' />
+    <input name="sequp" type="hidden" value="#ENV{seq}">
+        #SET{tab,#ENV{tab,general}}    
+        [(#ENV{seq}|=={oui}|oui)#SET{tab,general}]    #GET{tab}
+        <INCLURE{fond=formulaires/ui/#GET{tab},env,seq=#ENV{seq}}/>      
+    [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+    <!--extra-->
+    <p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
+</div></form>
         
 
 

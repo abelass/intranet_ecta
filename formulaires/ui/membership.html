@@ -1,10 +1,4 @@
-[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
-[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
-<form method='post' action='#ENV{action}'><div>
-    #ACTION_FORMULAIRE{#ENV{action}}
-    <input type='hidden' name='seq' value='#ENV{seq}' />
-    <input name="sequp" type="hidden" value="#ENV{seq}">
     <div id="membership" class="tab">
         <ul>
 
@@ -40,10 +34,7 @@
                         <li class="explication">
                             <small>Please specify a role and a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
                         </li>
-                        
-
                        <INCLURE{fond=formulaires/inc-commitees,env,ajax}/>
-                 
                     </ul>
                 </fieldset>
             </li> 
@@ -51,9 +42,9 @@
             <li>
                 <label>Executive Bodies</label>
                 <select name="executivebodies" id="executivebodies">
-                    <option value=''[>Make a Choice</option>
+                    <option value=''>Make a Choice</option>
                <BOUCLE_ex_bodies(EXECUTIVE_BODIES){par num title}>
-                    <option value='#ID_ECTA_EXECUTIVE_BODY'[(#ID_ECTA_EXECUTIVE_BODY|=={#ENV{executivebodies}})]> [(#TITLE|supprimer_numero)] </option>
+                    <option value='#ID_ECTA_EXECUTIVE_BODY'[ (#ID_ECTA_EXECUTIVE_BODY|=={#ENV{executivebodies}}|oui)selected="selected"]> [(#TITLE|supprimer_numero)] </option>
                 </BOUCLE_ex_bodies>
                  </select>
             </li>                  
@@ -209,7 +200,12 @@
          </ul>
     
     </div><!-- membership -->
-    [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
-    <!--extra-->
-    <p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
-</div></form>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        $("a .ajax >.cache").unbind('click');
+        $('.cache').hide('fast');
+        $('.switch').click(function(){
+            $(this).toggleClass('open').next().toggle('fast');       
+            });
+        });   
+</script>

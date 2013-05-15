@@ -148,7 +148,7 @@ function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_t
  *     Retours des traitements
  */
 function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
-    //l'acien scriopt utilisait $sequp
+    //l'acien script utilisait $sequp
     $sequp=$seq;
  /*   $row['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
         if (!trim($row['nom'])) $row['nom'] = '-';
@@ -218,7 +218,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
             }               
        
         /*Councils*/
- /*       
+      
         $council_statut=_request('council_statut');
         $council_start_date=_request('council_start_date');        
         $council_end_date=_request('council_end_date'); 
@@ -244,7 +244,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
             }
         }
         
-     */         
+        
             /* association */
             /*
             spip_query("delete from spip_members_associations where id_member='$sequp'");

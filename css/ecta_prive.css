@@ -21,3 +21,16 @@ select.year, select.fee{width:auto}
 
     small{font-size: 10px;color:#7f7f7f;display:block}
     .formulaire_spip ul ul .member_role, select.statut{width:auto !important}
+    
+  .barre_onglet li.deactivated strong{background: #e5e5e5}
+  
+  .member .barre_onglet a, .barre_onglet strong{padding-left:5px}
+  
+  .formulaire_spip span{font-weight:bold;cursor: pointer}
+	.formulaire_spip span .open{color:green}
+	.formulaire_spip span .close{display:none; color:red}
+	.formulaire_spip span.open .open{display:none}	
+	.formulaire_spip span.open .close{display:inline} 
+	small{font-size: 10px;color:#7f7f7f;display:block}
+	.formulaire_spip ul ul .member_role, select.statut{width:auto !important}
+
