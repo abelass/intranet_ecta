@@ -36,7 +36,7 @@ function ecta_formulaire_traiter($flux){
     
     //Redirection pour le members    
     if($objet=='member'){
-        if($seq=$flux['data']['seq']){
+        if($seq=$flux['data']['seq'] AND _request('new')){
         $flux['data']['redirect']=generer_url_ecrire($objet,'seq='.$seq);
         }
     }
