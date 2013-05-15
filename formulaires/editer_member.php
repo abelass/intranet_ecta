@@ -150,9 +150,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
         
     }
 
-        
 
-       
         
 /* Confs */
         if($_POST['spring_conferences']){
