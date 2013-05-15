@@ -1,13 +1,3 @@
-[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
-[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
-
-
-<form method='post' action='#ENV{action}'><div>
-    #ACTION_FORMULAIRE{#ENV{action}}
-    <input type='hidden' name='seq' value='#ENV{seq}' />
-    <input name="sequp" type="hidden" value="#ENV{seq}">
-
-        
     <div id="conferencies" class="tab">
             <ul>
                 <li>
@@ -17,30 +7,32 @@
                     <label>Spring conferences attended</label>
                     <fieldset>
                         <ul>
-<?php 
-    $q = spip_query("select * FROM spip_conferencies WHERE type='spring' order by spip_conferencies.year DESC");
 
-    while($conf = spip_fetch_array($q)) {
-        $q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'");
-        $spring_conferences[$conf['id_conference']] = '';
-        if (spip_num_rows($q2)) {
-            $participation = spip_fetch_array($q2);
-            $spring_conferences[$conf['id_conference']] = $participation['participation'];
-        }
-    
-?>
-                        <li>
-                                <label><?php echo $conf['title'].' '.$conf['year']; ?></label>
-                                <select name="spring_conferences[<?=$conf['id_conference']?>]">
-                                    <option>No</option>
-                                    <option <?php if ($spring_conferences[$conf['id_conference']]=='Speaker') echo 'selected';?> >Speaker</option>
-                                    <option <?php if ($spring_conferences[$conf['id_conference']]=='Chair') echo 'selected';?> >Chair</option>
-                                    <option <?php if ($spring_conferences[$conf['id_conference']]=='Delegate') echo 'selected';?> >Delegate</option>
-                                </select>
-                            </li>
-<?php
-    }
-?>
+               <BOUCLE_conf(CONFERENCIES){!par year}{type=spring}>
+                   <BOUCLE_conf_member(MEMBERS_CONFERENCIES){id_conference}{id_member=#ENV{seq}}>
+                    <li>
+                        <label>[(#TITLE|supprimer_numero)] #YEAR</label> 
+                        <select name="spring_conferences[#ID_CONFERENCE]">
+                            <option>No</option>
+                             <option value="Speaker"[(#PARTICIPATION|=={Speaker}|oui) selected='selected']>Speaker</option>
+                             <option value="Chair"  [(#PARTICIPATION|=={Chair}|oui)selected='selected']>Chair</option>
+                             <option value="Delegate"  [(#PARTICIPATION|=={Delegate}|oui)selected='selected']>Delegate</option>
+                       </select>
+                    </li>
+                    
+                   </BOUCLE_conf_member>
+                    <li>
+                        <label>[(#TITLE|supprimer_numero)] #YEAR</label> 
+                        <select name="spring_conferences[#ID_CONFERENCE]">
+                            <option>No</option>
+                             <option value="Speaker" >Speaker</option>
+                             <option value="Chair">Chair</option>
+                             <option value="Delegate">Delegate</option>
+                       </select>
+                    </li>
+                <//B_conf_member>                        
+               </BOUCLE_conf>
+
                         </ul>
                     </fieldset>
                 </li>
@@ -48,39 +40,34 @@
                     <label>Autumn Council meeting attended</label>
                     <fieldset>
                         <ul>
-<?php 
-    $q = spip_query("select * FROM spip_conferencies WHERE type='autumn' order by spip_conferencies.year DESC");
 
-    while($conf = spip_fetch_array($q)) {
-        $q2 = spip_query("select * FROM spip_members_conferencies WHERE id_member='$seq' and id_conference='{$conf['id_conference']}'");
-        $autumn_council[$conf['year']] = '';
-        if (spip_num_rows($q2)) {
-            $participation = spip_fetch_array($q2);
-            $autumn_council[$conf['id_conference']] = $participation['participation'];
-        }
-?>
-                        <li>
-                                <label><?php echo $conf['title'].' '.$conf['year']; ?></label>
-                                <select name="autumn_council[<?=$conf['id_conference']?>]">
-                                    <option>No</option>
-                                    <option <?php if ($autumn_council[$conf['id_conference']]=='Speaker') echo 'selected';?> >Speaker</option>
-                                    <option <?php if ($autumn_council[$conf['id_conference']]=='Chair') echo 'selected';?> >Chair</option>
-                                    <option <?php if ($autumn_council[$conf['id_conference']]=='Delegate') echo 'selected';?> >Delegate</option>
-                                </select>
-                            </li>
-<?php
-    }
-?>
+               <BOUCLE_conf_aut(CONFERENCIES){!par year}{type=autumn}>
+                   <BOUCLE_conf_member_aut(MEMBERS_CONFERENCIES){id_conference}{id_member=#ENV{seq}}>
+                    <li>
+                        <label>[(#TITLE|supprimer_numero)] #YEAR</label> 
+                        <select name="spring_conferences[#ID_CONFERENCE]">
+                            <option>No</option>
+                             <option value="Speaker" [(#PARTICIPATION|=={Speaker}|oui)selected='selected']>Speaker</option>
+                             <option value="Chair"  [(#PARTICIPATION|=={Chair}|oui)selected='selected']>Chair</option>
+                             <option value="Delegate"  [(#PARTICIPATION|=={Delegate}|oui)selected='selected']>Delegate</option>
+                       </select>
+                    </li>
+                    
+                   </BOUCLE_conf_member_aut>
+                    <li>
+                        <label>[(#TITLE|supprimer_numero)] #YEAR</label> 
+                        <select name="spring_conferences[#ID_CONFERENCE]">
+                            <option>No</option>
+                             <option value="Speaker" >Speaker</option>
+                             <option value="Chair">Chair</option>
+                             <option value="Delegate">Delegate</option>
+                       </select>
+                    </li>
+                <//B_conf_member_aut>                        
+               </BOUCLE_conf_aut>
                         </ul>
                     </fieldset>
                 </li>
             </ul>
-            <p class='boutons_formulaire'>
-                <input type="submit" name="Submit" value="Submit">
-            </p>
         </div>   <!-- conferencies -->
 
-    [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
-    <!--extra-->
-    <p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
-</div></form>

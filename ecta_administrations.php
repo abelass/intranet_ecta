@@ -66,7 +66,7 @@ function ecta_upgrade($nom_meta_base_version, $version_cible) {
        array('sql_alter','TABLE spip_members_no_members RENAME TO spip_members_no_members'),     
        array('sql_alter','TABLE spip_members_type RENAME TO spip_members_type'),
        
-	   array('maj_tables', array('spip_members', 'spip_associations', 'spip_categories_of_professional', 'spip_commitees', 'spip_conferencies','spip_executive_bodies','spip_membership','spip_members_associations','spip_members_categories_of_professional','spip_members_commitees','spip_members_council','spip_members_type','spip_members_conferencies)));
+	   array('maj_tables', array('spip_members', 'spip_associations', 'spip_categories_of_professional', 'spip_commitees', 'spip_conferencies','spip_executive_bodies','spip_membership','spip_members_associations','spip_members_categories_of_professional','spip_members_commitees','spip_members_council','spip_members_type','spip_members_conferencies')));
        
   $maj['1.0.2']  = array(
     array('sql_alter','TABLE spip_members CHANGE incommitee incommitee enum(\'Yes\',\'No\',\'Com\')  NOT NULL DEFAULT \'No\'')

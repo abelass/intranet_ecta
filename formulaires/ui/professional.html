@@ -1,35 +1,32 @@
-
-
+<div id="professional" class="tab">
+    <ul>
+        <li>
+            <label>Member number</label> <?php echo $inmembernumber;?>
+        </li>
+        <li>
+            <label>Company</label> 
+            #COMPANY
+        </li>
+            [(#SAISIE{pays_code, practicein,
+        label=Practice in})]
         
-        <div id="professional" class="tab">
-            <ul>
-                <li>
-                    <label>Member number</label> <?php echo $inmembernumber;?>
-                </li>
-                <li>
-                    <label>Company</label> 
-                    #COMPANY
-                </li>
-                    [(#SAISIE{pays_code, practicein,
-                label=Practice in})]
-                
-                [(#SAISIE{input, inactivitysince,
-                                label=In activity since})]
-                <li>
-                    <label>Categories of Professional</label> 
-                    <fieldset><ul>
-
-           <BOUCLE_ass(CATEGORIES_OF_PROFESSIONAL){par num title}>
-               <BOUCLE_ass_member(MEMBERS_CATEGORIES_OF_PROFESSIONAL){id_category}{id_member=#ENV{seq}}>
-                <li><label>[(#TITLE|supprimer_numero)]</label> <input name='categories_of_professional[#ID_CATEGORY]' type='checkbox' value='#ID_CATEGORY' checked="checked"></li>
-               </BOUCLE_ass_member>
-            <li><label>[(#TITLE|supprimer_numero)]</label> <input name='categories_of_professional[#ID_CATEGORY]' type='checkbox' value='#ID_CATEGORY'></li>
-            <//B_ass_member>                        
-           </BOUCLE_ass>
-                            
-                                </ul></fieldset>
-                </li>
-                
-            </ul>
-        </div> <!-- professional -->
+        [(#SAISIE{input, inactivitysince,
+                        label=In activity since})]
+        <li>
+            <label>Categories of Professional</label> 
+            <fieldset>
+                <ul>
+               <BOUCLE_cat(CATEGORIES_OF_PROFESSIONAL){par num title}>
+                   <BOUCLE_cat_member(MEMBERS_CATEGORIES_OF_PROFESSIONAL){id_category}{id_member=#ENV{seq}}>
+                    <li><label>[(#TITLE|supprimer_numero)]</label> <input name='categories_of_professional[#ID_CATEGORY]' type='checkbox' value='#ID_CATEGORY' checked="checked"></li>
+                   </BOUCLE_cat_member>
+                <li><label>[(#TITLE|supprimer_numero)]</label> <input name='categories_of_professional[#ID_CATEGORY]' type='checkbox' value='#ID_CATEGORY'></li>
+                <//B_cat_member>                        
+               </BOUCLE_cat>
+              </ul>
+            </fieldset>
+        </li>
+        
+    </ul>
+</div> <!-- professional -->
 

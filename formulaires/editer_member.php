@@ -186,7 +186,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
         spip_query("update spip_members set ". implode(',',$maj) ." where seq='$sequp'");
         */
 /* Confs */
-/*
+
         spip_query("delete from spip_members_conferencies where id_member='$sequp'");
         if (isset($_POST['spring_conferences']))
             foreach ($_POST['spring_conferences'] as $key => $value) {
@@ -196,7 +196,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
             foreach ($_POST['autumn_council'] as $key => $value) {
                 spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
             }
-   */
+
    /*Comitees*/        
         $val_start_date=_request('start_date');
         $val_end_date=_request('end_date');     
