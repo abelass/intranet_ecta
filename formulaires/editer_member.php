@@ -61,6 +61,7 @@ function formulaires_editer_member_identifier_dist($seq='new', $retour='', $lier
 function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
     $valeurs = formulaires_editer_objet_charger('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
     $valeurs['tab']=_request('tab');
+    $valeurs['associations']=_request('associations');    
     //$valeurs['id_commitee_role']=_request('id_commitee_role');    
     $valeurs['_hidden'].='<input type="hidden" value="'._request('tab').'" name="tab">'; 
      
@@ -246,13 +247,12 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
         
         
             /* association */
-            /*
-            spip_query("delete from spip_members_associations where id_member='$sequp'");
-            if (isset($_POST['associations']))
-                foreach ($_POST['associations'] as $value) {
-                    spip_query("insert into spip_members_associations(id_member,id_association) VALUES('$sequp','$value')");
+            sql_delete('spip_members_associations','id_member='.$sequp);
+            if ($association=_request('associations'))
+                foreach ($association as $value) {
+                    sql_insertq('spip_members_associations',array('id_member'=>$sequp,'id_association'=>$value));
                 }
-*/
+
 
             /* categories_of_professional */
             /*
