@@ -34,6 +34,7 @@ function ecta_declarer_tables_interfaces($interfaces) {
 	$interfaces['table_des_tables']['members_categories_of_professional'] = 'members_categories_of_professional';
     $interfaces['table_des_tables']['members_commitees'] = 'members_commitees';
     $interfaces['table_des_tables']['members_council'] = 'members_council';
+    $interfaces['table_des_tables']['members_conferencies'] = 'members_conferencies';    
     $interfaces['table_des_tables']['members_type'] = 'members_type';
     $interfaces['table_des_tables']['membership_type'] = 'membership_type';    
     
@@ -391,7 +392,23 @@ function spip_declarer_tables_auxiliaires($tables_auxiliaires){
     $tables_auxiliaires['spip_members_commitees'] = array(
         'field' => &$spip_members_commitees,
         'key' => &$spip_members_commitees_keys
-    );    
+    );
+    
+    //Table spip_members_conferencies
+    $spip_members_conferencies = array(
+        'id_conference' => 'bigint(11) DEFAULT "0" NOT NULL',    
+        'id_member' => 'bigint(11) DEFAULT "0" NOT NULL',
+        'particiaption' => "enum('No','Speaker','Chair','Delegatge') DEFAULT 'No' NOT NULL",
+    );
+ 
+    $spip_members_conferencies_keys = array(
+        'PRIMARY KEY' => 'id_conference, id_member'
+    );
+ 
+    $tables_auxiliaires['spip_members_conferencies'] = array(
+        'field' => &$spip_members_conferencies,
+        'key' => &$spip_members_conferencies_keys
+    );        
     return $tables_auxiliaires;
 }
 
