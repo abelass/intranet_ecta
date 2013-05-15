@@ -61,8 +61,9 @@ function formulaires_editer_member_identifier_dist($seq='new', $retour='', $lier
 function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
     $valeurs = formulaires_editer_objet_charger('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
     $valeurs['tab']=_request('tab');
+    //$valeurs['id_commitee_role']=_request('id_commitee_role');    
     $valeurs['_hidden'].='<input type="hidden" value="'._request('tab').'" name="tab">'; 
-   // $valeurs['_hidden'].='<input type="hidden" value="'.$valeurs['seq'].'" name="seq">';        
+     
         /*$sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
         $reponse = spip_query($sql);
         $results = spip_fetch_array($reponse);
@@ -147,6 +148,8 @@ function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_t
  *     Retours des traitements
  */
 function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
+    //l'acien scriopt utilisait $sequp
+    $sequp=$seq;
  /*   $row['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
         if (!trim($row['nom'])) $row['nom'] = '-';
         $row['email'] = _request('inemail');
@@ -192,12 +195,15 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
             foreach ($_POST['autumn_council'] as $key => $value) {
                 spip_query("insert into spip_members_conferencies(id_member,id_conference,participation) VALUES('$sequp','$key','$value')");
             }
-            
+   */
+   /*Comitees*/        
         $val_start_date=_request('start_date');
-        $vaspip__date=_request('end_date');     
-        $id_commitee_role=_request('id_commitee_role');
+        $val_end_date=_request('end_date');     
+        $id_commitee_role=_request('member_role');    
             foreach ($val_start_date as $id_commitee =>$start) {
-                $end=$val_end_date[$id_commitee];               
+                $end=$val_end_date[$id_commitee];   
+                if($val_end_date[$id_commitee]>0)$end=$val_end_date[$id_commitee];   
+                else $end=0000;             
                 if(isset($start['new']) AND $start['new']>0){
                     sql_insertq('spip_members_commitees',array('id_member'=>$sequp,'id_commitee'=>$id_commitee,'start_date'=>$start['new'].'-01-01','end_date'=>$end['new'].'-01-01','id_commitee_role'=>$id_commitee_role[$id_commitee]['new']));
                 }
@@ -210,7 +216,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
                         }
                 }
             }               
-       */ 
+       
         /*Councils*/
  /*       
         $council_statut=_request('council_statut');

@@ -42,66 +42,7 @@
                         </li>
                         
 
-
-
-                    #SET{roles,#VAL|tableau_roles}
-                    
-                    <BOUCLE_comites(COMMITEES){par num title}>
-                       #SET{start_date,0000}
-                       #SET{$end_date,0000}
-                       #SET{select,''} 
-                       #SET{champ1,<span> <b>From:</b> </span><input class="start_date" name="start_date[#ID_COMMITEE][new]" type="text" value="#START_DATE"/>}
-                       #SET{champ2,<span> <b>From:</b> </span><input class="start_date" name="end_date[#ID_COMMITEE][new]" type="text" value="#END_DATE"/>}
-                    
-                          <BOUCLE_roles(DATA){source tableau,#GET{roles}}>
-                            #SET{selected,''} 
-                            [(#CLE|=={0}|oui)#SET{selected, selected="selected"} ]
-                           #SET{select,#GET{select}|concat{<option value="#CLE"#GET{selected} >#VALEUR</option>}}       
-                          </BOUCLE_roles>
-                    
-                          
-                       #SET{champ0,<div><span> <b>Role:</b> </span><select class="member_role" name="id_commitee_role[#ID_COMMITEE][new]">#GET{select}</select>}
-                    
-                        #SET{champs,#GET{champ0}|concat{#GET{champ1}|concat{#GET{champ2}}}
-                        
-                          <BOUCLE_roles2(DATA) {source tableau,#GET{roles}}>
-                               #SET{end_tag,''}
-                             <BOUCLE_m_com(MEMBERS_COMMITEES){id_commitee=#ID_COMMITEE}{id_member=#ENV{seq}}{id_commitee_role=#CLE}>
-                                    #SET{start_date,0000}
-                                    #SET{end_date,''}
-                                    #SET{begin_tag,''}
-                                    #SET{end_tag,''}
-                                    #SET{limit,3} 
-                                   [(#START_DATE|>{0}|oui) #SET{start_date,#START_DATE|affdate{Y}}] 
-                                   [(#END_DATE|>{0}|oui) #SET{end_date,#END_DATE|affdate{Y}}]   
-                                   [(#COMPTEUR_BOUCLE|=={#GET{limit}}|oui)
-                                        #SET{begin_tag,
-                                            <span class="switch">
-                                                  <span class="open">+</span>
-                                                   <span class="close">-</span>
-                                               </span><div class="hidden">}
-                                         #SET{end_tag,</div>}
-                                   ]
-                                 #SET{champs,#GET{champs}|concat{
-                                     #INCLURE{fond=formulaires/field_period,begin_tag=#GET{begin_tag},
-                                         end_tag=#GET{end_tag},
-                                         begin_tag=#GET{begin_tag},
-                                         id_commitee=#ID_COMMITEE,
-                                         id_membership=#ID_MEMBERSHIP,
-                                         id_commitee_role=#ID_COMMMITEE_ROLE,
-                                         start_date=#GET{start_date},
-                                         end_date=#GET{end_date},
-                                         roles=#GET{roles},
-                                         env}               
-                                 </BOUCLE_m_com>
-                          </BOUCLE_roles2> 
-                            #SET{champs,#GET{champs}|concat{#GET{end_tag}}}
-                            <li class='membership'>
-                             <label>#TITLE</label>
-                             <div>#GET{champs}</div>
-                            #SET{champs,''} 
-                            </li>        
-                    </BOUCLE_comites>
+                       <INCLURE{fond=formulaires/inc-commitees,env,ajax}/>
                  
                     </ul>
                 </fieldset>
