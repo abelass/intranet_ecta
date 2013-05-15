@@ -1,0 +1,12 @@
+    <p class="style1" style="text-align:center"><img src="#CHEMIN{prive/themes/spip/images/admin-logo.png}" alt="ECTA"/></p>    
+    <p class="style1" style="text-align:center"><strong>MEMBERS DATABASE</strong></p>
+    
+
+
+<BOUCLE_member(MEMBERS){seq=#ENV{id}}>
+<div class='infos'>
+[(#SET{texte_objet,<:member:titre_member:>})]
+<div class='numero'><:titre_cadre_numero_objet{objet=#GET{texte_objet}}:><p>#SEQ</p></div>
+
+</div>
+</BOUCLE_member>
