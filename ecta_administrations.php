@@ -74,6 +74,9 @@ function ecta_upgrade($nom_meta_base_version, $version_cible) {
   $maj['1.0.5']  = array(
     array('sql_alter','TABLE spip_members CHANGE ohim ohim varchar(50) CHARACTER SET utf8 NOT NULL DEFAULT \'\'')
     );
+  $maj['1.0.6']  = array(
+    array('sql_alter','TABLE spip_members CHANGE Last_modified last_modified timestamp NOT NULL')
+    );    
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }

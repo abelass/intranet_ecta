@@ -1,4 +1,15 @@
-<div id="general" class="tab">
+
+[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+
+<form method='post' action='#ENV{action}'><div>
+    #ACTION_FORMULAIRE{#ENV{action}}
+    <input type='hidden' name='seq' value='#ENV{seq}' />
+    <input name="sequp" type="hidden" value="#ENV{seq}">
+
+        
+    <div id="general" class="tab">
             <ul>
                 [(#SAISIE{input, membernumber, obligatoire=oui,
                 label=<:member:label_membernumber:>})]
@@ -65,12 +76,12 @@
                         [(#SAISIE{input, addr5,
                             label=<:member:label_addr5:>})]
 
-                        [(#SAISIE{pays, country,
+                        [(#SAISIE{pays_code, country,
                 label=<:member:label_country:>})]
                         [(#SAISIE{selection, countrytype,
                             label=<:member:label_countrytype:>,
                             datas=[(#ARRAY{'',Make a Choice,EU,EU,Out EU,Out EU})]})]
-                        [(#SAISIE{pays, nationality,
+                        [(#SAISIE{pays_code, nationality,
                             label=<:member:label_nationality:>})]
                             </ul>
                    
@@ -98,7 +109,7 @@
                             </li>
                             <li>
                                 <label>Telephone 1</label>
-                                + <input name="intel1_pn" type="text" class="text-mini" style="width:30px;" id="intel1_pn" value="#ENV{fax2_pl}">                
+                                + <input name="tel1_pn" type="text" class="text-mini" style="width:30px;" id="intel1_pn" value="#ENV{tel1_pn}">                
                                 <input name="tel1_pl" type="text" class="text-mini" style="width:30px;" id="tel1_pl" value="#ENV{tel1_pl}">
                                 <input name="tel1" type="text" class="text tel" id="tel1" value="#ENV{tel1}">
                             </li>
@@ -118,13 +129,18 @@
                     </fieldset>
                 </li>
 
-                [(#SAISIE{checkbox, listed_in_dir,
+                [(#SAISIE{radio, listed_in_dir,
                                 label=<:member:label_listed_in_dir:>,
-                                datas=[(#ARRAY{Yes,Yes})]})]
+                                datas=[(#ARRAY{Yes,Yes,No,No})]})]
                 <li>
-                    <strong>Last modification done on : </strong>[(#DATESTAMP)]
+                    <strong>Last modification done on : </strong>[(#LAST_MODIFIED|affdate{d-m-Y H:i:s})]
                 </li>
 
             </ul>
             
         </div><!-- general -->
+
+    [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+    <!--extra-->
+    <p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
+</div></form>

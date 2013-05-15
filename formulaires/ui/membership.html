@@ -1,161 +1,167 @@
-<div id="membership" class="tab">
-    <ul>
+[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
+[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
+<form method='post' action='#ENV{action}'><div>
+    #ACTION_FORMULAIRE{#ENV{action}}
+    <input type='hidden' name='seq' value='#ENV{seq}' />
+    <input name="sequp" type="hidden" value="#ENV{seq}">
+    <div id="membership" class="tab">
+        <ul>
 
-                <li>
-                    <label>Member number</label> #ENV{membernumber}
-                </li>
-                [(#SAISIE{input,ohim,
-                        label=<:member:label_ohim:>})]                        
-                <li>
-                    <label>Member type</label> 
+            <li>
+                <label>Member number</label> #ENV{membernumber}
+            </li>
+            [(#SAISIE{input,ohim,
+                    label=<:member:label_ohim:>})]                        
+            <li>
+                <label>Member type</label> 
 
-                      
+                  
+                
+                <B_member_type>
+                <select name="membertype" id="membertype">
+                    <option value=''>Make a choice</option>
+                   <BOUCLE_member_type(MEMBERS_TYPE){par num title}>
+                    <option value='#ID_MEMBER_TYPE'[(#ID_MEMBER_TYPE|=={#ENV{membertype}}|oui) selected="selected"]>[(#TITLE|supprimer_numero)]</option>
+                   </BOUCLE_member_type>
+                </select>
+                </B_member_type>
+            </li>
+
+            <li class="com">
+                <label>Committee member</label>
+                <fieldset>
                     
-                    <B_member_type>
-                    <select name="membertype" id="membertype">
-                        <option value=''>Make a choice</option>
-                       <BOUCLE_member_type(MEMBERS_TYPE){par num title}>
-                        <option value='#ID_MEMBER_TYPE'[(#ID_MEMBER_TYPE|=={#ENV{membertype}}|oui) selected="selected"]>[(#TITLE|supprimer_numero)]</option>
-                       </BOUCLE_member_type>
-                    </select>
-                    </B_member_type>
-                </li>
+                    <ul>
 
-                <li class="com">
-                    <label>Committee member</label>
-                    <fieldset>
+                        [(#SAISIE{selection, incommitee,
+            label=<:member:label_incommitee:>,
+            datas=[(#ARRAY{'',Make a Choice,Yes,Yes,No,No,Com,Com})]})]
+                        <li class="explication">
+                            <small>Please specify a role and a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
+                        </li>
                         
-                        <ul>
-
-                            [(#SAISIE{selection, incommitee,
-                label=<:member:label_incommitee:>,
-                datas=[(#ARRAY{'',Make a Choice,Yes,Yes,No,No,Com,Com})]})]
-                            <li class="explication">
-                                <small>Please specify a role and a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
-                            </li>
-                            
 
 
 
-                        #SET{roles,#VAL|tableau_roles}
+                    #SET{roles,#VAL|tableau_roles}
+                    
+                    <BOUCLE_comites(COMMITEES){par num title}>
+                       #SET{start_date,0000}
+                       #SET{$end_date,0000}
+                       #SET{select,''} 
+                       #SET{champ1,<span> <b>From:</b> </span><input class="start_date" name="start_date[#ID_COMMITEE][new]" type="text" value="#START_DATE"/>}
+                       #SET{champ2,<span> <b>From:</b> </span><input class="start_date" name="end_date[#ID_COMMITEE][new]" type="text" value="#END_DATE"/>}
+                    
+                          <BOUCLE_roles(DATA){source tableau,#GET{roles}}>
+                            #SET{selected,''} 
+                            [(#CLE|=={0}|oui)#SET{selected, selected="selected"} ]
+                           #SET{select,#GET{select}|concat{<option value="#CLE"#GET{selected} >#VALEUR</option>}}       
+                          </BOUCLE_roles>
+                    
+                          
+                       #SET{champ0,<div><span> <b>Role:</b> </span><select class="member_role" name="id_commitee_role[#ID_COMMITEE][new]">#GET{select}</select>}
+                    
+                        #SET{champs,#GET{champ0}|concat{#GET{champ1}|concat{#GET{champ2}}}
                         
-                        <BOUCLE_comites(COMMITEES){par num title}>
-                           #SET{start_date,0000}
-                           #SET{$end_date,0000}
-                           #SET{select,''} 
-                           #SET{champ1,<span> <b>From:</b> </span><input class="start_date" name="start_date[#ID_COMMITEE][new]" type="text" value="#START_DATE"/>}
-                           #SET{champ2,<span> <b>From:</b> </span><input class="start_date" name="end_date[#ID_COMMITEE][new]" type="text" value="#END_DATE"/>}
-                        
-                              <BOUCLE_roles(DATA){source tableau,#GET{roles}}>
-                                #SET{selected,''} 
-                                [(#CLE|=={0}|oui)#SET{selected, selected="selected"} ]
-                               #SET{select,#GET{select}|concat{<option value="#CLE"#GET{selected} >#VALEUR</option>}}       
-                              </BOUCLE_roles>
-                        
-                              
-                           #SET{champ0,<div><span> <b>Role:</b> </span><select class="member_role" name="id_commitee_role[#ID_COMMITEE][new]">#GET{select}</select>}
-                        
-                            #SET{champs,#GET{champ0}|concat{#GET{champ1}|concat{#GET{champ2}}}
-                            
-                              <BOUCLE_roles2(DATA) {source tableau,#GET{roles}}>
-                                   #SET{end_tag,''}
-                                 <BOUCLE_m_com(MEMBERS_COMMITEES){id_commitee=#ID_COMMITEE}{id_member=#ENV{seq}}{id_commitee_role=#CLE}>
-                                        #SET{start_date,0000}
-                                        #SET{end_date,''}
-                                        #SET{begin_tag,''}
-                                        #SET{end_tag,''}
-                                        #SET{limit,3} 
-                                       [(#START_DATE|>{0}|oui) #SET{start_date,#START_DATE|affdate{Y}}] 
-                                       [(#END_DATE|>{0}|oui) #SET{end_date,#END_DATE|affdate{Y}}]   
-                                       [(#COMPTEUR_BOUCLE|=={#GET{limit}}|oui)
-                                            #SET{begin_tag,
-                                                <span class="switch">
-                                                      <span class="open">+</span>
-                                                       <span class="close">-</span>
-                                                   </span><div class="hidden">}
-                                             #SET{end_tag,</div>}
-                                       ]
-                                     #SET{champs,#GET{champs}|concat{
-                                         #INCLURE{fond=formulaires/field_period,begin_tag=#GET{begin_tag},
-                                             end_tag=#GET{end_tag},
-                                             begin_tag=#GET{begin_tag},
-                                             id_commitee=#ID_COMMITEE,
-                                             id_membership=#ID_MEMBERSHIP,
-                                             id_commitee_role=#ID_COMMMITEE_ROLE,
-                                             start_date=#GET{start_date},
-                                             end_date=#GET{end_date},
-                                             roles=#GET{roles},
-                                             env}               
-                                     </BOUCLE_m_com>
-                              </BOUCLE_roles2> 
-                                #SET{champs,#GET{champs}|concat{#GET{end_tag}}}
-                                <li class='membership'>
-                                 <label>#TITLE</label>
-                                 <div>#GET{champs}</div>
-                                #SET{champs,''} 
-                                </li>        
-                        </BOUCLE_comites>
-                     
-                        </ul>
-                    </fieldset>
-                </li> 
-                <B_ex_bodies>
-                <li>
-                    <label>Executive Bodies</label>
-                    <select name="executivebodies" id="executivebodies">
-                        <option value=''[>Make a Choice</option>
-                   <BOUCLE_ex_bodies(EXECUTIVE_BODIES){par num title}>
-                        <option value='#ID_ECTA_EXECUTIVE_BODY'[(#ID_ECTA_EXECUTIVE_BODY|=={#ENV{executivebodies}})]> [(#TITLE|supprimer_numero)] </option>
-                    </BOUCLE_ex_bodies>
-                     </select>
-                </li>                  
-                <B_ex_bodies>
+                          <BOUCLE_roles2(DATA) {source tableau,#GET{roles}}>
+                               #SET{end_tag,''}
+                             <BOUCLE_m_com(MEMBERS_COMMITEES){id_commitee=#ID_COMMITEE}{id_member=#ENV{seq}}{id_commitee_role=#CLE}>
+                                    #SET{start_date,0000}
+                                    #SET{end_date,''}
+                                    #SET{begin_tag,''}
+                                    #SET{end_tag,''}
+                                    #SET{limit,3} 
+                                   [(#START_DATE|>{0}|oui) #SET{start_date,#START_DATE|affdate{Y}}] 
+                                   [(#END_DATE|>{0}|oui) #SET{end_date,#END_DATE|affdate{Y}}]   
+                                   [(#COMPTEUR_BOUCLE|=={#GET{limit}}|oui)
+                                        #SET{begin_tag,
+                                            <span class="switch">
+                                                  <span class="open">+</span>
+                                                   <span class="close">-</span>
+                                               </span><div class="hidden">}
+                                         #SET{end_tag,</div>}
+                                   ]
+                                 #SET{champs,#GET{champs}|concat{
+                                     #INCLURE{fond=formulaires/field_period,begin_tag=#GET{begin_tag},
+                                         end_tag=#GET{end_tag},
+                                         begin_tag=#GET{begin_tag},
+                                         id_commitee=#ID_COMMITEE,
+                                         id_membership=#ID_MEMBERSHIP,
+                                         id_commitee_role=#ID_COMMMITEE_ROLE,
+                                         start_date=#GET{start_date},
+                                         end_date=#GET{end_date},
+                                         roles=#GET{roles},
+                                         env}               
+                                 </BOUCLE_m_com>
+                          </BOUCLE_roles2> 
+                            #SET{champs,#GET{champs}|concat{#GET{end_tag}}}
+                            <li class='membership'>
+                             <label>#TITLE</label>
+                             <div>#GET{champs}</div>
+                            #SET{champs,''} 
+                            </li>        
+                    </BOUCLE_comites>
+                 
+                    </ul>
+                </fieldset>
+            </li> 
+            <B_ex_bodies>
+            <li>
+                <label>Executive Bodies</label>
+                <select name="executivebodies" id="executivebodies">
+                    <option value=''[>Make a Choice</option>
+               <BOUCLE_ex_bodies(EXECUTIVE_BODIES){par num title}>
+                    <option value='#ID_ECTA_EXECUTIVE_BODY'[(#ID_ECTA_EXECUTIVE_BODY|=={#ENV{executivebodies}})]> [(#TITLE|supprimer_numero)] </option>
+                </BOUCLE_ex_bodies>
+                 </select>
+            </li>                  
+            <B_ex_bodies>
 
-                <li><label>Council Member</label>
-                    <div class="explication">
-                        <small>Please specify a type and a year in the fields below. Once you have saved you will be able to add a new period.</small>
-                    </div>
-                <?php
-                    $seq='#ENV{seq}';
+            <li><label>Council Member</label>
+                <div class="explication">
+                    <small>Please specify a type and a year in the fields below. Once you have saved you will be able to add a new period.</small>
+                </div>
+            <?php
+                $seq='#ENV{seq}';
+                $start_date=0000;    
+                $end_date=0000;  
+                
+               $champ0='<div><select class="statut" name="council_statut[new]">
+                    <option value="">No</option>
+                    <option value="Yes">Yes</option>
+                    <option value="Com">Com</option>                                        
+               </select>';  
+               $champ1='<span> <b>From:</b> </span><input class="start_date" name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
+               $champ2='<span> <b>To:</b> </span><input class="start_date"  name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
+               $champs=$champ0.$champ1.$champ2;
+                $sql=sql_select('*','spip_members_council','seq='.$seq,'','start_date DESC');
+                
+                if(sql_count( $sql)>0)$champs='';
+                $count=0;
+                                 
+                while($councils=sql_fetch($sql)){
                     $start_date=0000;    
-                    $end_date=0000;  
-                    
-                   $champ0='<div><select class="statut" name="council_statut[new]">
-                        <option value="">No</option>
-                        <option value="Yes">Yes</option>
-                        <option value="Com">Com</option>                                        
-                   </select>';  
-                   $champ1='<span> <b>From:</b> </span><input class="start_date" name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
-                   $champ2='<span> <b>To:</b> </span><input class="start_date"  name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
-                   $champs=$champ0.$champ1.$champ2;
-                    $sql=sql_select('*','spip_members_council','seq='.$seq,'','start_date DESC');
-                    
-                    if(sql_count( $sql)>0)$champs='';
-                    $count=0;
-                                     
-                    while($councils=sql_fetch($sql)){
-                        $start_date=0000;    
-                        $end_date=''; 
-                        $begin_tag='';
-                        $end_tag='';
-                        $limit=3;   
-                        $count++;
-     
-                        if($councils['start_date']>0)$start_date=affdate($councils['start_date'],'Y');
-                        if($councils['end_date']>0){
-                            $end_date=affdate($councils['end_date'],'Y');
-                            if($count==1){
-                                if($councils['start_date']>0)$champs=$champ0.$champ1.$champ2;
-                                 $limit= 2;
-                            }
+                    $end_date=''; 
+                    $begin_tag='';
+                    $end_tag='';
+                    $limit=3;   
+                    $count++;
+ 
+                    if($councils['start_date']>0)$start_date=affdate($councils['start_date'],'Y');
+                    if($councils['end_date']>0){
+                        $end_date=affdate($councils['end_date'],'Y');
+                        if($count==1){
+                            if($councils['start_date']>0)$champs=$champ0.$champ1.$champ2;
+                             $limit= 2;
                         }
-                        if($count==$limit){
-                            $begin_tag='<span class="switch">
-                                <span class="open">+</span>
-                                <span class="close">-</span>
-                                </span><div class="hidden">';
-                            $end_tag='</div>';
+                    }
+                    if($count==$limit){
+                        $begin_tag='<span class="switch">
+                            <span class="open">+</span>
+                            <span class="close">-</span>
+                            </span><div class="hidden">';
+                        $end_tag='</div>';
                         }
                         
                         $champs.=recuperer_fond('formulaires/field_period_councils',
@@ -172,94 +178,97 @@
                            }
  $champs.=$end_tag;
                            echo "<div>$champs</div>";
-                          
+                      
 
-                    
-                    ?>
-                </li>
-                <li>
-                    <label>Members of Honours
-                    </label>
-                    <select name="memberofhonour" id="memberofhonour">
-                        <option value=''>Make a choice</option>
-                        <option value="Yes" <?php if ($memberofhonour == 'Yes') { echo 'selected'; } ?>>
-                            Yes
-                        </option>
-                        <option value="No" <?php if ($memberofhonour == 'No') { echo 'selected'; } ?>>
-                            No
-                        </option>
-                    </select>
-                </li>
-                <li>
-                    <label>Past President
-                    </label>
-                    <select name="pastpresident" id="pastpresident">
-                        <option value=''>Make a choice</option>
-                        <option value="Yes" <?php if ($pastpresident == 'Yes') { echo 'selected'; } ?>>
-                            Yes
-                        </option>
-                        <option value="N                            echo 1;o" <?php if ($pastpresident == 'No') { echo 'selected'; } ?>>
-                            No
-                        </option>
-                    </select>
-                </li>
-                <li>
-                    <label>Sponsored by (1)
-                    </label>
-                    <input name="sponsoredby1" type="text" class="text"id="sponsoredby1" value="<?php echo $sponsoredby1;?>">
-                </li>
-                <li>
-                    <label>Sponsored by (2)</label>
-                    <input name="sponsoredby2" type="text" class="text"id="sponsoredby2" value="<?php echo $sponsoredby2;?>">
-                </li>
-                <li>
-                    <label>Date of membership
-                    </label>
-                    <input name="datemembership" type="text" class="text"id="datemembership" value="<?php echo $datemembership;?>">
-                </li>
-                <li>
-                    <label>Other Association
-                    </label>
-                    <fieldset><ul>
+                
+                ?>
+            </li>
+            <li>
+                <label>Members of Honours
+                </label>
+                <select name="memberofhonour" id="memberofhonour">
+                    <option value=''>Make a choice</option>
+                    <option value="Yes" <?php if ($memberofhonour == 'Yes') { echo 'selected'; } ?>>
+                        Yes
+                    </option>
+                    <option value="No" <?php if ($memberofhonour == 'No') { echo 'selected'; } ?>>
+                        No
+                    </option>
+                </select>
+            </li>
+            <li>
+                <label>Past President
+                </label>
+                <select name="pastpresident" id="pastpresident">
+                    <option value=''>Make a choice</option>
+                    <option value="Yes" <?php if ($pastpresident == 'Yes') { echo 'selected'; } ?>>
+                        Yes
+                    </option>
+                    <option value="N                            echo 1;o" <?php if ($pastpresident == 'No') { echo 'selected'; } ?>>
+                        No
+                    </option>
+                </select>
+            </li>
+            <li>
+                <label>Sponsored by (1)
+                </label>
+                <input name="sponsoredby1" type="text" class="text"id="sponsoredby1" value="<?php echo $sponsoredby1;?>">
+            </li>
+            <li>
+                <label>Sponsored by (2)</label>
+                <input name="sponsoredby2" type="text" class="text"id="sponsoredby2" value="<?php echo $sponsoredby2;?>">
+            </li>
+            <li>
+                <label>Date of membership
+                </label>
+                <input name="datemembership" type="text" class="text"id="datemembership" value="<?php echo $datemembership;?>">
+            </li>
+            <li>
+                <label>Other Association
+                </label>
+                <fieldset><ul>
 
 
-                            <?php
-                            /*
-                            $q = spip_query("select spip_associations.id_association, spip_associations.title, 0+title AS num_order FROM spip_associations order by num_order");
-                            
-                            while($association = spip_fetch_array($q)) {
-                                $association['title'] = supprimer_numero($association['title']);
-                            
-                                $q2 = spip_query("select id_association FROM spip_members_associations 
-                                        where spip_members_associations.id_association='{$association['id_association']}' and id_member='$seq'");
-                            
-                                if (spip_num_rows($q2)) $checked=" checked "; else $checked = '';
-                            
-                                echo "
-                                        <li>
-                                            <label>{$association['title']}</label> <input name='associations[{$association['id_association']}]' type='checkbox' value='{$association['id_association']}' $checked>
-                                        </li>
-                                    ";
-                            }
-                            */
-                            ?>
+                        <?php
+                        /*
+                        $q = spip_query("select spip_associations.id_association, spip_associations.title, 0+title AS num_order FROM spip_associations order by num_order");
+                        
+                        while($association = spip_fetch_array($q)) {
+                            $association['title'] = supprimer_numero($association['title']);
+                        
+                            $q2 = spip_query("select id_association FROM spip_members_associations 
+                                    where spip_members_associations.id_association='{$association['id_association']}' and id_member='$seq'");
+                        
+                            if (spip_num_rows($q2)) $checked=" checked "; else $checked = '';
+                        
+                            echo "
+                                    <li>
+                                        <label>{$association['title']}</label> <input name='associations[{$association['id_association']}]' type='checkbox' value='{$association['id_association']}' $checked>
+                                    </li>
+                                ";
+                        }
+                        */
+                        ?>
+
+
+                </ul></fieldset>
+            <li>
+                <label>Past member of Council/ Committees
+                </label>
+                <select name="pastcouncil" id="pastcouncil">
+                    <option value=''>Make a choice</option>
+                    <option value="Yes" <?php if ($pastcouncil == 'Yes') { echo 'selected'; } ?>>
+                        Yes
+                    </option>
+                    <option value="No" <?php if ($pastcouncil == 'No') { echo 'selected'; } ?>>
+                        No
+                    </option>
+                </select>
+            </li>
+         </ul>
     
-
-                    </ul></fieldset>
-                <li>
-                    <label>Past member of Council/ Committees
-                    </label>
-                    <select name="pastcouncil" id="pastcouncil">
-                        <option value=''>Make a choice</option>
-                        <option value="Yes" <?php if ($pastcouncil == 'Yes') { echo 'selected'; } ?>>
-                            Yes
-                        </option>
-                        <option value="No" <?php if ($pastcouncil == 'No') { echo 'selected'; } ?>>
-                            No
-                        </option>
-                    </select>
-                </li>
-
-     </ul>
-
-</div><!-- membership -->
+    </div><!-- membership -->
+    [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
+    <!--extra-->
+    <p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
+</div></form>

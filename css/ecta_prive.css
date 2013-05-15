@@ -8,24 +8,8 @@ select.year, select.fee{width:auto}
     .formulaire_member ul ul input.text, .formulaire_spip ul ul input.password, .formulaire_spip ul ul textarea, .formulaire_spip ul ul select  {
         width:190px!important;
     }
-    .formulaire_spip #nav li{clear:none}
-    .ui-tabs .ui-tabs-hide {
-         display: none;
-    }
-    .ui-tabs-panel {
-        padding:0;
-        border-top:0;
-    }
-    .ui-tabs-nav ul.nav li {
-        text-align:center;
-    }
-    .ui-tabs-nav ul.nav li a {
-        padding:0.5em 0;
-        width:98px;
-    }
-.ui-tabs .ui-tabs-nav li a {
-	padding:0.4em;
-}
+
+
     .formulaire_spip input.tel{width:100px}
 
     input.start_date, input.end_date{width:40px;}

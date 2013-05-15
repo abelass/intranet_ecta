@@ -59,9 +59,10 @@ function formulaires_editer_member_identifier_dist($seq='new', $retour='', $lier
  *     Environnement du formulaire
  */
 function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
-    
     $valeurs = formulaires_editer_objet_charger('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
     $valeurs['tab']=_request('tab');
+    $valeurs['_hidden'].='<input type="hidden" value="'._request('tab').'" name="tab">'; 
+   // $valeurs['_hidden'].='<input type="hidden" value="'.$valeurs['seq'].'" name="seq">';        
         /*$sql="SELECT * FROM spip_members where seq = '".addslashes(_request('seq'))."'";
         $reponse = spip_query($sql);
         $results = spip_fetch_array($reponse);

@@ -1,72 +1,9 @@
-<div class='formulaire_spip formulaire_editer formulaire_#FORM formulaire_#FORM-#ENV{seq,nouveau}'>
-	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
-	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
-
-	[(#ENV{editable})
-	<form method='post' action='#ENV{action}'><div>
-		#ACTION_FORMULAIRE{#ENV{action}}
-		<input type='hidden' name='seq' value='#ENV{seq}' />
-		<input name="sequp" type="hidden" value="#ENV{seq}">
-    <div id="tabs">
-        <ul id="nav">
-            <li><a href="#general">General</a></li>
-            <li><a href="[(#SELF|parametre_url{tab,membership})]#membership">Membership</a></li>
-            <li><a href="[(#SELF|parametre_url{tab,professional})]#professional">Professional</a></li>
-            <li><a href="[(#SELF|parametre_url{tab,conferencies})]#conferencies">Conferences</a></li>
-            <li><a href="[(#SELF|parametre_url{tab,conferencies})]#conferencies">Cotisation</a></li>
-        </ul>
-        
-
-        
+<div class='formulaire_spip formulaire_editer formulaire_#FORM formulaire_#FORM-#ENV{seq,nouveau} ajax'>
         <div id="content">
-        <INCLURE{fond=formulaires/ui/#ENV{tab,general},env}/>
+        <INCLURE{fond=formulaires/ui/#ENV{tab,general},env,seq=#ENV{seq}}/>
         </div>
-        
-
-
-
-    </div>
-		[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
-		<!--extra-->
-		<p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
-	</div></form>
-	]
-</div>
+</div>        
 
         
-<script type="text/javascript">
-  $(function() {
-    $("a .ajax >.hidden").unbind('click');
-            $('.hidden').hide('fast');
-            $('.switch').click(function(){
-                $(this).toggleClass('open').next().toggle('fast');       
-                }
-                
-               );
-      
-$('#tabs').tabs({           
-        ajaxOptions: {
-                cache : true,
-                dataFilter: function(data){
-                        return $(data).find('#content');
-                },
-        }
-});  
 
-  /* $("#tabs").tabs({
-    load: function(event, ui) {
-        $(ui.panel).delegate('a', 'click', function(event) {
-            $(ui.panel).load(this.href);
-           event.preventDefault();
-        });
-  
-    },
-   cache: false 
-});*/
-/*   $( "#tabs" ).tabs({
-      collapsible: true
-    });*/
-
-    });
-</script>
 

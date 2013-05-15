@@ -1,0 +1,78 @@
+<div class='cadre-formulaire-editer'>
+<div class="entete-formulaire">
+    [(#SEQ|oui)
+        [<h1>(#ENV{titre,#INFO_TITRE{member,#SEQ}})</h1>]
+        ]
+
+    <div class="barre_onglet clearfix">
+        <ul>
+            <li>[(#ENV{tab}|=={general}|ou{#ENV{tab}|non}|?{
+               <strong class="on">General</strong>
+                ,
+                <a class="ajax nocache" href="[(#SELF|parametre_url{tab,general})]">General</a>
+            })]
+            </li>
+            <li>
+                [(#ENV{tab}|=={membership}|?{
+               <strong class="on">Membership</strong>
+                ,
+                <a class="ajax nocache" href="[(#SELF|parametre_url{tab,membership})]">Membership</a>
+            })]
+            </li>
+            <li>
+               [(#ENV{tab}|=={professional}|?{
+               <strong class="on">Professional</strong>
+                ,
+                <a class="ajax nocache" href="[(#SELF|parametre_url{tab,professional})]">Professional</a>
+            })]
+            </li>
+                
+            <li>
+                 [(#ENV{tab}|=={Cotisation}|?{
+                   <strong class="on">Conferences</strong>
+                    ,
+                    <a class="ajax nocache" href="[(#SELF|parametre_url{tab,conferencies})]">Conferences</a>
+                })]
+            </li>
+            <li>
+                 [(#ENV{tab}|=={cotisation}|?{
+                   <strong class="on">Cotisation</strong>
+                    ,
+                    <a class="ajax nocache" href="[(#SELF|parametre_url{tab,cotisation})]">Cotisation</a>
+                })]
+            </li>
+        </ul>
+        </div>
+#INCLURE{fond=prive/squelettes/contenu/member_edit,redirect='',env,seq=#ENV{seq},retourajax=oui,ajax}
+    
+    </div>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+
+/*$('#tabs').tabs({           
+        ajaxOptions: {
+                cache : true,
+                dataFilter: function(data){
+                        return $(data).find('#content');
+                },
+        }
+});  */
+
+  /* $("#tabs").tabs({
+    load: function(event, ui) {
+        $(ui.panel).delegate('a', 'click', function(event) {
+            $(ui.panel).load(this.href);
+           event.preventDefault();
+        });
+  
+    },
+   cache: false 
+});*/
+/*   $( "#tabs" ).tabs({
+      collapsible: true
+    });*/
+
+    });
+</script>
