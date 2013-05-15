@@ -1,96 +1,62 @@
-[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
-[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
-
-
-<form method='post' action='#ENV{action}'><div>
-    #ACTION_FORMULAIRE{#ENV{action}}
-    <input type='hidden' name='seq' value='#ENV{seq}' />
-    <input name="sequp" type="hidden" value="#ENV{seq}">
-
-         
-        <div id="cotisation" class="tab">
-            <ul>
-                <li>
-                    <label>Member number</label> <?php echo $inmembernumber;?>
-                </li>
-                <li>
-                    <label>Membership fee</label>
-                    <fieldset>
-                        <ul>
-                            <li>
-                                <label>Year</label>
-                                <select name="membership_year">
-                                    <option value=''></option>
-                                    <?php
-                                        $q = spip_query("select DISTINCT membership_year FROM spip_members WHERE membership_year!=0 ORDER BY membership_year");
-                                        $year='';
-                                        while ($y = spip_fetch_array($q)) {
-                                            $year = $y['membership_year'];
-                                            echo "<option";
-                                            if ($membership_year == $y['membership_year']) { echo ' selected'; }
-                                            echo ">{$y['membership_year']}</option>";
-                                        }
-                                        if ($year < date('Y')-1) echo "<option>".(date('Y')-1)."</option>";
-                                        if ($year < date('Y')) echo "<option>".(date('Y'))."</option>";
-                                        if ($year < date('Y')+1) echo "<option>".(date('Y')+1)."</option>";
-                                    ?>
-                                </select>
-                            </li>
-                            <li>
-                                <label>Type</label>
-                                <select name="membership_fee" id="membership_subscription_fee">
-                                    <?php 
-                                        $q = spip_query("select DISTINCT membership_fee FROM spip_membership_type order by membership_fee");
+ <div id="cotisation" class="tab">
+    <ul>
+        <li>
+            <label>Member number</label> #MEMBERNUMBER
+        </li>
+        <li>
+            <label>Membership fee</label>
+            <fieldset>
+                <ul>
+                    <li>
+                        <label>Year</label>
+                            <B_m_year>
+                             <select name="membership_year">
+                                 <option value=''></option>
+                               <BOUCLE_m_year(MEMBERS){fusion membership_year}{membership_year!=0}{par membership_year}>
+                                [<option (#ENV{membership_year}|=={#MEMBERSHIP_YEAR}|oui)selected="selected">#MEMBERSHIP_YEAR</option>]
+                                [(#ENV{membership_year}|<{[(#ENV{date}|affdate{Y}|moins{1}|unique)]}|oui)<option>[(#ENV{date}|affdate{Y}|moins{1})]</option>]
+                                [(#ENV{membership_year}|<{[(#ENV{date}|affdate{Y}|unique)]}|oui)<option>[(#ENV{date}|affdate{Y})]</option>]                                        
+                                [(#ENV{membership_year}|<{[(#ENV{date}|affdate{Y}|plus{1}|unique)]}|oui)<option>[(#ENV{date}|affdate{Y}|plus{1})]</option>]  
                             
-                                        while($sub = spip_fetch_array($q)) {
-                                            echo "<option value='{$sub['membership_fee']}' ";
-                                            if ($membership_fee == $sub['membership_fee']) { echo 'selected'; }
-                                            echo ">{$sub[membership_fee]}</option>";
-                                        }   
-                                        ?>
-                                </select>
-                            </li>
-                        </ul>
-                    </fieldset> 
-                </li>
-                <li>
-                    <label>Payment</label>
-                    <fieldset>
-                        <ul>
-                            <li>
-                                <label>Error / Delayed reason</label>
-                                <input type="text" name="payment_error" value="<?php echo $payment_error; ?>" />
-                            </li>   
-                            <li>
-                                <label>Method of payment</label>
-                                <input type="text" name="method_of_payment" value="<?php echo $method_of_payment; ?>" />
-                            </li>   
-                            <li>
-                                <label>Date of payment</label>
-                                <input type="text" name="date_of_payment" value="<?php echo $date_of_payment; ?>" />
-                            </li>   
-                        </ul>
-                    </fieldset>
-                </li>
-                <li>
-                    <label>Reference</label>
-                    <input type="text" name="reference" class="text" value="<?php echo $reference; ?>" />
-                </li>   
-                <li>
-                    <label>VAT Number</label>
-                    <input type="text" name="vat_number" class="text" value="<?php echo $vat_number; ?>" />
-                </li>   
-                <li>
-                    <label>Special requests</label>
-                    <textarea name="special_requests" rows=10><?php echo $special_requests; ?></textarea>
-                </li>   
+                               </BOUCLE_m_year>
+                            </select>
+                            </B_m_year>
+                    </li>
+                    <li>
+                        <B_m_fee>
+                        <label>Type</label>
+                        <select name="membership_fee" id="membership_subscription_fee">
+                           <BOUCLE_m_fee(MEMBERSHIP_TYPE){fusion membership_fee}{par membership_fee}>
+                            <option value='#MEMBERSHIP_FEE'[(#MEMBERSHIP_FEE|=={#ENV{membership_fee}}|oui) selected="seelcted"]>#MEMBERSHIP_FEE</option>
+                           </BOUCLE_m_fee>
+                        </select>
+                        </B_m_fee>
+                    </li>
+                </ul>
+            </fieldset> 
+        </li>
+        <li>
+            <label>Payment</label>
+            <fieldset>
+                <ul>
+                    [(#SAISIE{input, payment_error,
+        label=<:member:label_payment_error:>})]
+ 
+                            [(#SAISIE{input, method_of_payment,
+                label=<:member:label_method_of_payment:>})] 
+                    
+                    [(#SAISIE{input, date_of_payment,
+        label=<:member:label_date_of_payment:>})]  
+                </ul>
+            </fieldset>
+        </li>
+        
+        [(#SAISIE{input, reference,
+        label=<:member:label_reference:>})]   
+        
+        [(#SAISIE{textarea, special_requests,
+        label=<:member:label_special_requests:>,
+                 rows=10})] 
+  
             </ul>
-            <p class='boutons_formulaire'>
-                <input type="submit" name="Submit" value="Submit">
-            </p>
-        </div>   <!-- cotisation -->
-
-    [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
-    <!--extra-->
-    <p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
-</div></form>
+</div>   <!-- cotisation -->
