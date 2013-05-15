@@ -7,7 +7,7 @@
     <input type='hidden' name='seq' value='#ENV{seq}' />
     <input name="sequp" type="hidden" value="#ENV{seq}">
         #SET{tab,#ENV{tab,general}}    
-        [(#ENV{seq}|=={oui}|oui)#SET{tab,general}]    #GET{tab}
+        [(#ENV{seq}|=={oui}|oui)#SET{tab,general}]
         <INCLURE{fond=formulaires/ui/#GET{tab},env,seq=#ENV{seq}}/>      
     [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
     <!--extra-->

@@ -1,11 +1,4 @@
-[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV**{message_ok})</p>]
-[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
 
-
-<form method='post' action='#ENV{action}'><div>
-    #ACTION_FORMULAIRE{#ENV{action}}
-    <input type='hidden' name='seq' value='#ENV{seq}' />
-    <input name="sequp" type="hidden" value="#ENV{seq}">
 
         
         <div id="professional" class="tab">
@@ -15,61 +8,28 @@
                 </li>
                 <li>
                     <label>Company</label> 
-                    <?php echo $incompany;?>
+                    #COMPANY
                 </li>
-                <li>
-                    <label>Practice in</label> 
-                    <select name="inpracticein" id="inpracticein" style="width:195px">
-                        <option value=''>Make a choice</option>
-                        <?php
-                        
-                            $q = sql_select('*','spip_geo_pays','','','pays');
-                            while ($p = sql_fetch($q)) {
-                                echo "<option value='".$p['code_iso']."'";
-                                if ($inpracticein == $p['code_iso']) { echo 'selected'; }
-                                echo ">".$p['pays']."</option>\n";
-                            }
-                            
-                        ?>
-                    </select>
-                </li>
-                <li>
-                    <label>In activity since</label> 
-                    <input name="inactivitysince" type="text" class="text" id="inactivitysince" value="<?php echo $inactivitysince;?>">
-                </li>
+                    [(#SAISIE{pays_code, practicein,
+                label=Practice in})]
+                
+                [(#SAISIE{input, inactivitysince,
+                                label=In activity since})]
                 <li>
                     <label>Categories of Professional</label> 
                     <fieldset><ul>
-                <?php
+
+           <BOUCLE_ass(CATEGORIES_OF_PROFESSIONAL){par num title}>
+               <BOUCLE_ass_member(MEMBERS_CATEGORIES_OF_PROFESSIONAL){id_category}{id_member=#ENV{seq}}>
+                <li><label>[(#TITLE|supprimer_numero)]</label> <input name='categories_of_professional[#ID_CATEGORY]' type='checkbox' value='#ID_CATEGORY' checked="checked"></li>
+               </BOUCLE_ass_member>
+            <li><label>[(#TITLE|supprimer_numero)]</label> <input name='categories_of_professional[#ID_CATEGORY]' type='checkbox' value='#ID_CATEGORY'></li>
+            <//B_ass_member>                        
+           </BOUCLE_ass>
                             
-                            $q = spip_query("select spip_categories_of_professional.id_category, spip_categories_of_professional.title, 0+title AS num_order FROM spip_categories_of_professional order by num_order");
-                            
-                            while($category = spip_fetch_array($q)) {
-                                $category['title'] = supprimer_numero($category['title']);
-                            
-                                $q2 = spip_query("select id_category FROM spip_members_categories_of_professional 
-                                        where spip_members_categories_of_professional.id_category='{$category['id_category']}' and id_member='$seq'");
-                            
-                                if (spip_num_rows($q2)) $checked=" checked "; else $checked = '';
-                            
-                                echo "
-                                        <li>
-                                            <label>{$category['title']}</label> <input name='categories_of_professional[{$category['id_category']}]' type='checkbox' value='{$category['id_category']}' $checked>
-                                        </li>
-                                    ";
-                            }
-                            
-                            ?>
                                 </ul></fieldset>
                 </li>
                 
             </ul>
-            <p class='boutons_formulaire'>
-                <input type="submit" name="Submit" value="Submit">
-            </p>
         </div> <!-- professional -->
 
-    [(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
-    <!--extra-->
-    <p class="boutons"><input type='submit' class='submit' value='<:bouton_enregistrer:>' /></p>
-</div></form>

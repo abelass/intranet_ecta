@@ -200,7 +200,8 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
    /*Comitees*/        
         $val_start_date=_request('start_date');
         $val_end_date=_request('end_date');     
-        $id_commitee_role=_request('member_role');    
+        $id_commitee_role=_request('member_role'); 
+        if(is_array($val_start_date)){
             foreach ($val_start_date as $id_commitee =>$start) {
                 $end=$val_end_date[$id_commitee];   
                 if($val_end_date[$id_commitee]>0)$end=$val_end_date[$id_commitee];   
@@ -216,55 +217,60 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
                             }
                         }
                 }
-            }               
+            }  
+        }   
+             
        
         /*Councils*/
       
         $council_statut=_request('council_statut');
         $council_start_date=_request('council_start_date');        
         $council_end_date=_request('council_end_date'); 
-      
-        foreach ($council_start_date AS $id_membership_council=>$start_date){
-            if( $id_membership_council =='new' AND $start_date>0){
-                $valeurs=array(
-                'seq'=>$sequp,
-                'end_date'=>$council_end_date['new'].'-01-01',
-                'start_date'=>$start_date.'-01-01',
-                'statut'=>$council_statut['new']?$council_statut['new']:'Yes');
-                sql_insertq('spip_members_council',$valeurs);
-                }
-            elseif($start_date>0){
-                $valeurs=array(
+        if(is_array($council_start_date)){
+            foreach ($council_start_date AS $id_membership_council=>$start_date){
+                if( $id_membership_council =='new' AND $start_date>0){
+                    $valeurs=array(
                     'seq'=>$sequp,
-                    'statut'=>$council_statut[$id_membership_council],
-                    'end_date'=>$council_end_date[$id_membership_council].'-01-01',
+                    'end_date'=>$council_end_date['new'].'-01-01',
                     'start_date'=>$start_date.'-01-01',
-                     'statut'=>$council_statut[$id_membership_council]?$council_statut[$id_membership_council]:'Yes'
-                    );
-                sql_updateq('spip_members_council',$valeurs,'id_membership_council='.$id_membership_council);
+                    'statut'=>$council_statut['new']?$council_statut['new']:'Yes');
+                    sql_insertq('spip_members_council',$valeurs);
+                    }
+                elseif($start_date>0){
+                    $valeurs=array(
+                        'seq'=>$sequp,
+                        'statut'=>$council_statut[$id_membership_council],
+                        'end_date'=>$council_end_date[$id_membership_council].'-01-01',
+                        'start_date'=>$start_date.'-01-01',
+                         'statut'=>$council_statut[$id_membership_council]?$council_statut[$id_membership_council]:'Yes'
+                        );
+                    sql_updateq('spip_members_council',$valeurs,'id_membership_council='.$id_membership_council);
+                }
             }
         }
         
-        
             /* association */
             sql_delete('spip_members_associations','id_member='.$sequp);
-            if ($association=_request('associations'))
-                foreach ($association as $value) {
+            if ($association=_request('associations')){
+               foreach ($association as $value) {
                     sql_insertq('spip_members_associations',array('id_member'=>$sequp,'id_association'=>$value));
                 }
+                
+            }
+
 
 
             /* categories_of_professional */
-            /*
-            spip_query("delete from spip_members_categories_of_professional where id_member='$sequp'");
-            if (isset($_POST['categories_of_professional']))
-                {foreach ($_POST['categories_of_professional'] as $value) {
-                    spip_query("insert into spip_members_categories_of_professional(id_member,id_category) VALUES('$sequp','$value')");
-                }
+            sql_delete('spip_members_categories_of_professional','id_member='.$sequp);
+
+            if ($cat=_request('categories_of_professional')){
+                    foreach ($cat as $value) {
+                    sql_insertq('spip_members_categories_of_professional',array('id_member'=>$sequp,'id_category'=>$value));
+                    }
                 }
                 
                 
-        if (!$message_err){
+       /*if (!$message_err){
             $ch = array();  
 
             foreach($aut AS $key=>$val){ 
@@ -307,7 +313,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
             spip_log($message_mail,'teste');
             
              $message_maj = "The member has been successfully updated";
-         }        */
+         }       */
     
     return formulaires_editer_objet_traiter('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
 }
