@@ -69,16 +69,15 @@
         </div>
         <div style="padding-top:12px;text-align:right">
             <input type="submit" name="Submit" value="Search"/>&nbsp;
-            [(#ENV{init}|oui)
-                <a target="_blank" href="[(#URL{ecrire,export_csv}
-                |parametre_url{init,#ENV{init}}
+
+                <a target="_blank" href="[(#URL_ACTION_AUTEUR{export_csv,'csv',''}|parametre_url{init,#ENV{init}}
                 |parametre_url{s_company,#ENV{company}|urlencode}
                 |parametre_url{s_country,#ENV{country}}
                 |parametre_url{membership_fee,#ENV{membership_fee}}  
                 |parametre_url{membership_year,#ENV{membership_year}}   
                 |parametre_url{s_name,#ENV{s_name}|urlencode}                                            
-                ))]">export CSV</a>
-                ]                
+                )]">export CSV</a>
+                                
 
         </div>
         </form>
