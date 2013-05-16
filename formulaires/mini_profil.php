@@ -3,7 +3,7 @@
 spip_query("SET NAMES 'utf8'");
 spip_query("SET NAMES 'utf8'");
 include_spip('inc/securiser_action');
-
+include_spip('inc/autoriser');
 	function formulaires_mini_profil_charger($id_auteur='',$readonly='') {
 
 		if (!$id_auteur) $id_auteur=get_session('id_auteur');

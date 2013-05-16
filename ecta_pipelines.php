@@ -100,7 +100,8 @@ function ecta_header_prive($flux){
 function ecta_jqueryui_plugins($scripts){
 
    $scripts[] = "jquery.ui.autocomplete";
-
+   $scripts[] = "jquery.ui.tabs";
+   $scripts[] = "jquery.ui.datepicker";   
    return $scripts;
 
 }

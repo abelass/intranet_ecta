@@ -1,9 +1,9 @@
-<link type="text/css" href="#CHEMIN{css/custom-theme/ui.all.css}" rel="stylesheet" />
-<script type="text/javascript" src="#CHEMIN{js/jquery-ui-1.6.custom.min.js}"></script>
-
 <link type="text/css" href="#CHEMIN{css/datePicker.css}" rel="stylesheet" />
 <script type="text/javascript" src="#CHEMIN{js/date.js}"></script>
-<script type="text/javascript" src="#CHEMIN{js/jquery.datePicker.min-2.1.2.js}"></script>		
+<script type="text/javascript" src="#CHEMIN{js/jquery.datePicker.min-2.1.2.js}"></script>	
+
+
+
 
 <style>
 	#contenu {
@@ -186,7 +186,7 @@
 								<label>Country</label>  
 								<select name="country" id="incountry" style="width:195px">
 								<option value=''>Make a choice</option>
-<BOUCLE_country(SPIP_GEO_PAYS){par pays}>
+<BOUCLE_country(GEO_PAYS){par pays}>
 <option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{country}}|oui)selected]>#PAYS</option>
 </BOUCLE_country>
 								</select>
@@ -198,7 +198,7 @@
 							<label>Nationality</label> 
 							<select name="nationality" id="nationality" style="width:195px">
 								<option value=''>Make a choice</option>
-<BOUCLE_nationality(SPIP_GEO_PAYS){par pays}>
+<BOUCLE_nationality(GEO_PAYS){par pays}>
 <option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{nationality}}|oui)selected]>#PAYS</option>
 </BOUCLE_nationality>
 
@@ -381,7 +381,7 @@
 					<label>Practice in</label> 
 					<select name="practicein" id="inpracticein" style="width:195px">
 						<option value=''>Make a choice</option>
-<BOUCLE_practicein(SPIP_GEO_PAYS){par pays}>
+<BOUCLE_practicein(GEO_PAYS){par pays}>
 <option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{practicein}}|oui)selected]>#PAYS</option>
 </BOUCLE_practicein>
 					</select>
@@ -450,18 +450,19 @@
 </div>
 
 <script type="text/javascript">
-	$("#tabs").tabs();
-	Date.firstDayOfWeek = 0;
-	Date.format = 'mm/dd/yyyy';
-	$('.date-pick').datePicker(
-			{
-				startDate: '01/01/1920',
-				endDate: (new Date()).asString()
-			}
-		);
+    $("#tabs").tabs();
+
+    $('.date-pick').datepicker(
+            {   dateFormat: "mm/dd/yy" ,
+                yearRange: "1920:2050",
+                minDate: new Date(1920, 1 - 1, 1),
+               maxDate: "+1m +1w",
+               changeMonth: true,
+      changeYear: true 
+            }
+        );
 
 </script>
-
 <pre>
 	[(#ENV**{debug})]
 </pre>
