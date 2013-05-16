@@ -55,7 +55,7 @@ function ecta_pre_insertion($flux){
                 $sql = array( 
                 'nom' => $nom, 
                 'bio' => '', 
-                'email' => addslashes(_request('email')), 
+                'email' => _request('email'), 
                 'nom_site' => '', 
                 'url_site' => '', 
                 'login' => _request('login'), 
@@ -79,7 +79,14 @@ function ecta_pre_insertion($flux){
         $sql = array('id_auteur' => $id_auteur,'id_liste'=>4,'statut'=>'valide','format'=>'html');
         sql_insertq('spip_auteurs_listes', $sql);
         
+        spip_log('actualisation profil intranet','sclp');
+        $flux=array(
+            'data'=>array('id_auteur'=>$id_auteur)
+            );
+        $flux['args']['args'][4]['email']=_request('email');    
         
+        $traitement=charger_fonction('editer_auteur_traiter_listes','inc');
+        $flux=$traitement($flux);
         $flux['data']['id_auteur'] = $id_auteur;
     }
     return $flux;

@@ -133,6 +133,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
     //l'acien script utilisait $sequp
     $sequp=$seq;
     $id_auteur=_request('id_auteur');
+    $email=_request('email');
     
     //Traitement spip_auteurs
     if(intval($seq)){
@@ -246,22 +247,22 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
 
             $ch = array();  
             
-            if($seq)$aut=sql_fetsel('*','spip_members','seq='.$seq);
+            if($seq){$aut=sql_fetsel('*','spip_members','seq='.$seq);
 
             foreach($aut AS $key=>$val){ 
                 if(($req=_request($key) AND _request($key)!=$val) OR ($req=_request('in'.$key) AND _request('in'.$key)!=$val))$ch[$key]=$req;               
             }
-            
+            }
             if(count($ch)>0){
             //actualisation mailchimp
             
                 spip_log('actualisation profil intranet','sclp');
                 $flux=array(
-                    'data'=>array('id_auteur'=>$aut['id_auteur'])
+                    'data'=>array('id_auteur'=>$id_auteur)
                     );
                     
-
-                $flux['args']['args'][4]['email']=$aut['email'];    
+                $email=$aut['email']?$aut['email']:$email;
+                $flux['args']['args'][4]['email']=$email;    
                 
                 $traitement=charger_fonction('editer_auteur_traiter_listes','inc');
                 $flux=$traitement($flux);
