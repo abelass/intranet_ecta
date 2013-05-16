@@ -38,34 +38,15 @@
             <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
                 Filter by Company :
             </label>
-             #SET{company,#ENV{company}|replace{'_','''}}
+            <input type="text" class="company" name="company" value="#ENV{company}"/>
 
-            <B_company>
-            <select name="company" class="company" style="width:200px">
-               <option value=''>ALL</option> 
-               <BOUCLE_company(MEMBERS){fusion company}{par company}>
-                <option value="[(#COMPANY|replace{''','_'})]"[ (#GET{company}|=={#COMPANY}|oui) selected="selected"]>#COMPANY</option>
-               </BOUCLE_company>
-            </select>
-            </B_company>
        </div>
        <div style="padding-top:3px">
             <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
                 Filter by Country :
             </label>
-            #SET{pays,#ARRAY}
-               <BOUCLE_pays(GEO_PAYS)>
-                #SET{pays,#GET{pays}|array_merge{#ARRAY{#CODE_ISO,#PAYS}}}
-               </BOUCLE_pays>
-               
-            <B_country>
-            <select name="country" class="country" style="width:200px">
-                <option value=''>ALL</option> 
-               <BOUCLE_country(MEMBERS){fusion country}{par country}>
-                [<option value="(#COUNTRY)"[ (#ENV{country}|=={#COUNTRY}|oui) selected="selected"]>[(#GET{pays}|table_valeur{#COUNTRY})]</option>]
-               </BOUCLE_country>
-            
-            </B_country>
+            <input type="text" class="country" name="country" value="#ENV{country}">
+   
         </div>
         <div style="padding-top:12px;text-align:right">
             <input type="submit" name="Submit" value="Search"/>&nbsp;
@@ -99,3 +80,43 @@
 <INCLURE{fond=prive/objets/liste/members, par=title, env,where=#GET{where}|implode{' AND '}, sinon=<:association:info_aucun_association:>}>
 
 [(#BOITE_FERMER)]
+
+<script type="text/javascript" >
+    $(function() {
+        $(".country" ).autocomplete({
+                source: "[(#URL_PAGE{recherche_country})]",
+                dataType: 'json',
+                minLength: 2,
+                autoFocus: true,
+                select: function(event, ui) {
+                    //assign value back to the form element
+                    if(ui.item){
+                      $(event.target).val(ui.item.value);
+                    }
+                    //submit the form
+                    //$(event.target.form).submit();
+                }
+          });
+        $(".company" ).autocomplete({
+                source: "[(#URL_PAGE{recherche_company})]",
+                dataType: 'json',
+                minLength: 2,
+                autoFocus: true,
+                select: function(event, ui) {
+                    //assign value back to the form element
+                    if(ui.item){
+                      $(event.target).val(ui.item.value);
+                    }
+                    //submit the form
+                    //$(event.target.form).submit();
+                }
+          });          
+        });
+    jQuery(document).ready(function(){
+    $('#formulaire_bouton_objet[_(#ENV{lang,no_lang})] #champ_objet_sel').val('');
+     #SET{id,selection_objets_#ENV{lang,no_lang}}
+    [(#ENV{message_ok}|oui)
+       $('#[(#GET{id})]').load('[(#URL_ACTION_AUTEUR{ranger,nouvel_ordre-[(#ENV{lang})]-0-0-[(#OBJET_DEST)]-[(#ENV{id_objet_dest})]}|parametre_url{load,prive/objets/liste/inc-selection_interface}|parametre_url{id,#GET{id}}|replace{&amp;,&})]');
+        ]         
+        });
+  </script>

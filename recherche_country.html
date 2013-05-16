@@ -1,0 +1,7 @@
+#CACHE{0}
+#HTTP_HEADER{Content-Type: text/plain; charset=#CHARSET}#SET{objets_sel,#ARRAY}
+#SET{output,#ARRAY}
+<BOUCLE_selection(GEO_PAYS){pays LIKE %#ENV{term}%}{par pays}>
+#SET{output,#GET{output}|array_merge{#ARRAY{#COMPTEUR_BOUCLE,#ARRAY{label,#PAYS,value,#CODE_ISO}}}}
+</BOUCLE_selection>
+[(#GET{output}|json_encode)]

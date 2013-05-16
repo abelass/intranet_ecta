@@ -1,0 +1,6 @@
+#CACHE{0}
+#HTTP_HEADER{Content-Type: text/plain; charset=#CHARSET}#SET{objets_sel,#ARRAY}
+#SET{output,#ARRAY}
+<BOUCLE_company(MEMBERS){fusion company}{company LIKE %#ENV{term}%}{par company}>#SET{output,#GET{output}|array_merge{#ARRAY{#COMPTEUR_BOUCLE,#ARRAY{label,#COMPANY,value,#COMPANY}}}}</BOUCLE_company>
+[(#GET{output}|json_encode)]
+
