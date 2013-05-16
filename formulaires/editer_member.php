@@ -246,7 +246,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
 
             $ch = array();  
             
-            $aut=sql_fetsel('*','spip_members','seq='.$seq);
+            if($seq)$aut=sql_fetsel('*','spip_members','seq='.$seq);
 
             foreach($aut AS $key=>$val){ 
                 if(($req=_request($key) AND _request($key)!=$val) OR ($req=_request('in'.$key) AND _request('in'.$key)!=$val))$ch[$key]=$req;               
