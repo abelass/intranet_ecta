@@ -147,11 +147,8 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
         if($email=_request('email'))$valeurs['email']=$email;
         if (_request('password')) {
             $valeurs['pass'] = md5('1545607746460151d1d63984.51604272'._request('password'));
-            //$valeurs['pass'] = _request('password');
             $valeurs['alea_actuel'] = '1545607746460151d1d63984.51604272';
         }
-        include_spip('action/editer_auteur');
-        auteur_instituer($id_auteur, $valeurs, $force_webmestre = false);
        sql_updateq('spip_auteurs',$valeurs,'id_auteur='.$id_auteur);
         
     }
