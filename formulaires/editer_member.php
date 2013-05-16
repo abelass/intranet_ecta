@@ -64,8 +64,10 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
     $valeurs['associations']=_request('associations');    
     //$valeurs['id_commitee_role']=_request('id_commitee_role');    
     $valeurs['_hidden'].='<input type="hidden" value="'._request('tab').'" name="tab">'; 
-    if(intval($valeurs['id_auteur']))$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['id_auteur'].'" name="id_auteur">';     
-
+    if(intval($valeurs['id_auteur']))$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['id_auteur'].'" name="id_auteur">';  
+    if(intval($valeurs['membernumber']))$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['membernumber'].'" name="membernumber">';  
+    if($valeurs['name'])$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['name'].'" name="name">';
+    if($valeurs['surname'])$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['surname'].'" name="surname">';    
     return $valeurs;
 }
 
