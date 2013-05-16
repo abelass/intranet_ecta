@@ -49,9 +49,8 @@ function ecta_pre_insertion($flux){
 
     if ($flux['args']['table']=='spip_members'){
        
-        $nom = ($flux['data']['title']?$flux['data']['title'].' ':'').$name.' '.$surname;
-        if (!trim($nom)) $nom = '-';
-         
+            $valeurs['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
+            if (!trim($valeurs['nom'])) $valeurs['nom'] = '-';
         
                 $sql = array( 
                 'nom' => $nom, 
@@ -59,7 +58,7 @@ function ecta_pre_insertion($flux){
                 'email' => addslashes(_request('email')), 
                 'nom_site' => '', 
                 'url_site' => '', 
-                'login' => $login, 
+                'login' => _request('login'), 
                 'pass' => md5( '1545607746460151d1d63984.51604272'._request('password')) , 
                 'low_sec' => '', 
                 'statut' => '6forum', 

@@ -92,17 +92,19 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
  *     Tableau des erreurs
  */
 function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
-    $login=_request('inlogin');
+    $login=_request('login');
     $id_auteur=_request('id_auteur');
-    $check_login = spip_query($sql);
     $erreurs=array();
+    
     if($login){
-         if (!sql_getfetsel('login','spip_auteurs','login='.sql_quote( $login))) $erreurs['login']="Error : this login already exists";
+        $where=array('login='.sql_quote( $login));
+        if($id_auteur)$where[]='id_auteur!='.$id_auteur;
+        if ($login=sql_getfetsel('login','spip_auteurs',$where)) $erreurs['login']="This login already exists";
     }
 
-
+   $erreurs=array_merge($erreurs,formulaires_editer_objet_verifier('member',$seq, array('membernumber','name','surname')));
   
-    return formulaires_editer_objet_verifier('member',$seq);
+   return $erreurs;
 }
 
 /**
@@ -136,17 +138,20 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
     if(intval($seq)){
         $valeurs=array();
         if($login=_request('login'))$valeurs['login']=$login;
-        if($name=_request('name') OR $surname=_request('surname')){
-            $valeurs['nom'] = (_request('title')?_request('title').' ':'').$name.' '.$surname;
+        if(_request('name') OR _request('surname')){
+            $valeurs['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
             if (!trim($valeurs['nom'])) $valeurs['nom'] = '-';
-            }
+        }
+
         if($email=_request('email'))$valeurs['email']=$email;
-        if (_request('inpassword')) {
+        if (_request('password')) {
             $valeurs['pass'] = md5('1545607746460151d1d63984.51604272'._request('password'));
+            //$valeurs['pass'] = _request('password');
             $valeurs['alea_actuel'] = '1545607746460151d1d63984.51604272';
         }
-        
-        sql_update('spip_auteurs',$valeurs,'id_auteur='.$id_auteur);
+        include_spip('action/editer_auteur');
+        auteur_instituer($id_auteur, $valeurs, $force_webmestre = false);
+       sql_updateq('spip_auteurs',$valeurs,'id_auteur='.$id_auteur);
         
     }
 
