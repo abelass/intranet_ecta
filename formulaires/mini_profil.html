@@ -3,20 +3,14 @@
 <div class="ajax">
 <BOUCLE_auteur(AUTEURS){id_auteur=#ENV{id_auteur}}{tout}>
  [(#LOGO_AUTEUR|fichier|non)
-		<div class="spip_documents_left" style="width:114px;">
-			<img src="#CHEMIN{images/avatar_defaut.jpg}" />
-		</div>
-	  
 		<p><small>You can upload a picture that will be attached to your profile</small></p>
-	    [(#ENV{form_upload}|html_entity_decode{#EVAL{ENT_QUOTES}})]
-	    <p><small>This avatar will make your profil more human</small></p>
+	    
+	  
   ]
-  [(#LOGO_AUTEUR|fichier|oui)
-			<div class="">
-			<a href="IMG/[(#LOGO_AUTEUR|fichier)]" target="_blanck">
-			[(#LOGO_AUTEUR|right||image_reduire{114,160})]</a></div>
-			<span class="boutons"><a href="#ENV{url_supp}">Remove your picture</a></span>
-  ]
+[(#FORMULAIRE_EDITER_LOGO{auteur,#ID_AUTEUR})]
+ [(#LOGO_AUTEUR|fichier|non)
+		<p><small>This avatar will make your profil more human</small></p>]
+
  </BOUCLE_auteur>
  </div>
  </B_auteur>
