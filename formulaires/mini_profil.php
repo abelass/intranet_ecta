@@ -38,6 +38,9 @@ include_spip('inc/autoriser');
 		list($fid, $dir, $nom, $format) = $chercher_logo($valeurs['id_auteur'], 'id_auteur', 'on');
 
 		$contenu = '<input type="file" name="image" size="20"/> <br /><br /><input type="submit" name="sousaction1" value="Update">';
+		$valeurs['form_upload'] = securiser_action_auteur('iconifier', $valeurs['id_auteur'].'+auton'.$valeurs['id_auteur'], $_SERVER["REQUEST_URI"], $contenu, ' method="POST" enctype="multipart/form-data"');
+
+		$valeurs['url_supp'] = securiser_action_auteur('iconifier', $valeurs['id_auteur']."-".$nom.'.'.$format, $_SERVER["REQUEST_URI"]);
 			
 		return $valeurs;
 	}
