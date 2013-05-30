@@ -116,12 +116,12 @@
                         </li>                           
                     </ul>
                 </fieldset>
-            </li>
-
+            <ul>
             [(#SAISIE{radio, listed_in_dir,
                             label=<:member:label_listed_in_dir:>,
-                            datas=[(#ARRAY{Yes,Yes,No,No})]})]
-            <li>
+                            datas=[(#ARRAY{Yes,Yes,No,No})],
+                            defaut=Yes})]
+            </ul>
                 <strong>Last modification done on : </strong>[(#LAST_MODIFIED|affdate{d-m-Y H:i:s})]
             </li>
 

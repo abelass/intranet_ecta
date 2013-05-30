@@ -293,15 +293,10 @@
 					<div class="clear"> </div>
 				</li>
 
-
-
-
-
-				<li>
-					<strong>Member shown in member directory ?</strong> <input name="listed_in_dir" type="checkbox" id="listed_in_dir" value="Yes" [(#ENV{listed_in_dir}|=={Yes}|oui)checked]>
-					<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
-
-				</li>
+            [(#SAISIE{radio, listed_in_dir,
+                            label=Member shown in member directory?,
+                            datas=[(#ARRAY{Yes,Yes,No,No})],
+                            defaut=Yes})]				
 				<li>
 					<strong>Last modification done on : </strong>#ENV{datestamp}</li>
 
