@@ -4,7 +4,7 @@ spip_query("SET NAMES 'utf8'");
 spip_query("SET NAMES 'utf8'");
 
 	function formulaires_profil_public_charger($id_auteur='',$readonly='') {
-
+        incLude_spip('inc/autoriser');
 		if (!$id_auteur) $id_auteur=get_session('id_auteur');
 		if (!autoriser("visiteur")) {
 			$valeurs['editable'] = false;
