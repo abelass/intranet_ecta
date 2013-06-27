@@ -14,7 +14,7 @@
             <B_years>
             <select name="membership_year" class="year">
                <option value=''>YEAR</option>
-               <BOUCLE_years(MEMBERS){fusion membership_year}{membership_year!=0000}{par membership_year}>
+               <BOUCLE_years(MEMBERS){membership_year!=0000}{par membership_year}>
                <option value="#MEMBERSHIP_YEAR"[ (#MEMBERSHIP_YEAR|=={#ENV{membership_year}}|oui)selected="selected"]>#MEMBERSHIP_YEAR</option>
                </BOUCLE_years>
             </select>
@@ -32,7 +32,7 @@
            <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
                Name or member number :
            </label>
-            <input type="text" class="text" name="name" value="#ENV{name}" style="width:160px"/> 
+            <input type="text" class="text" name="name" value="[(#ENV{name}|entites_html)]" style="width:160px"/> 
        </div>
        <div style="padding-top:3px">
             <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
@@ -52,7 +52,7 @@
             <input type="submit" name="Submit" value="Search"/>&nbsp;
 
                 <a target="_blank" href="[(#URL_ACTION_AUTEUR{export_csv,'csv',''}|parametre_url{init,#ENV{init}}
-                |parametre_url{s_company,#ENV{company}|urlencode}
+                |parametre_url{s_company,#ENV{company}}
                 |parametre_url{s_country,#ENV{country}}
                 |parametre_url{membership_fee,#ENV{membership_fee}}  
                 |parametre_url{membership_year,#ENV{membership_year}}   
@@ -68,12 +68,19 @@
 [(#ENV{name}|intval|?{
     #SET{where,#GET{where}|push{membernumber=#ENV{name}}}
     ,
-    [(#ENV{name}|oui)#SET{where,#GET{where}|push{(LOWER(name) LIKE '%#ENV{name}%' OR LOWER(surname) LIKE '%#ENV{name}%')}}]
+    #SET{name,#ENV{name}}
+    #GET{name}
+    [(#ENV{name}|oui)#SET{where,#GET{where}|push{(LOWER(name) LIKE '%#GET{name}%' OR LOWER(surname) LIKE '%#GET{name}%')}}]
     }
 )]
+[(#ENV{name}|non)
 [(#ENV{init}|oui)#SET{where,#GET{where}|push{surname LIKE '#ENV{init}%'}}]
+]
 [(#ENV{country}|oui)#SET{where,#GET{where}|push{country =#ENV{country}|sql_quote}}]
-[(#ENV{company}|oui)#SET{where,#GET{where}|push{company LIKE '%#ENV{company}%'}}]
+[(#ENV{company}|oui)
+#SET{company,#ENV{company}|filtrer_entites}
+#SET{where,#GET{where}|push{company LIKE '%#GET{company}%'}}
+]
 [(#ENV{membership_year}|oui)#SET{where,#GET{where}|push{membership_year=#ENV{membership_year}|sql_quote}}]
 [(#ENV{membership_fee}|oui)#SET{where,#GET{where}|push{membership_fee=#ENV{membership_fee}|sql_quote}}]
 

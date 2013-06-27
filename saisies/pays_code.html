@@ -15,7 +15,7 @@
 ]
 <select name="#ENV{nom}" id="champ_[(#ENV{nom}|saisie_nom2classe)]"[ class="(#ENV{class})"][ disabled="(#ENV{disable})"][ (#ENV*{attributs})]>
 [(#ENV{cacher_option_intro}|non)<option value="">[(#ENV{option_intro})]</option>]
-<BOUCLE_pays(GEO_PAYS){par pays}>
-	<option value="#CODE_ISO"[(#CODE_ISO|=={#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}}|oui) selected="selected"]>#PAYS</option>
+<BOUCLE_pays(PAYS){par multi nom}>
+	<option value="#CODE_ISO"[(#CODE|=={#ENV{valeur_forcee,#ENV{valeur,#ENV{defaut}}}}|oui) selected="selected"]>#NOM</option>
 </BOUCLE_pays>
 </select>
