@@ -1,3 +1,28 @@
+#SET{where,#ARRAY}
+[(#ENV{name}|intval|?{
+    #SET{where,#GET{where}|push{membernumber=#ENV{name}}}
+    ,
+    #SET{name,#ENV{name}}
+    #GET{name}
+    [(#ENV{name}|oui)#SET{where,#GET{where}|push{(LOWER(name) LIKE '%#GET{name}%' OR LOWER(surname) LIKE '%#GET{name}%')}}]
+    }
+)]
+[(#ENV{name}|non)
+[(#ENV{init}|oui)#SET{where,#GET{where}|push{surname LIKE '#ENV{init}%'}}]
+]
+<BOUCLE_pays(PAYS){nom LIKE %#ENV{country}%}>
+    [(#ENV{country}|oui)#SET{where,#GET{where}|push{country='#CODE'}}]
+    #SET{country,#CODE}
+</BOUCLE_pays>
+
+[(#ENV{company}|oui)
+#SET{company,#ENV{company}|filtrer_entites}
+#SET{where,#GET{where}|push{company LIKE '%#GET{company}%'}}
+]
+[(#ENV{membership_year}|oui)#SET{where,#GET{where}|push{membership_year=#ENV{membership_year}|sql_quote}}]
+[(#ENV{membership_fee}|oui)#SET{where,#GET{where}|push{membership_fee=#ENV{membership_fee}|sql_quote}}]
+
+
 <h1 class="grostitre">Members</h1>
 <div class="nettoyeur"></div>
 [(#BOITE_OUVRIR{
@@ -53,7 +78,7 @@
 
                 <a target="_blank" href="[(#URL_ACTION_AUTEUR{export_csv,'csv',''}|parametre_url{init,#ENV{init}}
                 |parametre_url{s_company,#ENV{company}}
-                |parametre_url{s_country,#ENV{country}}
+                |parametre_url{s_country,#GET{country}}
                 |parametre_url{membership_fee,#ENV{membership_fee}}  
                 |parametre_url{membership_year,#ENV{membership_year}}   
                 |parametre_url{s_name,#ENV{s_name}|urlencode}                                            
@@ -64,28 +89,7 @@
         </form>
 </div>
 
-#SET{where,#ARRAY}
-[(#ENV{name}|intval|?{
-    #SET{where,#GET{where}|push{membernumber=#ENV{name}}}
-    ,
-    #SET{name,#ENV{name}}
-    #GET{name}
-    [(#ENV{name}|oui)#SET{where,#GET{where}|push{(LOWER(name) LIKE '%#GET{name}%' OR LOWER(surname) LIKE '%#GET{name}%')}}]
-    }
-)]
-[(#ENV{name}|non)
-[(#ENV{init}|oui)#SET{where,#GET{where}|push{surname LIKE '#ENV{init}%'}}]
-]
-<BOUCLE_pays(PAYS){nom LIKE %#ENV{country}%}>
-    [(#ENV{country}|oui)#SET{where,#GET{where}|push{country='#CODE'}}]
-</BOUCLE_pays>
 
-[(#ENV{company}|oui)
-#SET{company,#ENV{company}|filtrer_entites}
-#SET{where,#GET{where}|push{company LIKE '%#GET{company}%'}}
-]
-[(#ENV{membership_year}|oui)#SET{where,#GET{where}|push{membership_year=#ENV{membership_year}|sql_quote}}]
-[(#ENV{membership_fee}|oui)#SET{where,#GET{where}|push{membership_fee=#ENV{membership_fee}|sql_quote}}]
 
 <INCLURE{fond=prive/objets/liste/members, par=title, env,where=#GET{where}|implode{' AND '}, sinon=<:association:info_aucun_association:>}>
 
