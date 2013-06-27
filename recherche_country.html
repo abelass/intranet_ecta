@@ -2,6 +2,6 @@
 #HTTP_HEADER{Content-Type: text/plain; charset=#CHARSET}#SET{objets_sel,#ARRAY}
 #SET{output,#ARRAY}
 <BOUCLE_selection(PAYS){nom LIKE %#ENV{term}%}{par multi nom}>
-#SET{output,#GET{output}|array_merge{#ARRAY{#COMPTEUR_BOUCLE,#ARRAY{label,#NOM,value,#CODE}}}}
+#SET{output,#GET{output}|array_merge{#ARRAY{#COMPTEUR_BOUCLE,#ARRAY{label,#NOM,value,#NOM}}}}
 </BOUCLE_selection>
 [(#GET{output}|json_encode)]

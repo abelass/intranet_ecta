@@ -14,7 +14,7 @@
             <B_years>
             <select name="membership_year" class="year">
                <option value=''>YEAR</option>
-               <BOUCLE_years(MEMBERS){membership_year!=0000}{par membership_year}>
+               <BOUCLE_years(MEMBERS){fusion membership_year}{membership_year!=0000}{par membership_year}>
                <option value="#MEMBERSHIP_YEAR"[ (#MEMBERSHIP_YEAR|=={#ENV{membership_year}}|oui)selected="selected"]>#MEMBERSHIP_YEAR</option>
                </BOUCLE_years>
             </select>
@@ -32,20 +32,20 @@
            <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
                Name or member number :
            </label>
-            <input type="text" class="text" name="name" value="[(#ENV{name}|entites_html)]" style="width:160px"/> 
+            <input type="text" class="text" name="name" value="[(#ENV{name})]" style="width:160px"/> 
        </div>
        <div style="padding-top:3px">
             <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
                 Filter by Company :
             </label>
-            <input type="text" class="company" name="company" value="#ENV{company}"/>
+            <input type="text" class="company" name="company" value="#ENV{company}" placeholder="ALL"/>
 
        </div>
        <div style="padding-top:3px">
             <label style="float: left; clear: left; display: block; width: 200px; line-height:18px">
                 Filter by Country :
             </label>
-            <input type="text" class="country" name="country" value="#ENV{country}">
+            <input type="text" class="country" name="country" value="#ENV{country}"  placeholder="ALL">
    
         </div>
         <div style="padding-top:12px;text-align:right">
@@ -76,7 +76,10 @@
 [(#ENV{name}|non)
 [(#ENV{init}|oui)#SET{where,#GET{where}|push{surname LIKE '#ENV{init}%'}}]
 ]
-[(#ENV{country}|oui)#SET{where,#GET{where}|push{country =#ENV{country}|sql_quote}}]
+<BOUCLE_pays(PAYS){nom LIKE %#ENV{country}%}>
+    [(#ENV{country}|oui)#SET{where,#GET{where}|push{country='#CODE'}}]
+</BOUCLE_pays>
+
 [(#ENV{company}|oui)
 #SET{company,#ENV{company}|filtrer_entites}
 #SET{where,#GET{where}|push{company LIKE '%#GET{company}%'}}
