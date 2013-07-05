@@ -62,7 +62,7 @@ while($r = spip_fetch_array($q)) {
             $where[] = "(LOWER(membership_fee) = '$membership_fee')";
         }
         
-        if (count($where)) {
+        if (count($where)>0) {
             $where = 'WHERE '.implode(' AND ',$where);
         } else $where = '';
         
@@ -160,16 +160,9 @@ while($r = spip_fetch_array($q)) {
         include_spip('inc/texte');
         $filename = preg_replace(',[^-_\w]+,', '_', translitteration(textebrut(typo(_T('i2_import:export_users_sites',array('date' => date('Y-m-d'),'site'=>$GLOBALS['meta']['nom_site']))))));
     
-        // Excel ?
-        if ($delim == ',')
+
             $extension = 'csv';
-        else {
-            $extension = 'xls';
-            # Excel n'accepte pas l'utf-8 ni les entites html... on fait quoi?
-            include_spip('inc/charsets');
-            $output = unicode2charset(charset2unicode($output), 'iso-8859-1');
-            $charset = 'iso-8859-1';
-        }
+
         header("Content-type: application/vnd.ms-excel;$charset");
         header("Content-disposition: attachment; filename=membres-".date('Ymd').".csv"); 
         Header("Content-Length: ".strlen($output));
