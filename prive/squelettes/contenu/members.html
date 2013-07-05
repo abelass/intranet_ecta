@@ -10,7 +10,7 @@
 [(#ENV{name}|non)
 [(#ENV{init}|oui)#SET{where,#GET{where}|push{surname LIKE '#ENV{init}%'}}]
 ]
-<BOUCLE_pays(PAYS){nom LIKE %#ENV{country}%}>
+<BOUCLE_pays(PAYS){nom LIKE %#ENV{country}%}{si #ENV{country}|oui}>
     [(#ENV{country}|oui)#SET{where,#GET{where}|push{country='#CODE'}}]
     #SET{country,#CODE}
 </BOUCLE_pays>
