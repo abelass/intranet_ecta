@@ -343,6 +343,24 @@ function ecta_declarer_tables_principales($tables_principales){
         'join'=>array(
             '   id_member_type'=>'  id_member_type',                                
         ));  
+        
+    //-- Table spip_commitee_role-----------------
+    $spip_commitee_role = array(
+        "id_commitee_role"  => "int(6) NOT NULL",
+        "title" => "varchar(50) DEFAULT '' NOT NULL",
+        );
+ 
+    $spip_commitee_role_key = array(
+        "PRIMARY KEY"   => "    id_commitee_role",
+        );
+ 
+    $tables_principales['spip_commitee_role'] = array(
+        'field' => &$spip_commitee_role ,
+        'key' => &$spip_commitee_role_key, 
+        'join'=>array(
+            '   id_commitee_role'=>'id_commitee_role',
+        ));
+
 
     return $tables_principales;
 }
