@@ -2,7 +2,8 @@
 <a class="invisible" href="#URL_ACTION_AUTEUR{delete_periode,#ENV{id_membership},#SELF}" title="delete this period"></a>
 #ENV**{begin_tag}
 <div class="block">
-    <span> <b>Role:</b> </span><select class="member_role" name="member_role[#ENV{id_commitee}][#ENV{id_membership}]">
+    <span> <b>Role:</b> </span>
+    <select class="member_role" name="member_role[#ENV{id_commitee}][#ENV{id_membership}]">
     <BOUCLE_roles(DATA){source tableau, #ENV{roles}}>
         <option value="#CLE" [(#CLE|=={#ENV{id_commitee_role}}|oui) selected="selected"]>#VALEUR</option>
     </BOUCLE_roles>
