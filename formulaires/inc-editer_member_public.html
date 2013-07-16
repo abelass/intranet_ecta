@@ -1,3 +1,5 @@
+#ENV
+
 <ul>
     <li class="fieldset">
         <h5 class="legend"><span>Identity</span></h5>
@@ -19,13 +21,14 @@
                 <span class='obligatoire'><:info_obligatoire_02:></span> 
                 <p class="explication">I am a</p>[<span class='erreur_message'>(#GET{erreurs})</span>]
                 <select name="categories_of_professional" class="categories_of_professional" id="categories_of_professional">
+                    <option value=""></option>
                    <BOUCLE_cat(CATEGORIES_OF_PROFESSIONAL){par num title}{id_category!=14}>
                        <option value="#ID_CATEGORY"[ (#ENV{categories_of_professional}|=={#ID_CATEGORY}|oui)selected="selected"]>[(#TITLE**|supprimer_numero)]</option>
                     <//B_cat_member>                        
                    </BOUCLE_cat>
                 </select>
             </li>
-            [(#SAISIE{input,categories_of_professional,
+            [(#SAISIE{input,categories_of_professional_other,
                 label=Other Position})]    
            [(#SAISIE{input, title,
                 label=<:member:label_title:>,
@@ -34,8 +37,13 @@
             [(#SAISIE{input, name,
                 obligatoire=oui,
                 label=<:member:label_name:>,
+                })]  
+            [(#SAISIE{input, surname,
+                obligatoire=oui,
+                label=<:member:label_surname:>,
                 explication=Family name
-                })]                
+                })]                  
+                              
             [(#SAISIE{input, email,
                 obligatoire=oui,
                 label=<:member:label_email:>})]
@@ -55,9 +63,11 @@
                 label=<:member:label_postal_address:>})]
 
             [(#SAISIE{input,addr4,
+                obligatoire=oui,
                 label=<:member:label_zip:>})]
 
             [(#SAISIE{input,addr5,
+                obligatoire=oui,
                 label=<:member:label_city:>})]
                 
             [(#SAISIE{pays_code, country,
@@ -93,7 +103,6 @@
         <h5 class="legend"><span><:member:label_category_membership:></span></h5>
         <p class="explication">This information is requested but please note membership is on a strictly individual basis</p>
         <fieldset>
-            
             <ul>
                 #SET{erreurs,#ENV**{erreurs}|table_valeur{membertype}}
                 <li class="editer editer_membertype obligatoire[ (#GET{erreurs}|oui)erreur] checkbox" data-id="membertype">
@@ -102,7 +111,7 @@
                 [<span class='erreur_message'>(#GET{erreurs})</span>] 
                <BOUCLE_member_type(MEMBERS_TYPE){par num title}{id_member_type!=13}>
                <div class="choix">
-                <input type="radio" value='#ID_MEMBER_TYPE'[(#ID_MEMBER_TYPE|=={#ENV{membertype}}|oui) selected="selected"] name="membertype" /><label>[(#VAL{member:label_membertype_#ID_MEMBER_TYPE}|_T)]</label>
+                <input type="radio" value='#ID_MEMBER_TYPE'[(#ID_MEMBER_TYPE|=={#ENV{membertype}}|oui) checked="checked"] name="membertype" /><label>[(#VAL{member:label_membertype_#ID_MEMBER_TYPE}|_T)]</label>
                  </div>
                </BOUCLE_member_type>
 
@@ -146,9 +155,9 @@
                 <ul>
                <BOUCLE_ass(ASSOCIATIONS){par num title}>
                    <BOUCLE_ass_member(MEMBERS_ASSOCIATIONS){id_association}{id_member=#ENV{seq}}>
-                    <li><label>[(#TITLE|supprimer_numero)]</label> <input name='associations[#ID_ASSOCIATION]' type='checkbox' value='#ID_ASSOCIATION' checked="checked"></li>
-                   </BOUCLE_ass_member>
-                <li><label>[(#TITLE|supprimer_numero)]</label> <input name='associations[#ID_ASSOCIATION]' type='checkbox' value='#ID_ASSOCIATION'></li>
+                    <li><label>[(#TITLE|supprimer_numero)]</label> <input name='associations[]' type='checkbox' value='#ID_ASSOCIATION' [(#ID_ASSOCIATION|in_array{#ENV{associations}}|oui) checked="checked"]></li>
+
+
                 <//B_ass_member>                        
                </BOUCLE_ass>
             </ul>

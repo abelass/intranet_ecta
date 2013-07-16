@@ -70,10 +70,12 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
         $valeurs['espace']='public';  
         $valeurs['taxable']=''; 
         $valeurs['art_92_93']=''; 
-        $valeurs['retired_diclaimer']='';                                               
+        $valeurs['retired_diclaimer']='';
+        $valeurs['categories_of_professional_other']='';  
+        $valeurs['categories_of_professional']='';                                                                     
         }
     
-    $valeurs['associations']=_request('associations');    
+    $valeurs['associations']=_request('associations')?_request('associations'):(isset($valeurs['associations'])?$valeurs['associations']:array());    
     //$valeurs['id_commitee_role']=_request('id_commitee_role');    
     $valeurs['_hidden'].='<input type="hidden" value="'._request('tab').'" name="tab">';
     $valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['espace'].'" name="espace">';  
@@ -120,7 +122,10 @@ function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_t
     //Formulaire public
     if(espace=='prive')$obligatoire=array('membernumber','name','surname');
     //Formulaire prive
-    else $obligatoire=array('name','surname','email','pays_code','practicein','categories_of_professional','company','addr1','zip','city','country','vat_number','membertype','nationality');
+    else {
+        $obligatoire=array('name','surname','email','practicein','company','addr1','addr4','addr5','country','vat_number','membertype','nationality');
+        if(!_request('categories_of_professional_other'))array_push($obligatoire,'categories_of_professional');
+    }
     
 
    $erreurs=array_merge($erreurs,formulaires_editer_objet_verifier('member',$seq,$obligatoire));
@@ -157,6 +162,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
     $email=_request('email');
     $espace=_request('espace');
     $cat=_request('categories_of_professional');
+    $association=_request('associations');
     
     //Formulaire Privée
     if($espace=='prive'){
@@ -247,21 +253,10 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
             }
             
                 /* association */
-                 if($association=_request('associations')){
-                    sql_delete('spip_members_associations','id_member='.$sequp);
-    
-                       foreach ($association as $value) {
-                            sql_insertq('spip_members_associations',array('id_member'=>$sequp,'id_association'=>$value));
-                    }
-    
-                 }
-    
+                 if($association) sql_delete('spip_members_associations','id_member='.$sequp);
+ 
                 /* categories_of_professional */
-                 if ($cat){
-                sql_delete('spip_members_categories_of_professional','id_member='.$sequp);
-                    }
-                    
-                    
+                 if ($cat) sql_delete('spip_members_categories_of_professional','id_member='.$sequp);
     
                 $ch = array();  
                 
@@ -311,23 +306,29 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
     //Formulaire Public
     else{
         $categories_of_professional=_request('categories_of_professional');
-        if(isset($categories_of_professional['other'])){
-            $categories_of_professional_other=$categories_of_professional['other'];
-            $cat=array(14=>14);
-            }
+        if($categories_of_professional_other=_request('categories_of_professional_other'))$cat=array(14);
+        elseif($categories_of_professional) $cat=array($categories_of_professional);
     }
     
     //Traiter le formulaire
     $res=formulaires_editer_objet_traiter('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
     
-    $seq= $res['seq'];
+    if(!intval($sequp))$sequp= $res['seq'];
     
     /* categories_of_professional */
      if (is_array($cat)){
         foreach ($cat as $value) {
-             sql_insertq('spip_members_categories_of_professional',array('id_member'=>$seq,'id_category'=>$value));
+             sql_insertq('spip_members_categories_of_professional',array('id_member'=>$sequp,'id_category'=>$value));
              }
         }
+     
+     /* association */
+     if(is_array($association)){
+           foreach ($association as $value) {
+                sql_insertq('spip_members_associations',array('id_member'=>$sequp,'id_association'=>$value));
+        }
+
+     }
 
     return $res;
 }
