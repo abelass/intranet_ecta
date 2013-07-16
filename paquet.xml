@@ -6,7 +6,7 @@
 	compatibilite="[3.0.8;3.0.*]"
 	logo="prive/themes/spip/images/ecta-64.png"
 	documentation=""
-	schema="1.0.6" 
+	schema="1.1.1" 
 >
 
 	<nom>Intranete Ecta</nom>

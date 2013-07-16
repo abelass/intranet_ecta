@@ -118,6 +118,7 @@ function ecta_declarer_tables_objets_sql($tables) {
 			"active"             => "enum('Yes','No') CHARACTER SET utf8 NOT NULL DEFAULT 'Yes'",
 			"vat_number"         => "varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT ''",
 			"special_requests"   => "text COLLATE utf8_unicode_ci NOT NULL",
+			"statut"             => "varchar(20)  DEFAULT '0' NOT NULL", 
 			"maj"                => "TIMESTAMP"
 		),
 		'key' => array(
@@ -127,6 +128,21 @@ function ecta_declarer_tables_objets_sql($tables) {
         'champs_editables'  => array('membernumber', 'gender', 'title', 'name', 'surname', 'birthdate', 'email', 'login', 'password', 'addr1', 'addr2', 'addr3', 'addr4', 'addr5', 'country', 'nationality', 'fax1_pn', 'fax1_pl', 'fax1', 'fax2_pn', 'fax2_pl', 'fax2', 'tel1_pn', 'tel1_pl', 'tel1', 'tel2_pn', 'tel2_pl', 'tel2', 'tel3_pn', 'tel3_pl', 'tel3', 'listed_in_dir', 'ohim', 'membertype', 'incommitee', 'executivebodies', 'memberofhonour', 'sponsoredby1', 'sponsoredby2', 'datemembership', 'pastcouncil', 'company', 'practicein', 'inactivitysince', 'membership_fee', 'membership_year', 'payment_error', 'method_of_payment', 'date_of_payment', 'reference', 'countrytype', '_membership', 'printed', 'otherassociations', 'pastpresident', 'active', 'vat_number', 'special_requests','last_modified'),
          'champs_versionnes' => array('membernumber', 'gender', 'title', 'name', 'surname', 'birthdate', 'email', 'login', 'password', 'addr1', 'addr2', 'addr3', 'addr4', 'addr5', 'country', 'nationality', 'fax1_pn', 'fax1_pl', 'fax1', 'fax2_pn', 'fax2_pl', 'fax2', 'tel1_pn', 'tel1_pl', 'tel1', 'tel2_pl', 'tel2', 'tel3_pn', 'tel3_pl', 'tel3', 'listed_in_dir', 'ohim', 'membertype', 'incommitee', 'executivebodies', 'memberofhonour', 'sponsoredby1', 'sponsoredby2', 'datemembership', 'pastcouncil', 'company', 'practicein', 'inactivitysince', 'membership_fee', 'membership_year', 'payment_error', 'method_of_payment', 'date_of_payment', 'reference', 'countrytype', '_membership', 'printed', 'otherassociations', 'pastpresident', 'active', 'vat_number', 'special_requests'),
          'rechercher_champs' => array("membernumber" => 8, "name" => 8, "surname" => 8, "email" => 8, "addr1" => 4, "addr2" => 4, "addr3" => 3, "addr4" => 3, "addr5" => 3, "country" => 3, "nationality" => 2, "company" => 4),
+        'statut_textes_instituer' => array(
+            'application'     => 'member:texte_statut_applications',
+            'attente_paiement'  => 'member:texte_statut_attente_paiement',           
+            'accepte'      => 'member:texte_statut_accepte',
+        ),
+        'statut'=> array(
+            array(
+                'champ'     => 'statut',
+                'publie'    => 'accepte',
+                'previsu'   => 'accepte,attente_paiement,application',
+                'post_date' => 'date', 
+                'exception' => array('statut','tout')
+            )
+        ),
+        'texte_changer_statut' => 'member:texte_changer_statut_member', 
 		'tables_jointures'  => array(),
 		
 

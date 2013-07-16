@@ -1,5 +1,3 @@
-#ENV
-
 <ul>
     <li class="fieldset">
         <h5 class="legend"><span>Identity</span></h5>
@@ -156,8 +154,6 @@
                <BOUCLE_ass(ASSOCIATIONS){par num title}>
                    <BOUCLE_ass_member(MEMBERS_ASSOCIATIONS){id_association}{id_member=#ENV{seq}}>
                     <li><label>[(#TITLE|supprimer_numero)]</label> <input name='associations[]' type='checkbox' value='#ID_ASSOCIATION' [(#ID_ASSOCIATION|in_array{#ENV{associations}}|oui) checked="checked"]></li>
-
-
                 <//B_ass_member>                        
                </BOUCLE_ass>
             </ul>

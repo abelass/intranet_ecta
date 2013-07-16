@@ -64,6 +64,7 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
     if(_request(exec)){
         $valeurs['espace']='prive';
         $valeurs['tab']=_request('tab');
+        $statut='accepte';        
         }
     //Formulaire privé   
     else {
@@ -72,15 +73,17 @@ function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_tr
         $valeurs['art_92_93']=''; 
         $valeurs['retired_diclaimer']='';
         $valeurs['categories_of_professional_other']='';  
-        $valeurs['categories_of_professional']='';                                                                     
+        $statut='application';                                                                        
         }
-    
+    $valeurs['categories_of_professional']='';  
     $valeurs['associations']=_request('associations')?_request('associations'):(isset($valeurs['associations'])?$valeurs['associations']:array());    
     //$valeurs['id_commitee_role']=_request('id_commitee_role');    
     $valeurs['_hidden'].='<input type="hidden" value="'._request('tab').'" name="tab">';
-    $valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['espace'].'" name="espace">';  
+    $valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['espace'].'" name="espace">'; 
+    $valeurs['_hidden'].='<input type="hidden" value="'. $statut.'" name="statut">';      
+    
     if(intval($valeurs['id_auteur']))$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['id_auteur'].'" name="id_auteur">';  
-    if(intval($valeurs['membernumber']))$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['membernumber'].'" name="membernumber">';  
+    if(isset($valeurs['membernumber']))$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['membernumber'].'" name="membernumber">';  
     if($valeurs['name'])$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['name'].'" name="name">';
     if($valeurs['surname'])$valeurs['_hidden'].='<input type="hidden" value="'. $valeurs['surname'].'" name="surname">';    
     return $valeurs;
@@ -120,7 +123,7 @@ function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_t
         if ($login=sql_getfetsel('login','spip_auteurs',$where)) $erreurs['login']="This login already exists";
     }
     //Formulaire public
-    if(espace=='prive')$obligatoire=array('membernumber','name','surname');
+    if($espace=='prive')$obligatoire=array('membernumber','name','surname');
     //Formulaire prive
     else {
         $obligatoire=array('name','surname','email','practicein','company','addr1','addr4','addr5','country','vat_number','membertype','nationality');
@@ -315,6 +318,8 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
     
     if(!intval($sequp))$sequp= $res['seq'];
     
+    echo $sequp;
+    
     /* categories_of_professional */
      if (is_array($cat)){
         foreach ($cat as $value) {
@@ -324,6 +329,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
      
      /* association */
      if(is_array($association)){
+         echo 'ok';
            foreach ($association as $value) {
                 sql_insertq('spip_members_associations',array('id_member'=>$sequp,'id_association'=>$value));
         }

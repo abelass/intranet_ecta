@@ -107,10 +107,15 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'retirer_lien_member' => 'Retirer ce member',
 	'retirer_tous_liens_members' => 'Retirer tous les members',
 
+
 	// T
 	'texte_ajouter_member' => 'Ajouter un member',
-	'texte_changer_statut_member' => 'Ce member est :',
+	'texte_changer_statut_member' => 'Member status:',
 	'texte_creer_associer_member' => 'Créer et associer un member',
+    'texte_statut_accepte'=>' accepted',	
+    'texte_statut_applications'=>' application',
+    'texte_statut_attente_paiement'=>' waiting for paiment',    
+    	
 	'titre_langue_member' => 'Langue de ce member',
 	'titre_logo_member' => 'Logo de ce member',
 	'titre_member' => 'Member',
