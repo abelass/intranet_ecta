@@ -9,7 +9,7 @@
 	schema="1.1.1" 
 >
 
-	<nom>Intranete Ecta</nom>
+	<nom>Intranet Ecta</nom>
 
 	<!-- cette balise peut etre presente plusieurs fois s'il y a plusieurs auteurs --> 
 	<auteur lien='http://websimple.be'>Rainer Müller</auteur>
@@ -17,7 +17,9 @@
 	<licence>GNU/GPL</licence>
 
 	<necessite nom="saisies" compatibilite="[1.24.0;]" /> 
-	<necessite nom="pays" compatibilite="[2.1.1;]" /> 	
+	<necessite nom="pays" compatibilite="[2.1.1;]" />
+	<necessite nom="facteur" compatibilite="[2.4.5;]" />	 	
+	
 	
 	<pipeline nom="autoriser" inclure="ecta_autorisations.php" /> 
 	<pipeline nom="formulaire_traiter" inclure="ecta_pipelines.php" /> 	

@@ -299,9 +299,9 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
                             }
             
                         $envoyer_mail = charger_fonction('envoyer_mail','inc');
-                        //$envoyer_mail($GLOBALS['meta']['email_webmaster'], "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail, true);
-                        //$envoyer_mail('websolutions@mychacra.net', "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail, true);
-                         $envoyer_mail('ecta@ecta.org', "Modification of a public profile (Nr ".$aut['membernumber'].")", $message_mail, true);
+                        //$envoyer_mail($GLOBALS['meta']['email_webmaster'], "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail);
+                        $envoyer_mail('websolutions@mychacra.net', "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail);
+                         //$envoyer_mail('ecta@ecta.org', "Modification of a public profile (Nr ".$aut['membernumber'].")", $message_mail);
                         }               
                         spip_log($message_mail,'teste');                    
                     }
@@ -311,14 +311,14 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
         $categories_of_professional=_request('categories_of_professional');
         if($categories_of_professional_other=_request('categories_of_professional_other'))$cat=array(14);
         elseif($categories_of_professional) $cat=array($categories_of_professional);
+         $envoyer_mail = charger_fonction('envoyer_mail','inc');
+         $envoyer_mail('rainer@websimple.be', "Modification of a public profile (Nr ".$_POST['membernumber'].")", 'teste');
     }
     
     //Traiter le formulaire
     $res=formulaires_editer_objet_traiter('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
     
     if(!intval($sequp))$sequp= $res['seq'];
-    
-    echo $sequp;
     
     /* categories_of_professional */
      if (is_array($cat)){
@@ -329,7 +329,6 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
      
      /* association */
      if(is_array($association)){
-         echo 'ok';
            foreach ($association as $value) {
                 sql_insertq('spip_members_associations',array('id_member'=>$sequp,'id_association'=>$value));
         }
