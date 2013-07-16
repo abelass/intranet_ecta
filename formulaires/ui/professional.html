@@ -8,15 +8,15 @@
             #COMPANY
         </li>
             [(#SAISIE{pays_code, practicein,
-        label=Practice in})]
+                label=Practice in})]
         
             [(#SAISIE{input, vat_number,
-        label=Vat Number})]        
+                label=<:member:label_vat_numberl:>})]        
         
         [(#SAISIE{input, inactivitysince,
                         label=In activity since})]
         <li>
-            <label>Categories of Professional</label> 
+            <label><:member:label_categoriesofprofessional:></label> 
             <fieldset>
                 <ul>
                <BOUCLE_cat(CATEGORIES_OF_PROFESSIONAL){par num title}>

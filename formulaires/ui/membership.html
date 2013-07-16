@@ -129,23 +129,22 @@
             [(#SAISIE{input, datemembership,
                 label=<:member:label_datemembership:>})]
             <li>
-                <label>Other Association
-                </label>
-                <fieldset><ul>
-
-           <BOUCLE_ass(ASSOCIATIONS){par num title}>
-               <BOUCLE_ass_member(MEMBERS_ASSOCIATIONS){id_association}{id_member=#ENV{seq}}>
-                <li><label>[(#TITLE|supprimer_numero)]</label> <input name='associations[#ID_ASSOCIATION]' type='checkbox' value='#ID_ASSOCIATION' checked="checked"></li>
-               </BOUCLE_ass_member>
-            <li><label>[(#TITLE|supprimer_numero)]</label> <input name='associations[#ID_ASSOCIATION]' type='checkbox' value='#ID_ASSOCIATION'></li>
-            <//B_ass_member>                        
-           </BOUCLE_ass>
-
-                </ul></fieldset>
+                <label>Other Association</label>
+                <fieldset>
+                    <ul>
+                   <BOUCLE_ass(ASSOCIATIONS){par num title}>
+                       <BOUCLE_ass_member(MEMBERS_ASSOCIATIONS){id_association}{id_member=#ENV{seq}}>
+                        <li><label>[(#TITLE|supprimer_numero)]</label> <input name='associations[#ID_ASSOCIATION]' type='checkbox' value='#ID_ASSOCIATION' checked="checked"></li>
+                       </BOUCLE_ass_member>
+                    <li><label>[(#TITLE|supprimer_numero)]</label> <input name='associations[#ID_ASSOCIATION]' type='checkbox' value='#ID_ASSOCIATION'></li>
+                    <//B_ass_member>                        
+                   </BOUCLE_ass>
+                    </ul>
+                </fieldset>
+            </li>
                 [(#SAISIE{selection, pastcouncil,
-                                label=<:member:label_pastcouncil:>,
-                                datas=[(#ARRAY{'',Make a Choice,Yes,Yes,No,No})]})]
-
+                      label=<:member:label_pastcouncil:>,
+                       datas=[(#ARRAY{'',Make a Choice,Yes,Yes,No,No})]})]
          </ul>
     
     </div><!-- membership -->
