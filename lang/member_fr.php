@@ -11,7 +11,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	
     //E
      'explication_nationality' => 'I declare that, at the date of this application, I am a national of',
-	'explication_practicein' => 'exercise my trade mark activities in.',     
+	'explication_practicein' => 'I exercise my trade mark activities in.',     
 	'explication_vat_numberl' => 'Your Local VAT/Tax ID number is required by European Law since January 2011. If you do not have a local tax number please mark N/A.',    
 
 	// I
@@ -44,6 +44,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'label_datestamp' => 'Datestamp',
 	'label_email' => 'Email',
 	'label_executivebodies' => 'Executive Bodies',
+	'label_fax' => 'Fax',	
 	'label_fax1' => 'Fax1',
 	'label_fax1_pl' => 'Fax1 pl',
 	'label_fax1_pn' => 'Fax1 pn',
@@ -97,7 +98,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'label_tel3' => 'Tel3',
 	'label_tel3_pl' => 'Tel3 pl',
 	'label_tel3_pn' => 'Tel3 pn',
-	'label_label_telephone' => 'Telephone',	
+	'label_telephone' => 'Telephone',	
 	'label_title' => 'Title',
 	'label_vat_number' => 'Vat number (or Tax ID)',
 	'label_zip' => 'ZIP',	

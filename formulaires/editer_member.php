@@ -120,7 +120,7 @@ function formulaires_editer_member_verifier_dist($seq='new', $retour='', $lier_t
     //Formulaire public
     if(espace=='prive')$obligatoire=array('membernumber','name','surname');
     //Formulaire prive
-    else $obligatoire=array('name','surname','email','pays_code','practicein','categories_of_professional','company','addr1','zip','city','country','vat_number','membertype');
+    else $obligatoire=array('name','surname','email','pays_code','practicein','categories_of_professional','company','addr1','zip','city','country','vat_number','membertype','nationality');
     
 
    $erreurs=array_merge($erreurs,formulaires_editer_objet_verifier('member',$seq,$obligatoire));

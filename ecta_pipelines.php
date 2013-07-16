@@ -91,14 +91,17 @@ function ecta_pre_insertion($flux){
     }
     return $flux;
 }
+
 function ecta_header_prive($flux){
     $flux .= '<link rel="stylesheet" href="' .find_in_path('css/ecta_prive.css').'" type="text/css" media="all" />';
     return $flux;
 }
 
-
+function ecta_insert_head($flux){
+    $flux .= '<link rel="stylesheet" href="' .find_in_path('css/ecta_public.css').'" type="text/css" media="all" />';
+    return $flux;
+}
 function ecta_jqueryui_plugins($scripts){
-
    $scripts[] = "jquery.ui.autocomplete";
    $scripts[] = "jquery.ui.tabs";
    $scripts[] = "jquery.ui.datepicker";   

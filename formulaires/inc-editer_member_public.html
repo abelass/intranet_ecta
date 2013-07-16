@@ -1,64 +1,49 @@
 <ul>
-    <li>
-        <label>Identity</label>
+    <li class="fieldset">
+        <h5 class="legend"><span>Identity</span></h5>
         <fieldset>
          <ul>
-            [(#SAISIE{pays_code, 
-                nationality,
-                oubligatoire=oui
+            [(#SAISIE{pays_code, nationality,
+                obligatoire=oui,
                 label=<:member:label_nationality:>, 
-                explication=<:member:explication_nationality:>               
-                })]
-                
+                explication=<:member:explication_nationality:>,               
+                })]                
             [(#SAISIE{pays_code, practicein,
-                oubligatoire=oui,
+                obligatoire=oui,
                 label=Practice in,
-                explication=<:member:explication_practicein:>                    
+                explication=<:member:explication_practicein:>,                    
                 })]
-                
             #SET{erreurs,#ENV**{erreurs}|table_valeur{categories_of_professional}}
-            <li class="editer editer_categories_of_professional obligatoire[ (#GET{erreurs}|oui)erreur] checkbox"[ data-id="categories_of_professional"]>
-                <label><:member:label_position:>
-                <p>I am a</p>
-                    <span class='obligatoire'>#ENV*{info_obligatoire}</span></label> 
-                    [<span class='erreur_message'>(#GET{erreurs})</span>]
-                    <ul>
-                   <BOUCLE_cat(CATEGORIES_OF_PROFESSIONAL){par num title}>
-                       <BOUCLE_cat_member(MEMBERS_CATEGORIES_OF_PROFESSIONAL){id_category}{id_member=#ENV{seq}}>
-                        <li><label>[(#TITLE|supprimer_numero)]</label> <input name='categories_of_professional[#ID_CATEGORY]' type='checkbox' value='#ID_CATEGORY' checked="checked"></li>
-                       </BOUCLE_cat_member>
-                    <li><label>[(#TITLE|supprimer_numero)]</label> <input name='categories_of_professional[#ID_CATEGORY]' type='checkbox' value='#ID_CATEGORY'></li>
+            <li class="editer editer_categories_of_professional obligatoire[ (#GET{erreurs}|oui)erreur] select" data-id="categories_of_professional">
+                <label><:member:label_position:></label>
+                <span class='obligatoire'><:info_obligatoire_02:></span> 
+                <p class="explication">I am a</p>[<span class='erreur_message'>(#GET{erreurs})</span>]
+                <select name="categories_of_professional" class="categories_of_professional" id="categories_of_professional">
+                   <BOUCLE_cat(CATEGORIES_OF_PROFESSIONAL){par num title}{id_category!=14}>
+                       <option value="#ID_CATEGORY"[ (#ENV{categories_of_professional}|=={#ID_CATEGORY}|oui)selected="selected"]>[(#TITLE**|supprimer_numero)]</option>
                     <//B_cat_member>                        
                    </BOUCLE_cat>
-                  </ul>
-
+                </select>
             </li>
-            
-                
-            [(#SAISIE{input,categories_of_professional[other],
+            [(#SAISIE{input,categories_of_professional,
                 label=Other Position})]    
-                        
            [(#SAISIE{input, title,
                 label=<:member:label_title:>,
                 explication=My title is
                 })] 
-
             [(#SAISIE{input, name,
                 obligatoire=oui,
                 label=<:member:label_name:>,
                 explication=Family name
-                })]
-                
+                })]                
             [(#SAISIE{input, email,
+                obligatoire=oui,
                 label=<:member:label_email:>})]
            </ul>
         </fieldset>
     </li>
-
-
-
-    <li>
-        <label><:member:label_company:></label>
+    <li class="fieldset">
+        <h5 class="legend"><span><:member:label_company:></span></h5>
         <fieldset>
             <ul>
             [(#SAISIE{input, company,
@@ -86,10 +71,10 @@
                 <input name="tel1" type="text" class="text tel" id="tel1" value="#ENV{tel1}">
             </li>
             <li>
-                <div class="label">Fax 1</div>
+                <div class="label">Fax</div>
                 <p class="explication">+ national prefix | regional prefix | number</p>
-                + <input name="fax1_pn" type="text" class="text-short" id="fax1_pn" value="#ENV{fax1_pn}">
-                <input name="fax1_pl" type="text" class="text-short" id="fax1_pl" value="#ENV{fax1_pl}">
+                + <input name="fax1_pn" type="text" class="text-short" id="fax1_pn" style="width:30px;" value="#ENV{fax1_pn}">
+                <input name="fax1_pl" type="text" class="text-short" id="fax1_pl" style="width:30px;" value="#ENV{fax1_pl}">
                 <input name="fax1" type="text" class="text-medium" id="infax1" value="#ENV{fax1}">
             </li>
             [(#SAISIE{oui_non,taxable,
@@ -97,31 +82,30 @@
                  
             [(#SAISIE{input, vat_number,
                 obligatoire=oui,
-                label=<:member:label_vat_numberl:>,
+                label=<:member:label_vat_number:>,
                 explication=<:member:explication_vat_numberl:>})]   
             </ul>
         </fieldset>
     </li>
     
 
-    <li>
-        <label><:member:label_category_membership:></label>
+    <li class="fieldset">
+        <h5 class="legend"><span><:member:label_category_membership:></span></h5>
         <p class="explication">This information is requested but please note membership is on a strictly individual basis</p>
         <fieldset>
             
             <ul>
                 #SET{erreurs,#ENV**{erreurs}|table_valeur{membertype}}
-                <li class="editer editer_membertype obligatoire[ (#GET{erreurs}|oui)erreur] checkbox"[ data-id="membertype"]>
+                <li class="editer editer_membertype obligatoire[ (#GET{erreurs}|oui)erreur] checkbox" data-id="membertype">
                 <label>Choose a category </label> 
-                <span class='obligatoire'>#ENV*{info_obligatoire}</span></label>
+                <span class='obligatoire'><span><:info_obligatoire_02:></span></label>
                 [<span class='erreur_message'>(#GET{erreurs})</span>] 
-                <B_member_type>
-                <select name="membertype" id="membertype">
-                   <BOUCLE_member_type(MEMBERS_TYPE){par num title}{id_member_type!=13}>
-                    <input type="radio" value='#ID_MEMBER_TYPE'[(#ID_MEMBER_TYPE|=={#ENV{membertype}}|oui) selected="selected"] name="membertype" /><label>[(#VAL{members:label_membertype_#ID_MEMBER_TYPE}|_T)]</label>
-                   </BOUCLE_member_type>
-                </select>
-                </B_member_type>
+               <BOUCLE_member_type(MEMBERS_TYPE){par num title}{id_member_type!=13}>
+               <div class="choix">
+                <input type="radio" value='#ID_MEMBER_TYPE'[(#ID_MEMBER_TYPE|=={#ENV{membertype}}|oui) selected="selected"] name="membertype" /><label>[(#VAL{member:label_membertype_#ID_MEMBER_TYPE}|_T)]</label>
+                 </div>
+               </BOUCLE_member_type>
+
             </li> 
             [(#SAISIE{radio,art_92_93,
                 label=(Art. 92 and 93 EC Regulation No 207/2009 dated 26 February 2009),
@@ -144,8 +128,8 @@
             </ul>
         </fieldset>
     </li>
-    <li>
-        <label>Associate, Affiliate, Student, Recently Graduated members only</label>
+    <li class="fieldset">
+        <h5 class="legend"><span>Associate, Affiliate, Student, Recently Graduated members only</span></h5>
         <fieldset>
             <ul>
                 [(#SAISIE{input, sponsoredby1,
@@ -156,7 +140,7 @@
         </fieldset>
     </li>        
     <li>
-        <label>IP Associations</label>
+        <h5 class="legend"><span>IP Associations</span></h5>
         <p class="explication">I am a member of the following IP Associations</p>
             <fieldset>
                 <ul>
@@ -169,5 +153,5 @@
                </BOUCLE_ass>
             </ul>
         </fieldset>
-            </li>
+   </li>
 </ul>
