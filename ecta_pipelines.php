@@ -47,7 +47,7 @@ function ecta_formulaire_traiter($flux){
 //Faire en sorte que l'id:auteur crée soit enregistré dans la bd  
 function ecta_pre_insertion($flux){
 
-    if ($flux['args']['table']=='spip_members'){
+    if ($flux['args']['table']=='spip_members' AND _request('exec')){
        
             $valeurs['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
             if (!trim($valeurs['nom'])) $valeurs['nom'] = '-';

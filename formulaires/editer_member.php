@@ -61,7 +61,7 @@ function formulaires_editer_member_identifier_dist($seq='new', $retour='', $lier
 function formulaires_editer_member_charger_dist($seq='new', $retour='', $lier_trad=0, $config_fonc='', $row=array(), $hidden=''){
     $valeurs = formulaires_editer_objet_charger('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
     //Formulaire public
-    if(_request(exec)){
+    if(_request('exec')){
         $valeurs['espace']='prive';
         $valeurs['tab']=_request('tab');
         $statut='accepte';        
@@ -308,17 +308,20 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
         }
     //Formulaire Public
     else{
+         $notifications = charger_fonction('notifications', 'inc');
         $categories_of_professional=_request('categories_of_professional');
         if($categories_of_professional_other=_request('categories_of_professional_other'))$cat=array(14);
         elseif($categories_of_professional) $cat=array($categories_of_professional);
-         $envoyer_mail = charger_fonction('envoyer_mail','inc');
-         $envoyer_mail('rainer@websimple.be', "Modification of a public profile (Nr ".$_POST['membernumber'].")", 'teste');
+        
     }
     
     //Traiter le formulaire
     $res=formulaires_editer_objet_traiter('member',$seq,'',$lier_trad,$retour,$config_fonc,$row,$hidden);
     
+    
+    
     if(!intval($sequp))$sequp= $res['seq'];
+    
     
     /* categories_of_professional */
      if (is_array($cat)){
@@ -335,6 +338,31 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
 
      }
 
+    if($espace=='public'){
+        // On récupère les entrées du formulaire
+        $champs=formulaires_editer_member_charger_dist();
+        $contexte=array();
+        $exclus=array('espace','statut');
+        foreach($champs as $champ=>$valeur){
+            if(!in_array(trim($champ),$exclus)){
+                if($champ=='categories_of_professional' AND $categories_of_professional=_request($champ))
+                    $contexte[$champ]=supprimer_numero(sql_getfetsel('title','spip_categories_of_professional','id_category='.$categories_of_professional));
+                elseif($champ=='associations' AND $associations=_request($champ)){
+                    $sql=sql_select('title','spip_associations','id_association IN ('.implode(', ',$associations).')');
+                    $ass=array();
+                    while($data=sql_fetch($sql)){
+                        spip_log($data,'teste');
+                        $ass[]=supprimer_numero($data['title']);
+                    }
+                    $contexte[$champ]=implode(',',$ass);
+                }
+                else$contexte[$champ]=_request($champ);
+                }
+            else unset($champ);
+           }
+        $notifications('member_application',$sequp,$contexte);
+        }
+    
     return $res;
 }
 ?>

@@ -1,0 +1,22 @@
+#INCLURE{fond=notifications/inc-haut}
+
+<p>Dear,</p>
+
+<p>Followin application has been registred:</p>
+
+</B_data>
+<ul>
+<BOUCLE_data(DATA){source tableau, #ENV**}{cle !IN lang,date,date_default,date_redac,date_redac_default}>
+   [<li>#CLE: (#VALEUR|is_array|?{[(#VALEUR|implode{','})],#VALEUR})</li>]
+</BOUCLE_data>
+</ul>
+</B_data>
+<p>Please fin here the detail of the applicant: <a href="[(#URL_ECRIRE{member,seq=#SEQ}|url_absolue)]">[(#URL_ECRIRE{member,seq=#SEQ}|url_absolue)]</a></p>
+
+<p>A conformation mail has been sent to : <a href="mailto:[(#EMAIL)]">[(#EMAIL)]</a></p>
+
+<p>Yours sincerely,</p>
+
+#FILTRE{filtrer_entites|trim}
+
+#INCLURE{fond=notifications/inc-bas}
