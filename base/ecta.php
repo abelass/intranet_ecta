@@ -378,7 +378,7 @@ function ecta_declarer_tables_principales($tables_principales){
     return $tables_principales;
 }
 
-function spip_declarer_tables_auxiliaires($tables_auxiliaires){
+function ecta_declarer_tables_auxiliaires($tables_auxiliaires){
      
     //Table spip_members_associations
     $spip_members_associations = array(

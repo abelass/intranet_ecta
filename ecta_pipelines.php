@@ -48,46 +48,16 @@ function ecta_formulaire_traiter($flux){
 function ecta_pre_insertion($flux){
 
     if ($flux['args']['table']=='spip_members' AND _request('exec')){
-       
-            $valeurs['nom'] = (_request('title')?_request('title').' ':'')._request('name').' '._request('surname');
-            if (!trim($valeurs['nom'])) $valeurs['nom'] = '-';
-        
-                $sql = array( 
-                'nom' => $nom, 
-                'bio' => '', 
-                'email' => _request('email'), 
-                'nom_site' => '', 
-                'url_site' => '', 
-                'login' => _request('login'), 
-                'pass' => md5( '1545607746460151d1d63984.51604272'._request('password')) , 
-                'low_sec' => '', 
-                'statut' => '6forum', 
-                'maj' =>  date('Y-m-d H:i:s'), 
-                'pgp' => '', 
-                'htpass' => '', 
-                'en_ligne' => '', 
-                'alea_actuel' => '1545607746460151d1d63984.51604272', 
-                'alea_futur' => '157799821346015be7c75233.74847129', 
-                'prefs' => 'a:1:{s:3:\"cnx\";s:0:\"\";}', 
-                'cookie_oubli' => '', 
-                'source' => 'spip', 
-                'lang' => 'en');
-                
-        $id_auteur=sql_insertq('spip_auteurs', $sql);
-        set_request('id_auteur',$id_auteur);
-        // SPIP-Liste : Abonnement à la liste "membres" (id = 4)
-        $sql = array('id_auteur' => $id_auteur,'id_liste'=>4,'statut'=>'valide','format'=>'html');
-        sql_insertq('spip_auteurs_listes', $sql);
-        
-        spip_log('actualisation profil intranet','sclp');
-        $flux=array(
-            'data'=>array('id_auteur'=>$id_auteur)
+      $inserer_auteur=charger_fonction('inserer_auteur','inc');
+      $contexte=array(
+            'title'=>_request('title'),
+            'name'=>_request('name'), 
+            'surname'=>_request('surname'),  
+            'email'=>_request('email'), 
+            'login'=>_request('login'),    
+            'password'=>_request('password'),                                       
             );
-        $flux['args']['args'][4]['email']=_request('email');    
-        
-        $traitement=charger_fonction('editer_auteur_traiter_listes','inc');
-        $flux=$traitement($flux);
-        $flux['data']['id_auteur'] = $id_auteur;
+        $flux['data']['id_auteur'] = $inserer_auteur($contexte);
     }
     return $flux;
 }

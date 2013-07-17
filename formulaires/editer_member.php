@@ -339,7 +339,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
      }
 
     if($espace=='public'){
-        // On récupère les entrées du formulaire
+        // On récupère les entrées du formulaire pour l'envoi des mail
         $champs=formulaires_editer_member_charger_dist();
         $contexte=array();
         $exclus=array('espace','statut');
@@ -360,6 +360,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
                 }
             else unset($champ);
            }
+        // envoi des mails
         $notifications('member_application',$sequp,$contexte);
         }
     

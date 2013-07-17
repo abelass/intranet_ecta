@@ -16,21 +16,20 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
  * @param int $id_forum
  */
 function notifications_member_application_dist($quoi, $seq, $options) {
-    $options['seq']=$seq;  
-    $email_client=$options['email'];
     $definitions = charger_fonction('definitions', 'inc');
-    $envoyer_mail = charger_fonction('envoyer_mail','inc');
+    $envoyer_mail = charger_fonction('envoyer_mail','inc');    
+    
+    $options['seq']=$seq;  
+    
+    $email_client=$options['email'];
+    $email_admin=$definitions('dest_admin');
     
     $subject_client='Ecta- Confirmation of your application';
     $subject_admin='Ecta- Confirmation of application';  
     
     $message_client=recuperer_fond('notifications/member_application_client',$options);
-    $message_admin=recuperer_fond('notifications/member_application_admin',$options);    
-     
-    $dest_admin=$definitions('dest_admin');
-    
-    spip_log($definitions('dest_admin'),'teste');
-
+    $message_admin=recuperer_fond('notifications/member_application_admin',$options);  
+      
     //
     // Envoyer les emails
     //
@@ -39,7 +38,7 @@ function notifications_member_application_dist($quoi, $seq, $options) {
     $envoyer_mail($email_client,$subject_client,$message_client);
     
     //Admin
-    $envoyer_mail($dest_admin,$subject_admin,array('html'=>$message_admin));
+    $envoyer_mail($email_admin,$subject_admin,array('html'=>$message_admin));
     
 }
 ?>
