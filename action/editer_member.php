@@ -100,12 +100,10 @@ function member_instituer($seq, $c, $calcul_rub=true) {
         $notifications = charger_fonction('notifications', 'inc');
         if($statut_ancien=="application" AND $s=='attente_paiement')$notifications('member_attente_paiement',$seq,$c);
         if($statut_ancien=="attente_paiement" AND $s=='accepte'){
-            //Si pas encore lié à un auteur on le crée
-            if(!isset($row['id_auteur']) OR $row['id_auteur']==0){
-                list($login,$reste)=Explode('@',$row['email']);
+            list($login,$reste)=Explode('@',$row['email']);
                 $password=substr(md5(time()),0,10);
-                $inserer_auteur=charger_fonction('inserer_auteur','inc');
-                      $contexte=array(
+                
+                 $contexte=array(
                         'title'=>$row['title'],
                         'name'=>$row['name'], 
                         'surname'=>$row['surname'],  
@@ -113,6 +111,10 @@ function member_instituer($seq, $c, $calcul_rub=true) {
                         'login'=>$login,    
                         'password'=>$password,
                         );
+            //Si pas encore lié à un auteur on le crée
+            if(!isset($row['id_auteur']) OR $row['id_auteur']==0){
+          
+                $inserer_auteur=charger_fonction('inserer_auteur','inc');
                    $id_auteur = $inserer_auteur($contexte);
                    //lier le membre à l'auteur
                    sql_updateq('spip_members',array('id_auteur'=>$id_auteur,'login'=>$login,'password'=>$password));
