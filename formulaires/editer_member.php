@@ -285,6 +285,7 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
                     
                     //Les mails aux admins
                     if(intval($seq)){
+                        $definitions = charger_fonction('definitions', 'inc');
                         include_spip('inc/session');
                         $id_auteur_session=session_get('id_auteur');    
                         $nom_session=sql_getfetsel('nom','spip_auteurs','id_auteur='.$id_auteur_session);
@@ -299,9 +300,8 @@ function formulaires_editer_member_traiter_dist($seq='new', $retour='', $lier_tr
                             }
             
                         $envoyer_mail = charger_fonction('envoyer_mail','inc');
-                        //$envoyer_mail($GLOBALS['meta']['email_webmaster'], "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail);
-                        $envoyer_mail('websolutions@mychacra.net', "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail);
-                         //$envoyer_mail('ecta@ecta.org', "Modification of a public profile (Nr ".$aut['membernumber'].")", $message_mail);
+                        $envoyer_mail($definitions('dest_admin'), "Modification of a public profile (Nr ".$_POST['membernumber'].")", $message_mail);
+
                         }               
                         spip_log($message_mail,'teste');                    
                     }
