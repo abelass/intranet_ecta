@@ -20,7 +20,7 @@ function member_instituer($seq, $c, $calcul_rub=true) {
     include_spip('inc/rubriques');
     include_spip('inc/modifier');
 
-    $row = sql_fetsel('statut,id_auteur,name,surname,title,email', 'spip_members','seq='.intval($seq));
+    $row = sql_fetsel('statut,id_auteur,name,surname,title,email,login,password', 'spip_members','seq='.intval($seq));
 
     $statut_ancien = $statut = $row['statut'];
 
@@ -97,30 +97,58 @@ function member_instituer($seq, $c, $calcul_rub=true) {
 
     //Actions après changement de statut
     if($statut_ancien!=$s){
+        $id_auteur=isset($row['id_auteur'])?$row['id_auteur']:'';
+        if($id_auteur==0)$id_auteur='';
+        $email=isset($row['email'])?$row['email']:'';
         $notifications = charger_fonction('notifications', 'inc');
+        
         if($statut_ancien=="application" AND $s=='attente_paiement')$notifications('member_attente_paiement',$seq,$c);
-        if($statut_ancien=="attente_paiement" AND $s=='accepte'){
-            list($login,$reste)=Explode('@',$row['email']);
-                $password=substr(md5(time()),0,10);
+        elseif($statut_ancien=="attente_paiement" AND $s=='accepte'){
+            include_spip('action/inscrire_auteur');
+            $name=$row['name'];
+            $surname=$row['surname'];
+            $login=test_login($name.$surname,$email);
                 
-                 $contexte=array(
-                        'title'=>$row['title'],
-                        'name'=>$row['name'], 
-                        'surname'=>$row['surname'],  
-                        'email'=>$row['email'], 
-                        'login'=>$login,    
-                        'password'=>$password,
+            $contexte=array(
+                    'title'=>$row['title'],
+                    'name'=>$name, 
+                    'surname'=>$surname,  
+                    'email'=>$row['email'], 
+                    'login'=>$login,    
+                    );
+            //Si pas encore lié à un auteur
+            if(!$id_auteur){
+                //Si il y a déjà un auteur avec ce mail on le prend et on actualise avec les nouvelles données
+                if($email){
+                    $auteur=sql_fetsel('id_auteur,statut','spip_auteurs','email='.sql_quote($email));
+                    $id_auteur=$auteur['id_auteur'];
+                    
+                    $valeurs=array( 
+                        'login' => $login,
                         );
-            //Si pas encore lié à un auteur on le crée
-            if(!isset($row['id_auteur']) OR $row['id_auteur']==0){
-          
-                $inserer_auteur=charger_fonction('inserer_auteur','inc');
-                   $id_auteur = $inserer_auteur($contexte);
-                   //lier le membre à l'auteur
-                   sql_updateq('spip_members',array('id_auteur'=>$id_auteur,'login'=>$login,'password'=>$password));
+                    //Si le compte est désactivé, on l'active
+                    if (!in_array($auteur['statut'],array('6forum','1comite','0minirezo')))$valeurs['statut']='6forum';
+                    sql_updateq('spip_auteurs',$valeurs,'id_auteur='.$id_auteur);
+                    }
+                // si on a toujours pas récupéré l'id_auteur, on crée un nouveau
+                if(!$id_auteur){
+                    $changer_statut=false;
+                    $inserer_auteur=charger_fonction('inserer_auteur','inc');
+                    $id_auteur = $inserer_auteur($contexte);                    
+                }
+                    $password=creer_pass_pour_auteur($id_auteur);
+                    $contexte['password']=$password;
+                //lier le membre à l'auteur
+                   sql_updateq('spip_members',array('id_auteur'=>$id_auteur,'login'=>$login,'password'=>$password),'seq='.$seq);
                 }
             $notifications('member_accepte',$seq,array_merge($c,$contexte)); 
             }
+        else{
+            include_spip('action/editer_auteur');
+            $relation_statut=array('application'=>'nouveau','attente_paiement'=>'nouveau','accepte'=>'6forum');
+            auteur_instituer($id_auteur,array('statut'=>$relation_statut[$s]));
+        }
+        
         }
 
 
