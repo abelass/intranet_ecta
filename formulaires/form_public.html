@@ -186,8 +186,8 @@
 								<label>Country</label>  
 								<select name="country" id="incountry" style="width:195px">
 								<option value=''>Make a choice</option>
-<BOUCLE_country(GEO_PAYS){par pays}>
-<option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{country}}|oui)selected]>#PAYS</option>
+<BOUCLE_country(PAYS){par multi nom}>
+<option value='#CODE' [(#CODE|=={#ENV{country}}|oui)selected="selected"]>#NOM</option>
 </BOUCLE_country>
 								</select>
 								<input name="country_test" type="hidden" value="#ENV{country}"/>
@@ -198,10 +198,9 @@
 							<label>Nationality</label> 
 							<select name="nationality" id="nationality" style="width:195px">
 								<option value=''>Make a choice</option>
-<BOUCLE_nationality(GEO_PAYS){par pays}>
-<option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{nationality}}|oui)selected]>#PAYS</option>
-</BOUCLE_nationality>
-
+<BOUCLE_pays(PAYS){par multi nom}>
+    <option value="#CODE"[ (#CODE|=={#ENV{nationality}}|oui)selected="selected"]>#NOM</option>
+</BOUCLE_pays>
 							</select>
 							<input name="nationality_test" type="hidden" value="#ENV{nationality}"/>
 						</li>
@@ -376,8 +375,8 @@
 					<label>Practice in</label> 
 					<select name="practicein" id="inpracticein" style="width:195px">
 						<option value=''>Make a choice</option>
-<BOUCLE_practicein(GEO_PAYS){par pays}>
-<option value='#CODE_ISO' [(#CODE_ISO|=={#ENV{practicein}}|oui)selected]>#PAYS</option>
+<BOUCLE_practicein(PAYS){par multi nom}>
+<option value='#CODE'[(#CODE|=={#ENV{practicein}}|oui) selected="selected"]>#NOM</option>
 </BOUCLE_practicein>
 					</select>
 					<input name="practicein_test" type="hidden" value="#ENV{practicein}"/>
