@@ -3,7 +3,6 @@
     #SET{where,#GET{where}|push{membernumber=#ENV{name}}}
     ,
     #SET{name,#ENV{name}}
-    #GET{name}
     [(#ENV{name}|oui)#SET{where,#GET{where}|push{(LOWER(name) LIKE '%#GET{name}%' OR LOWER(surname) LIKE '%#GET{name}%')}}]
     }
 )]
