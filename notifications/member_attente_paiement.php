@@ -32,7 +32,7 @@ function notifications_member_attente_paiement_dist($quoi, $seq, $options) {
     $subject_admin=$subject_client;  
     
     $message_client=recuperer_fond('notifications/member_attente_paiement_client',$options);
-    $message_admin='Letter 2 sent';    
+    $message_admin=recuperer_fond('notifications/member_attente_paiement_admin',$options);    
      
     //
     // Envoyer les emails
@@ -56,8 +56,7 @@ function notifications_member_attente_paiement_dist($quoi, $seq, $options) {
     $envoyer_mail($email_client,$subject_client, $corps);
     
     //Admin
-    $envoyer_mail( $email_admin,$subject_admin,$message_admin);
+    $envoyer_mail($email_admin,$subject_admin,$message_admin);
     
 }
 ?>
-
