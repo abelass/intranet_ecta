@@ -32,7 +32,7 @@ function notifications_member_accepte_dist($quoi, $seq, $options) {
     $subject_admin=$subject_client;  
     
     $message_client=recuperer_fond('notifications/member_accepte_client',$options);
-    $message_admin='Letter 3 sent';    
+    $message_admin=recuperer_fond('notifications/member_accepte_admin',$options);   
      
     //
     // Envoyer les emails
