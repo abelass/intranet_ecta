@@ -313,7 +313,8 @@
 				<li style="overflow: hidden; width: 100%">
 					<label>Date of membership</label> <input name="datemembership" type="text" class="text date-pick" id="datemembership" value="#ENV{datemembership}">
 					<input name="datemembership_test" type="hidden" value="#ENV{datemembership}"/>
-				</li>							
+				</li>
+
 				<li>
 					<label>Member of Honours</label> #ENV**{memberofhonour}
 				</li>
@@ -323,15 +324,41 @@
 				<li>
 					<label>Member Type</label> [(#ENV**{membertype})]
 				</li>
+				[(#REM)old code
 				<li>
 					<label>Council Member</label> [(#ENV**{councilmem,No})]
 				</li>
 				<li>
 					<label>Past member of Council</label> [(#ENV**{pastcouncil,No})]
+				</li>]
+				<li><label>Council Member</label>
 				</li>
+                <div class="explication">
+                    <small>Please specify a type and a year in the fields below. Once you have saved you will be able to add a new period.</small>
+                </div>
+				[<div>(#ENV{seq}|council_member)</div>]
+				</li>
+				<li class="com">
+					<label>Committee member</label>
+					<fieldset>
+						
+						<ul>
+
+							[(#SAISIE{selection, incommitee,
+				label=<:member:label_incommitee:>,
+				datas=[(#ARRAY{'',Make a Choice,Yes,Yes,No,No,Com,Com})]})]
+							<li class="explication">
+								<small>Please specify a role and a year in the fields below. Once you have saved you will be able to add a new period by committee.</small>
+							</li>
+						   <INCLURE{fond=formulaires/inc-commitees,env,ajax}/>
+						</ul>
+					</fieldset>
+				</li> 
+				[(#REM)old code
 				<li>
 					<label>Committee Member</label> #ENV**{list_commitee_member}
 				</li>
+				
 				<li>
 					<label>Chair of Committee</label> #ENV**{chaircommitee,No}
 				</li>
@@ -340,7 +367,7 @@
 				</li>
 				<li>
 					<label>Secretary of Committee</label> #ENV**{secretarycommitee,No}
-				</li>
+				</li>]
 				<li>
 					<label>Executive Bodies</label> [(#ENV**{executivebodies,No})]
 				</li>
