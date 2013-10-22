@@ -1,1 +1,9 @@
 .formulaire_editer_member br.autobr{display:none}
+
+.formulaire_spip ul ul .member_role, select.statut { 
+	width: auto !important;
+	}
+	
+input.start_date, input.end_date { 
+width: 40px;
+}
