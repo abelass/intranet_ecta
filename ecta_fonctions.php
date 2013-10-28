@@ -19,18 +19,18 @@ function tableau_roles(){
         }
    return $roles;
 }
-// Generates the form entry for the council memberships
-function council_member($seq){
+// Givees the form entry for the committee memberships
+function council_member($seq,$espace='prive'){
 	$start_date=0000;    
 	$end_date=0000;  
-	
-	$champ0='<div><select class="statut" name="council_statut[new]">
+	if($espace=="public")$disabled=' disabled="disabled" ';
+	$champ0='<div><select'.$disabled.'class="statut" name="council_statut[new]">
 		<option value="">No</option>
 		<option value="Yes">Yes</option>
 		<option value="Com">Com</option>                                        
 	</select>';  
-	$champ1='<span> <b>From:</b> </span><input class="start_date" name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
-	$champ2='<span> <b>To:</b> </span><input class="start_date"  name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
+	$champ1='<span> <b>From:</b> </span><input class="start_date"'.$disabled.'name="council_start_date[new]" type="text" value="'.$start_date.'"/>';
+	$champ2='<span> <b>To:</b> </span><input class="start_date"'.$disabled.'name="council_end_date[new]" type="text" value="'.$end_date.'"/></div>';
 	$champs=$champ0.$champ1.$champ2;
 	$sql=sql_select('*','spip_members_council','seq='.$seq,'','start_date DESC');
 
@@ -69,7 +69,8 @@ function council_member($seq){
 			'statut'=>$councils['statut'],
 			'start_date'=>$start_date,
 			'end_date'=>$end_date,
-			'seq'=>$seq
+			'seq'=>$seq,
+			'disabled'=>$disabled
 			));       		 
 		}
 	$champs.=$end_tag;
