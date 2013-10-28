@@ -1,19 +1,18 @@
 #CACHE{0}
-#ENV**{begin_tag}
 <div class="block">
     <a class="notab" href="" title="delete this period"> </a>
 <div class="block">
-    <select class="statut" name="council_statut[#ENV{id_membership_council}]">
+    <select class="statut" #ENV**{disabled} name="council_statut[#ENV{id_membership_council}]">
         <option value="">No</option>
         <option value="Yes"[(#ENV{statut}|=={Yes}|oui) selected="selected"]>Yes</option>
         <option value="Com"[(#ENV{statut}|=={Com}|oui) selected="selected"]>Com</option>   
     </select>
     
-    <span> <b>From:</b> </span><input class="start_date"  name="council_start_date[#ENV{id_membership_council}]" type="text" value="#ENV{start_date}"/>
-    <span> <b>To:</b> </span><input class="end_date" name="council_end_date[#ENV{id_membership_council}]" type="text" value="#ENV{end_date}"/>
-<a class="ajax notab" href="#URL_ACTION_AUTEUR{delete_periode,#ENV{id_membership}-council,#SELF}" title="delete this period">
-
+    <span> <b>From:</b> </span><input class="start_date" #ENV**{disabled} name="council_start_date[#ENV{id_membership_council}]" type="text" value="#ENV{start_date}"/>
+    <span> <b>To:</b> </span><input class="end_date" #ENV**{disabled} name="council_end_date[#ENV{id_membership_council}]" type="text" value="#ENV{end_date}"/>
+	[(#ENV{disabled}|non)
+	<a class="ajax notab" href="#URL_ACTION_AUTEUR{delete_periode,#ENV{id_membership}-council,#SELF}" title="delete this period">
         <img src="#CHEMIN{prive/themes/spip/images/user-delete.png}" alt="delete"/>
-    </a>
+    </a>]
     
 </div>
