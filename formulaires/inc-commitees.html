@@ -4,8 +4,10 @@
    #SET{start_date,0000}
    #SET{end_date,0000}
    #SET{select,''} 
-   #SET{champ1,<span> <b>From:</b> </span><input class="start_date" name="start_date[#ID_COMMITEE][new]" type="text" value="#START_DATE"/>}
-   #SET{champ2,<span> <b>From:</b> </span><input class="start_date" name="end_date[#ID_COMMITEE][new]" type="text" value="#END_DATE"/>}
+   #SET{disabled,''}
+   [(#ENV{espace}|=={public}|oui)#SET{disabled,disabled="disabled"}]
+   #SET{champ1,<span> <b>From:</b> </span><input class="start_date" #GET{disabled} name="start_date[#ID_COMMITEE][new]" type="text" value="#START_DATE"/>}
+   #SET{champ2,<span> <b>To:</b> </span><input class="start_date" #GET{disabled} name="end_date[#ID_COMMITEE][new]" type="text" value="#END_DATE"/>}
 
       <BOUCLE_roles(DATA){source tableau,#GET{roles}}>
         #SET{selected,''} 
@@ -13,7 +15,7 @@
        #SET{select,#GET{select}|concat{<option value="#CLE">#VALEUR</option>}}       
       </BOUCLE_roles>
 
-   #SET{name,<div><span> <b>Role:</b> </span><select class="member_role" name="member_role[#ID_COMMITEE][new]">}  
+   #SET{name,<div><span> <b>Role:</b> </span><select class="member_role" #GET{disabled} name="member_role[#ID_COMMITEE][new]">}  
    #SET{champ0,#GET{name}|concat{#GET{select}</select>}}
 
     #SET{champs,#GET{champ0}|concat{#GET{champ1}|concat{#GET{champ2}}}
@@ -46,6 +48,7 @@
                      start_date=#GET{start_date},
                      end_date=#GET{end_date},
                      roles=#GET{roles},
+					 disabled=#GET{disabled}
                      env}               
              </BOUCLE_m_com>
       </BOUCLE_roles2> 
