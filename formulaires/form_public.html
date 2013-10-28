@@ -368,9 +368,17 @@
 				<li>
 					<label>Secretary of Committee</label> #ENV**{secretarycommitee,No}
 				</li>]
+				<B_ex_bodies>
 				<li>
-					<label>Executive Bodies</label> [(#ENV**{executivebodies,No})]
-				</li>
+					<label>Executive Bodies</label>
+					<select name="executivebodies" id="executivebodies">
+						<option value=''>Make a Choice</option>
+				   <BOUCLE_ex_bodies(EXECUTIVE_BODIES){par num title}>
+						<option value='#ID_ECTA_EXECUTIVE_BODY'[ (#ID_ECTA_EXECUTIVE_BODY|=={#ENV{executivebodies}}|oui)selected="selected"]> [(#TITLE|supprimer_numero)] </option>
+					</BOUCLE_ex_bodies>
+					 </select>
+				</li>                  
+				</B_ex_bodies>
 				<li>
 					<label>OHIM number</label> <input name="OHIM" type="text" class="text"id="ohimnumber" value="#ENV**{OHIM}">
 				</li>							
