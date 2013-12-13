@@ -102,8 +102,9 @@ function member_instituer($seq, $c, $calcul_rub=true) {
         $email=isset($row['email'])?$row['email']:'';
         $notifications = charger_fonction('notifications', 'inc');
         
-        if($statut_ancien=="application" AND $s=='attente_paiement')$notifications('member_attente_paiement',$seq,$c);
-        elseif($statut_ancien=="attente_paiement" AND $s=='accepte'){
+        if($s=='attente_paiement')
+	$notifications('member_attente_paiement',$seq,$c);
+        elseif($s=='accepte'){
             include_spip('action/inscrire_auteur');
             $name=$row['name'];
             $surname=$row['surname'];
