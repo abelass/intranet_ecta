@@ -102,9 +102,12 @@ function member_instituer($seq, $c, $calcul_rub=true) {
         $email=isset($row['email'])?$row['email']:'';
         $notifications = charger_fonction('notifications', 'inc');
         
-        if($s=='attente_paiement')
-	$notifications('member_attente_paiement',$seq,$c);
-        elseif($s=='accepte'){
+        /*
+		 *Status deactivated on  20140304
+		 *if($s=='attente_paiement') $notifications('member_attente_paiement',$seq,$c);
+		 * 
+		 */
+       if($s=='accepte'){
             include_spip('action/inscrire_auteur');
             $name=$row['name'];
             $surname=$row['surname'];
@@ -146,7 +149,7 @@ function member_instituer($seq, $c, $calcul_rub=true) {
             }
         else{
             include_spip('action/editer_auteur');
-            $relation_statut=array('application'=>'nouveau','attente_paiement'=>'nouveau','accepte'=>'6forum');
+            $relation_statut=array('application'=>'nouveau','accepte'=>'6forum');
             auteur_instituer($id_auteur,array('statut'=>$relation_statut[$s]));
         }
         

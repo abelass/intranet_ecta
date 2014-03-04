@@ -130,14 +130,14 @@ function ecta_declarer_tables_objets_sql($tables) {
          'rechercher_champs' => array("membernumber" => 8, "name" => 8, "surname" => 8, "email" => 8, "addr1" => 4, "addr2" => 4, "addr3" => 3, "addr4" => 3, "addr5" => 3, "country" => 3, "nationality" => 2, "company" => 4),
         'statut_textes_instituer' => array(
             'application'     => 'member:texte_statut_applications',
-            'attente_paiement'  => 'member:texte_statut_attente_paiement',           
+            //'attente_paiement'  => 'member:texte_statut_attente_paiement',           
             'accepte'      => 'member:texte_statut_accepte',
         ),
         'statut'=> array(
             array(
                 'champ'     => 'statut',
                 'publie'    => 'accepte',
-                'previsu'   => 'accepte,attente_paiement,application',
+                'previsu'   => 'accepte,application',
                 'post_date' => 'date', 
                 'exception' => array('statut','tout')
             )
