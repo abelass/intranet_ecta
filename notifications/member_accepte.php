@@ -21,7 +21,7 @@ function notifications_member_accepte_dist($quoi, $seq, $options) {
     
     $options['seq']=$seq;  
     
-    $member=sql_fetsel('name,surname,email,login','spip_members','seq='.$seq);
+    $member=sql_fetsel('name,surname,email','spip_members','seq='.$seq);
     $options['name']=$member['name']; 
     $options['surname']=$member['surname']; 
     
@@ -39,7 +39,7 @@ function notifications_member_accepte_dist($quoi, $seq, $options) {
     //
     //
     //Member
-
+	spip_log($message_client,'teste');
     $envoyer_mail($email_client,$subject_client,array(
         'html'=>$message_client)
        );
