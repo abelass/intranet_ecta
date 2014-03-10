@@ -9,7 +9,7 @@
 <BOUCLE_data(DATA){source tableau, #ENV**}{cle !IN lang,date,date_default,date_redac,date_redac_default}>
     [(#CLE|!={membertype}|?{
         [<li>#CLE: (#VALEUR|is_array|?{[(#VALEUR|implode{','})],#VALEUR})</li>]
-        ,test
+        ,
         [<li>[(#CLE):  ](#INCLURE{fond=inclure/membertype,id_member_type=#VALEUR})</li>]
     })]
 
