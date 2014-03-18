@@ -23,4 +23,7 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
 // ne jamais afficher les préfixes numériques des titres
  $table_des_traitements['TITLE'][]= 'typo(supprimer_numero(%s))';
 
+// proteger le #FORMULAIRE_EDITER_MEMBER
+$GLOBALS['formulaires_no_spam'][] = 'editer_member';
+
 ?>

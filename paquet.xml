@@ -1,7 +1,7 @@
 <paquet
 	prefix="ecta"
 	categorie="divers"
-	version="1.2.1"
+	version="1.2.2"
 	etat="test"
 	compatibilite="[3.0.8;3.0.*]"
 	logo="prive/themes/spip/images/ecta-64.png"
@@ -20,7 +20,7 @@
 	<necessite nom="pays" compatibilite="[2.1.1;]" />
 	<necessite nom="facteur" compatibilite="[2.4.5;]" />
 	<necessite nom="sclp" compatibilite="[1.0.6;]" />		 	
-	
+	<necessite nom="nospam" compatibilite="[1.5.6;]" />	
 	
 	<pipeline nom="autoriser" inclure="ecta_autorisations.php" /> 
 	<pipeline nom="formulaire_traiter" inclure="ecta_pipelines.php" /> 	
